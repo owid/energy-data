@@ -1,2 +1,43 @@
-# energy-data
-Data on energy by Our World in Data 
+# Data on Energy by *Our World in Data*
+
+Our complete Energy dataset is a collection of key metrics maintained by [*Our World in Data*](https://ourworldindata.org/energy). It is updated regularly and includes data on energy consumption (primary energy, per capita, and growth rates), energy mix, electricity mix and other relevant metrics.
+
+### 🗂️ Download our complete Energy dataset : [CSV](https://github.com/owid/energy-data/raw/master/owid-energy-data.csv) | [XLSX](https://github.com/owid/energy-data/raw/master/owid-energy-data.xlsx) | [JSON](https://github.com/owid/energy-data/raw/master/owid-energy-data.json)
+
+We will continue to publish updated data on Energy as it becomes available. Most metrics are published on an annual basis.
+
+## Our data sources
+
+- **Energy consumption (primary energy, energy mix and energy intensity):** this data is sourced from a combination of two sources—the [BP Statistical Review of World Energy](https://www.bp.com/en/global/corporate/energy-economics/statistical-review-of-world-energy.html) and [SHIFT Data Portal](https://www.theshiftdataportal.org/energy).
+- **Electricity consumption (electricity consumption, and electricity mix):** this data is sourced from a combination of two sources—the [BP Statistical Review of World Energy](https://www.bp.com/en/global/corporate/energy-economics/statistical-review-of-world-energy.html) and [EMBER – Global Electricity Dashboard](https://ember.shinyapps.io/GlobalElectricityDashboard/).
+- **Other variables:** this data is collected from a variety of sources (United Nations, World Bank, Gapminder, Maddison Project Database, etc.). More information is available in [our codebook](https://github.com/owid/energy-data/blob/master/owid-energy-codebook.csv).
+
+## The complete *Our World in Data* Energy dataset
+
+**Our complete Energy dataset is available in [CSV](https://github.com/owid/energy-data/raw/master/owid-energy-data.csv), [XLSX](https://github.com/owid/energy-data/raw/master/owid-energy-data.xlsx), and [JSON](https://github.com/owid/energy-data/raw/master/owid-energy-data.json) formats.**
+
+The CSV and XLSX files follow a format of 1 row per location and year. The JSON version is split by country, with an array of yearly records.
+
+The variables represent all of our main data related to energy consumption, energy mix, electricity mix as well as other variables of potential interest.
+
+A [full codebook](https://github.com/owid/energy-data/blob/master/owid-energy-codebook.csv) is made available, with a description and source for each variable in the dataset.
+
+## Changelog
+
+## Data alterations
+
+- **We standardize names of countries and regions.** Since the names of countries and regions are different in different data sources, we standardize all names to the [*Our World in Data* standard entity names](https://github.com/owid/energy-data/blob/master/scripts/input/shared/continents.csv).
+- **We recalculate primary energy in terawatt-hours.** The primary data sources on energy—the BP Statistical Review of World Energy, for example—typically report consumption in terms of exajoules. We have recalculated these figures as terawatt-hours using a conversion factor of 277.8.
+- **We calculate per capita figures.** All of our per capita figures are calculated from our metric 'Population', which is included in the complete dataset. These population figures are sourced from [Gapminder](http://gapminder.org) and the [UN World Population Prospects (UNWPP)](https://population.un.org/wpp/).
+
+## License
+
+All visualizations, data, and code produced by _Our World in Data_ are completely open access under the [Creative Commons BY license](https://creativecommons.org/licenses/by/4.0/). You have the permission to use, distribute, and reproduce these in any medium, provided the source and authors are credited.
+
+The data produced by third parties and made available by _Our World in Data_ is subject to the license terms from the original third-party authors. We will always indicate the original source of the data in our database, and you should always check the license of any such third-party data before use.
+
+## Authors
+
+This data has been collected, aggregated, and documented by Hannah Ritchie, Max Roser and Edouard Mathieu.
+
+The mission of *Our World in Data* is to make data and research on the world’s largest problems understandable and accessible. [Read more about our mission](https://ourworldindata.org/about).
