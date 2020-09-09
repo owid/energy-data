@@ -186,6 +186,7 @@ def main():
     # Round all values to 3 decimal places
     rounded_cols = [col for col in list(energy_mix) if col not in ("Country", "Year")]
     energy_mix[rounded_cols] = energy_mix[rounded_cols].round(3)
+    energy_mix = energy_mix[energy_mix.isna().sum(axis=1) < len(rounded_cols)]
 
     # Save to files as csv
     energy_mix.to_csv(

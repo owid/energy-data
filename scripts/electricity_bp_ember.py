@@ -205,6 +205,7 @@ def main():
     # Round all values to 3 decimal places
     rounded_cols = [col for col in list(combined) if col not in ("Country", "Year")]
     combined[rounded_cols] = combined[rounded_cols].round(3)
+    combined = combined[combined.isna().sum(axis=1) < len(rounded_cols)]
 
     # Save to files as csv
     combined.to_csv(
