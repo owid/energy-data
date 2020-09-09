@@ -28,7 +28,7 @@ A [full codebook](https://github.com/owid/energy-data/blob/master/owid-energy-co
 
 ## Data alterations
 
-- **We standardize names of countries and regions.** Since the names of countries and regions are different in different data sources, we standardize all names to the [*Our World in Data* standard entity names](https://github.com/owid/energy-data/blob/master/scripts/input/shared/continents.csv).
+- **We standardize names of countries and regions.** Since the names of countries and regions are different in different data sources, we standardize all names to the [*Our World in Data* standard entity names](https://github.com/owid/energy-data/tree/master/scripts/input/shared).
 - **We recalculate primary energy in terawatt-hours.** The primary data sources on energy—the BP Statistical Review of World Energy, for example—typically report consumption in terms of exajoules. We have recalculated these figures as terawatt-hours using a conversion factor of 277.8.
 - **We calculate per capita figures.** All of our per capita figures are calculated from our metric `Population`, which is included in the complete dataset. These population figures are sourced from [Gapminder](http://gapminder.org) and the [UN World Population Prospects (UNWPP)](https://population.un.org/wpp/).
 
