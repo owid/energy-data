@@ -21,13 +21,13 @@ def main():
 
     bp_fossil["Oil Production (EJ)"] = bp_fossil["Oil Production - Tonnes"] * oil_to_ej
 
-    bp_fossil = bp_fossil.rename(columns={
+    bp_fossil = bp_fossil.rename(errors="raise", columns={
         "Entity": "Country",
         "Coal Production - EJ": "Coal Production (EJ)",
         "Gas Production - EJ": "Gas Production (EJ)",
     })
 
-    bp_fossil = bp_fossil.drop(columns=["Oil Production - Tonnes"])
+    bp_fossil = bp_fossil.drop(errors="raise", columns=["Oil Production - Tonnes"])
 
     # Import fossil fuel production data from SHIFT
     shift_coal = pd.read_csv(os.path.join(INPUT_DIR, "fossil-fuel-production/shift_coal.csv"))
@@ -60,7 +60,7 @@ def main():
 
     shift_countries = pd.read_csv(os.path.join(INPUT_DIR, "shared/shift_countries.csv"))
     shift_fossil = shift_fossil.merge(shift_countries,on="Entity")
-    shift_fossil = shift_fossil.drop(columns=["Entity"])
+    shift_fossil = shift_fossil.drop(errors="raise", columns=["Entity"])
 
     # Combine BP and SHIFT data
     bp_fossil.loc[:, "Source"] = "BP"
@@ -72,7 +72,7 @@ def main():
     combined = pd.concat([bp_fossil, shift_fossil], join="outer")
     combined = combined.sort_values(["Country", "Year", "Priority"])
     combined = combined.groupby(["Year","Country"]).tail(1)
-    combined = combined.drop(columns=["Priority", "Source"])
+    combined = combined.drop(errors="raise", columns=["Priority", "Source"])
 
     # Convert to TWh
     ej_to_twh = 277.778
@@ -81,7 +81,7 @@ def main():
     combined["Oil production (TWh)"] = combined["Oil Production (EJ)"] * ej_to_twh
     combined["Gas production (TWh)"] = combined["Gas Production (EJ)"] * ej_to_twh
 
-    combined = combined.drop(columns=[
+    combined = combined.drop(errors="raise", columns=[
         "Coal Production (EJ)",
         "Oil Production (EJ)",
         "Gas Production (EJ)"
@@ -105,7 +105,7 @@ def main():
         combined[f"{cat} production per capita (kWh)"] = (
             combined[f"{cat} production (TWh)"] / combined["Population"] * 1000000000
         )
-    combined = combined.drop(columns=["Population"])
+    combined = combined.drop(errors="raise", columns=["Population"])
     combined = combined.replace([np.inf, -np.inf], np.nan)
 
     # Round all values to 3 decimal places

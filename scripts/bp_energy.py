@@ -28,7 +28,7 @@ def main():
         "Geo Biomass Other - TWh"
     ])
 
-    primary_energy = primary_energy.rename(columns={
+    primary_energy = primary_energy.rename(errors="raise", columns={
         "Coal Consumption - EJ": "Coal (EJ)",
         "Gas Consumption - EJ": "Gas (EJ)",
         "Oil Consumption - EJ": "Oil (EJ)",
@@ -154,7 +154,7 @@ def main():
             primary_energy[f"{cat} (TWh – sub method)"] / primary_energy["Population"] * 1000000000
         )
 
-    energy_mix = primary_energy.drop(columns=[
+    energy_mix = primary_energy.drop(errors="raise", columns=[
         "Coal (EJ)",
         "Gas (EJ)",
         "Oil (EJ)",

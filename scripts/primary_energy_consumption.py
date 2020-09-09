@@ -13,7 +13,7 @@ def main():
         os.path.join(INPUT_DIR, "shared/bp_energy.csv"),
         usecols=["Entity", "Year", "Primary Energy Consumption"]
     )
-    bp_energy = bp_energy.rename(columns={
+    bp_energy = bp_energy.rename(errors="raise", columns={
         "Entity": "Country",
         "Primary Energy Consumption": "Primary energy consumption (EJ)"
     })
@@ -24,7 +24,7 @@ def main():
         bp_energy["Primary energy consumption (EJ)"] * ej_to_twh
     )
 
-    bp_energy = bp_energy.drop(columns=["Primary energy consumption (EJ)"])
+    bp_energy = bp_energy.drop(errors="raise", columns=["Primary energy consumption (EJ)"])
 
     bp_energy = bp_energy[-bp_energy["Primary energy consumption (TWh)"].isnull()]
 
@@ -49,7 +49,7 @@ def main():
     shift_consumption = (
         shift_consumption
         .merge(shift_countries, on="Entity")
-        .drop(columns=["Entity", "Primary energy consumption (Mtoe)"])
+        .drop(errors="raise", columns=["Entity", "Primary energy consumption (Mtoe)"])
         .dropna(subset=["Primary energy consumption (TWh)"])
     )
 
@@ -65,7 +65,7 @@ def main():
     combined = combined.groupby(["Year", "Country"]).tail(1).reset_index(drop=True)
 
     # Drop columns
-    combined = combined.drop(columns=["Priority", "Source"])
+    combined = combined.drop(errors="raise", columns=["Priority", "Source"])
 
     # Calculate annual change
     combined = combined.sort_values(["Country", "Year"])
@@ -83,20 +83,19 @@ def main():
     combined["Energy per capita (kWh)"] = (
         combined["Primary energy consumption (TWh)"] / combined["Population"] * 1000000000
     )
-    combined = combined.drop(columns=["Population"])
+    combined = combined.drop(errors="raise", columns=["Population"])
 
     # Calculating energy consumption per unit GDP
     gdp = pd.read_csv(
         os.path.join(INPUT_DIR, "shared/total-gdp-maddison.csv"),
         usecols=["Country", "Year", "Total real GDP"]
     )
-    gdp = gdp.rename(columns={"Entity": "Country"})
 
-    combined = combined.merge(gdp,on=["Country", "Year"], how="left")
+    combined = combined.merge(gdp, on=["Country", "Year"], how="left")
     combined["Energy per GDP (kWh per $)"] = (
         combined["Primary energy consumption (TWh)"] / combined["Total real GDP"] * 1000000000
     )
-    combined = combined.drop(columns=["Total real GDP"])
+    combined = combined.drop(errors="raise", columns=["Total real GDP"])
 
     # Drop rows with blank Country column
     combined["Country"] = combined["Country"].replace("", np.nan)

@@ -24,9 +24,9 @@ def main():
         "Elec Gen from Gas"
     ])
 
-    bp_elec = bp_elec.rename(columns={
+    bp_elec = bp_elec.rename(errors="raise", columns={
         "Primary Energy Consumption": "Primary Energy (Mtoe)",
-        "Electricity Generation": "Electricity Generation (TWh)",
+        "Electricity Generation ": "Electricity Generation (TWh)",
         "Entity": "Country",
         "Hydro Generation - TWh": "Hydro (TWh)",
         "Nuclear Generation - TWh": "Nuclear (TWh)",
@@ -58,7 +58,7 @@ def main():
     mtoe_to_twh = 11.63
 
     bp_elec["Primary energy (TWh)"] = bp_elec["Primary Energy (Mtoe)"] * mtoe_to_twh
-    bp_elec = bp_elec.drop(columns=["Primary Energy (Mtoe)"])
+    bp_elec = bp_elec.drop(errors="raise", columns=["Primary Energy (Mtoe)"])
 
     # Go from wide to long format and drop NAs
     bp_elec = bp_elec.melt(id_vars=["Country", "Year"]).dropna()
@@ -87,8 +87,8 @@ def main():
     for varname, colname in metadata:
         sub_dfs.append(
             ember_elec[ember_elec["Variable"] == varname]
-            .rename(columns={"Value (TWh)": colname})
-            .drop(columns=["Variable"])
+            .rename(errors="raise", columns={"Value (TWh)": colname})
+            .drop(errors="raise", columns=["Variable"])
         )
 
     ember_elec = reduce(lambda left, right: pd.merge(left, right, on=["Year", "Country"]), sub_dfs)
@@ -100,8 +100,8 @@ def main():
     ember_elec = (
         ember_elec
         .merge(ember_countries, on="Country")
-        .drop(columns=["Country"])
-        .rename(columns={"OWID Country":"Country"})
+        .drop(errors="raise", columns=["Country"])
+        .rename(errors="raise", columns={"OWID Country": "Country"})
     )
 
     ember_elec["Other renewables (TWh)"] = (
@@ -124,7 +124,7 @@ def main():
         .add(ember_elec["Nuclear (TWh)"])
     )
 
-    ember_elec = ember_elec.drop(columns=["Biomass and waste", "Other renewables"])
+    ember_elec = ember_elec.drop(errors="raise", columns=["Biomass and waste", "Other renewables"])
 
     # Reorder columns
     left_columns = ["Country", "Year"]
@@ -145,7 +145,7 @@ def main():
     combined = pd.concat([bp_elec, ember_elec])
     combined = combined.sort_values(["Country", "Year", "Priority"])
     combined = combined.groupby(["Year","Country", "variable"]).tail(1)
-    combined = combined.drop(columns=["Priority", "Source"])
+    combined = combined.drop(errors="raise", columns=["Priority", "Source"])
 
     # Go back to wide format
     combined = (
@@ -164,7 +164,7 @@ def main():
             combined[f"{cat} (TWh)"] / combined["Population"] * 1000000000
         )
 
-    combined = combined.rename(columns={
+    combined = combined.rename(errors="raise", columns={
         "Electricity Generation electricity per capita (kWh)": "Per capita electricity (kWh)",
         "Low-carbon electricity electricity per capita (kWh)": "Low-carbon electricity per capita (kWh)",
         "Renewables electricity per capita (kWh)": "Renewable electricity per capita (kWh)",
@@ -173,13 +173,13 @@ def main():
     })
 
     # Drop 'Population' column
-    combined = combined.drop(columns=["Population"])
+    combined = combined.drop(errors="raise", columns=["Population"])
 
     # Calculate electricity as share of energy
     combined["Electricity as share of primary energy"] = (
         combined["Electricity Generation (TWh)"] / combined["Primary energy (TWh)"] * 100
     )
-    combined = combined.drop(columns=["Primary energy (TWh)"])
+    combined = combined.drop(errors="raise", columns=["Primary energy (TWh)"])
 
     # Calculating electricity shares by source
     for cat in ["Coal", "Oil", "Gas", "Fossil fuels", "Renewables", "Low-carbon electricity",
@@ -189,17 +189,17 @@ def main():
         )
 
     # Rename variables for grapher
-    combined = combined.rename(columns={
-        "Coal (TWh)":"Electricity from coal (TWh)",
-        "Gas (TWh)":"Electricity from gas (TWh)",
-        "Oil (TWh)":"Electricity from oil (TWh)",
-        "Nuclear (TWh)":"Electricity from nuclear (TWh)",
-        "Hydro (TWh)":"Electricity from hydro (TWh)",
-        "Solar (TWh)":"Electricity from solar (TWh)",
-        "Wind (TWh)":"Electricity from wind (TWh)",
-        "Other renewables (TWh)":"Electricity from other renewables (TWh)",
-        "Fossil fuels (TWh)":"Electricity from fossil fuels (TWh)",
-        "Renewables (TWh)":"Electricity from renewables (TWh)"
+    combined = combined.rename(errors="raise", columns={
+        "Coal (TWh)": "Electricity from coal (TWh)",
+        "Gas (TWh)": "Electricity from gas (TWh)",
+        "Oil (TWh)": "Electricity from oil (TWh)",
+        "Nuclear (TWh)": "Electricity from nuclear (TWh)",
+        "Hydro (TWh)": "Electricity from hydro (TWh)",
+        "Solar (TWh)": "Electricity from solar (TWh)",
+        "Wind (TWh)": "Electricity from wind (TWh)",
+        "Other renewables (TWh)": "Electricity from other renewables (TWh)",
+        "Fossil fuels (TWh)": "Electricity from fossil fuels (TWh)",
+        "Renewables (TWh)": "Electricity from renewables (TWh)"
     })
 
     # Round all values to 3 decimal places
