@@ -86,7 +86,7 @@ oil_production,"Oil production, measured in terawatt-hours",Calculated by Our Wo
 oil_prod_per_capita,"Per capita oil production, measured in kilowatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy; Gapminder and UN Population Estimates
 other_renewables_elec_per_capita,"Per capita electricity consumption from other renewables, measured in kilowatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy; Ember; and UN Population Estimates
 other_renewables_share_elec,Share of electricity consumption that comes from other renewables,Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember
-other_renewables_cons_change_pct,Annual percentage change in energy consumption from other renewbles,Calculated by Our World in Data based on BP Statistical Review of World Energy
+other_renewables_cons_change_pct,Annual percentage change in energy consumption from other renewables,Calculated by Our World in Data based on BP Statistical Review of World Energy
 other_renewables_share_energy,Share of primary energy consumption that comes from other renewables,Calculated by Our World in Data based on BP Statistical Review of World Energy
 other_renewables_cons_change_twh,"Annual change in other renewable consumption, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy
 other_renewable_consumption,"Primary energy consumption from other renewables, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy
