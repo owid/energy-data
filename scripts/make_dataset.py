@@ -65,7 +65,7 @@ def main():
 
     # Add Electricity Mix
     elec_mix = pd.read_csv(
-        os.path.join(GRAPHER_DIR, "Electricity mix from BP & EMBER (2020).csv")
+        os.path.join(GRAPHER_DIR, "Electricity mix from BP & EMBER (2021).csv")
     )
 
     # Add Fossil Fuel Production
@@ -75,24 +75,15 @@ def main():
     population = pd.read_csv(os.path.join(INPUT_DIR, "shared/population.csv"))
     gdp = pd.read_csv(os.path.join(INPUT_DIR, "shared/total-gdp-maddison.csv"))
     iso_codes = pd.read_csv(os.path.join(INPUT_DIR, "shared/iso_codes.csv"))
-
-    # Combine datasets
+    
+    # merges together energy datasets
     combined = (
         primary_energy
-        .merge(fossil_fuels, on=["Year", "Country"], how="left")
-        .merge(bp_energy, on=["Year", "Country"], how="left")
-        .merge(energy_mix, on=["Year", "Country"], how="left")
-        .merge(elec_mix, on=["Year", "Country"], how="left")
-        .merge(iso_codes, on=["Country"], how="left")
-        .merge(population, on=["Year", "Country"], how="left")
-        .merge(gdp, on=["Year", "Country"], how="left")
+        .merge(fossil_fuels, on=["Year", "Country"], how="outer", validate="1:1")
+        .merge(bp_energy, on=["Year", "Country"], how="outer", validate="1:1")
+        .merge(energy_mix, on=["Year", "Country"], how="outer", validate="1:1")
+        .merge(elec_mix, on=["Year", "Country"], how="outer", validate="1:1")
     )
-
-    # Reorder columns
-    left_columns = ["iso_code", "Country", "Year"]
-    other_columns = sorted([col for col in combined.columns if col not in left_columns])
-    column_order = left_columns + other_columns
-    combined = combined[column_order]
 
     combined = combined.drop(errors="raise", columns=[
         "Biofuels (% primary direct energy)",
@@ -110,8 +101,27 @@ def main():
         "Primary energy – direct (TWh)",
         "Renewables (% primary direct energy)",
         "Solar (% primary direct energy)",
-        "Wind (% primary direct energy)"
+        "Wind (% primary direct energy)",
+        "Carbon intensity of electricity (gCO2/kWh)"
     ])
+
+    row_has_data = combined.drop(columns=['Country', 'Year']).notnull().any(axis=1)
+    countries_keep = set(primary_energy['Country'].unique())
+    combined = combined[row_has_data & combined['Country'].isin(countries_keep)]
+
+    # merges non-energy datasets onto energy dataset
+    combined = (
+        combined
+        .merge(iso_codes, on=["Country"], how="left", validate="m:1")
+        .merge(population, on=["Year", "Country"], how="left", validate="1:1")
+        .merge(gdp, on=["Year", "Country"], how="left", validate="1:1")
+    )
+    
+    # Reorder columns
+    left_columns = ["iso_code", "Country", "Year"]
+    other_columns = sorted([col for col in combined.columns if col not in left_columns])
+    column_order = left_columns + other_columns
+    combined = combined[column_order]
 
     # Round all values to 3 decimal places
     rounded_cols = [col for col in list(combined) if col not in ("Country", "Year")]
@@ -237,6 +247,8 @@ def main():
         "Wind electricity per capita (kWh)": "wind_elec_per_capita",
         "Wind per capita (kWh)": "wind_energy_per_capita"
     })
+
+    combined.sort_values(['country', 'year'], inplace=True)
 
     # Save output files
     combined.to_csv(
