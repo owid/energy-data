@@ -102,7 +102,6 @@ def main():
         "Renewables (% primary direct energy)",
         "Solar (% primary direct energy)",
         "Wind (% primary direct energy)",
-        "Carbon intensity of electricity (gCO2/kWh)"
     ])
 
     row_has_data = combined.drop(columns=['Country', 'Year']).notnull().any(axis=1)
@@ -140,11 +139,14 @@ def main():
         "Annual change in oil production (TWh)": "oil_prod_change_twh",
         "Annual change primary energy consumption (%)": "energy_cons_change_pct",
         "Annual change primary energy consumption (TWh)": "energy_cons_change_twh",
+        "Bioenergy (% electricity)": "biofuel_share_elec",
         "Biofuels (% growth)": "biofuel_cons_change_pct",
         "Biofuels (% sub energy)": "biofuel_share_energy",
         "Biofuels (TWh growth – sub method)": "biofuel_cons_change_twh",
+        "Bioenergy electricity per capita (kWh)": "biofuel_elec_per_capita",
         "Biofuels (TWh)": "biofuel_consumption",
         "Biofuels per capita (kWh)": "biofuel_cons_per_capita",
+        "Carbon intensity of electricity (gCO2/kWh)": "carbon_intensity_elec",
         "Coal Consumption - TWh": "coal_consumption",
         "Coal (% electricity)": "coal_share_elec",
         "Coal (% growth)": "coal_cons_change_pct",
@@ -155,6 +157,7 @@ def main():
         "Coal production (TWh)": "coal_production",
         "Coal production per capita (kWh)": "coal_prod_per_capita",
         "Electricity Generation (TWh)": "electricity_generation",
+        "Electricity from bioenergy (TWh)": "biofuel_electricity",
         "Electricity from coal (TWh)": "coal_electricity",
         "Electricity from fossil fuels (TWh)": "fossil_electricity",
         "Electricity from gas (TWh)": "gas_electricity",
@@ -162,6 +165,7 @@ def main():
         "Electricity from nuclear (TWh)": "nuclear_electricity",
         "Electricity from oil (TWh)": "oil_electricity",
         "Electricity from other renewables (TWh)": "other_renewable_electricity",
+        "Electricity from other renewables excluding bioenergy (TWh)": "other_renewable_exc_biofuel_electricity",
         "Electricity from renewables (TWh)": "renewables_electricity",
         "Electricity from solar (TWh)": "solar_electricity",
         "Electricity from wind (TWh)": "wind_electricity",

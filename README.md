@@ -24,6 +24,7 @@ A [full codebook](https://github.com/owid/energy-data/blob/master/owid-energy-co
 
 ## Changelog
 
+- On March 31, 2021, we updated 2020 electricity mix data.
 - On September 9, 2020, the first version of this dataset was made available.
 
 ## Data alterations
