@@ -65,7 +65,7 @@ def main():
 
     # Add Electricity Mix
     elec_mix = pd.read_csv(
-        os.path.join(GRAPHER_DIR, "Electricity mix from BP & EMBER (2020).csv")
+        os.path.join(GRAPHER_DIR, "Electricity mix from BP & EMBER (2021).csv")
     )
 
     # Add Fossil Fuel Production
@@ -75,24 +75,15 @@ def main():
     population = pd.read_csv(os.path.join(INPUT_DIR, "shared/population.csv"))
     gdp = pd.read_csv(os.path.join(INPUT_DIR, "shared/total-gdp-maddison.csv"))
     iso_codes = pd.read_csv(os.path.join(INPUT_DIR, "shared/iso_codes.csv"))
-
-    # Combine datasets
+    
+    # merges together energy datasets
     combined = (
         primary_energy
-        .merge(fossil_fuels, on=["Year", "Country"], how="left")
-        .merge(bp_energy, on=["Year", "Country"], how="left")
-        .merge(energy_mix, on=["Year", "Country"], how="left")
-        .merge(elec_mix, on=["Year", "Country"], how="left")
-        .merge(iso_codes, on=["Country"], how="left")
-        .merge(population, on=["Year", "Country"], how="left")
-        .merge(gdp, on=["Year", "Country"], how="left")
+        .merge(fossil_fuels, on=["Year", "Country"], how="outer", validate="1:1")
+        .merge(bp_energy, on=["Year", "Country"], how="outer", validate="1:1")
+        .merge(energy_mix, on=["Year", "Country"], how="outer", validate="1:1")
+        .merge(elec_mix, on=["Year", "Country"], how="outer", validate="1:1")
     )
-
-    # Reorder columns
-    left_columns = ["iso_code", "Country", "Year"]
-    other_columns = sorted([col for col in combined.columns if col not in left_columns])
-    column_order = left_columns + other_columns
-    combined = combined[column_order]
 
     combined = combined.drop(errors="raise", columns=[
         "Biofuels (% primary direct energy)",
@@ -110,8 +101,26 @@ def main():
         "Primary energy – direct (TWh)",
         "Renewables (% primary direct energy)",
         "Solar (% primary direct energy)",
-        "Wind (% primary direct energy)"
+        "Wind (% primary direct energy)",
     ])
+
+    row_has_data = combined.drop(columns=['Country', 'Year']).notnull().any(axis=1)
+    countries_keep = set(primary_energy['Country'].unique())
+    combined = combined[row_has_data & combined['Country'].isin(countries_keep)]
+
+    # merges non-energy datasets onto energy dataset
+    combined = (
+        combined
+        .merge(iso_codes, on=["Country"], how="left", validate="m:1")
+        .merge(population, on=["Year", "Country"], how="left", validate="1:1")
+        .merge(gdp, on=["Year", "Country"], how="left", validate="1:1")
+    )
+    
+    # Reorder columns
+    left_columns = ["iso_code", "Country", "Year"]
+    other_columns = sorted([col for col in combined.columns if col not in left_columns])
+    column_order = left_columns + other_columns
+    combined = combined[column_order]
 
     # Round all values to 3 decimal places
     rounded_cols = [col for col in list(combined) if col not in ("Country", "Year")]
@@ -130,11 +139,14 @@ def main():
         "Annual change in oil production (TWh)": "oil_prod_change_twh",
         "Annual change primary energy consumption (%)": "energy_cons_change_pct",
         "Annual change primary energy consumption (TWh)": "energy_cons_change_twh",
+        "Bioenergy (% electricity)": "biofuel_share_elec",
         "Biofuels (% growth)": "biofuel_cons_change_pct",
         "Biofuels (% sub energy)": "biofuel_share_energy",
         "Biofuels (TWh growth – sub method)": "biofuel_cons_change_twh",
+        "Bioenergy electricity per capita (kWh)": "biofuel_elec_per_capita",
         "Biofuels (TWh)": "biofuel_consumption",
         "Biofuels per capita (kWh)": "biofuel_cons_per_capita",
+        "Carbon intensity of electricity (gCO2/kWh)": "carbon_intensity_elec",
         "Coal Consumption - TWh": "coal_consumption",
         "Coal (% electricity)": "coal_share_elec",
         "Coal (% growth)": "coal_cons_change_pct",
@@ -145,6 +157,7 @@ def main():
         "Coal production (TWh)": "coal_production",
         "Coal production per capita (kWh)": "coal_prod_per_capita",
         "Electricity Generation (TWh)": "electricity_generation",
+        "Electricity from bioenergy (TWh)": "biofuel_electricity",
         "Electricity from coal (TWh)": "coal_electricity",
         "Electricity from fossil fuels (TWh)": "fossil_electricity",
         "Electricity from gas (TWh)": "gas_electricity",
@@ -152,6 +165,7 @@ def main():
         "Electricity from nuclear (TWh)": "nuclear_electricity",
         "Electricity from oil (TWh)": "oil_electricity",
         "Electricity from other renewables (TWh)": "other_renewable_electricity",
+        "Electricity from other renewables excluding bioenergy (TWh)": "other_renewable_exc_biofuel_electricity",
         "Electricity from renewables (TWh)": "renewables_electricity",
         "Electricity from solar (TWh)": "solar_electricity",
         "Electricity from wind (TWh)": "wind_electricity",
@@ -237,6 +251,8 @@ def main():
         "Wind electricity per capita (kWh)": "wind_elec_per_capita",
         "Wind per capita (kWh)": "wind_energy_per_capita"
     })
+
+    combined.sort_values(['country', 'year'], inplace=True)
 
     # Save output files
     combined.to_csv(
