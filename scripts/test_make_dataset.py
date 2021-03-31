@@ -22,6 +22,14 @@ class TestMakeDataset(unittest.TestCase):
         msg = ("All columns should be in the codebook, but the following "
               f"columns are not: {self.data.columns[~col_in_codebook].tolist()}")
         self.assertTrue(col_in_codebook.all(), msg)
+    
+    def test_codebook_columns_in_data(self):
+        """All columns in the codebook should be in the cleaned dataset.
+        """
+        col_in_data = self.codebook['column'].isin(self.data.columns)
+        msg = ("All codebook columns should be in the data, but the following "
+              f"columns are not: {self.codebook['column'][~col_in_data].tolist()}")
+        self.assertTrue(col_in_data.all(), msg)
 
     def test_column_names_no_whitespace(self):
         """All columns in cleaned dataset should not contain whitespace.
