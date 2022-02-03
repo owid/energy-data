@@ -39,21 +39,18 @@ REGIONS_WITH_INCONSISTENT_DATA = [
 
 
 def prepare_european_electricity_review_data_from_ember():
-    # Generate a dataframe analogous to the one for Ember electricity, but for European countries, based on the European
-    # Electricity Review from Ember.
-    # Changes to original EER file from Ember:
-    # * Direct translation from new to old variables:
-    #     'Other Renewables' -> 'Other renewables'
-    #     'Gas' -> 'Gas'
-    #     'Hard Coal + Lignite' -> 'Coal'
-    #     'Hydro' -> 'Hydro'
-    #     'Solar' -> 'Solar'
-    #     'Wind' -> 'Wind'
-    #     'Nuclear' -> 'Nuclear'
-    #     'Other Fossil' -> 'Other fossil'
-    # * Recalculate 'Production' as the sum of all the above sources.
-    # * Adapt country names to standardized OWID country names.
+    """Load and prepare European Electricity Review (EER) electricity data from Ember in a convenient format.
 
+    Generate a dataframe analogous to the one for Ember global electricity, but for European countries, based on the
+    European Electricity Review from Ember. Changes to original EER file from Ember:
+    * Add 'Hard Coal' to 'Lignite' and call it simply 'Coal'.
+
+    Returns
+    -------
+    eu_ember_elec : pd.DataFrame
+        Ember electricity data for Europe.
+
+    """
     # Upload European Electricity Review 2022 data from Ember.
     eu_ember_elec = pd.read_csv(EMBER_EUROPE_FILE)
 
