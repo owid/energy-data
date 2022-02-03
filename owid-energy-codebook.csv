@@ -17,7 +17,6 @@ biofuel_cons_change_twh,"Annual change in biofuel consumption, measured in teraw
 biofuel_consumption,"Primary energy consumption from biofuels, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy
 biofuel_elec_per_capita,"Per capita electricity consumption from biofuels, measured in kilowatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember
 biofuel_cons_per_capita,"Per capita primary energy consumption from biofuels, measured in kilowatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy and UN Population estimates
-carbon_intensity_elec,"Carbon intensity of electricity production, measured in grams of carbon dioxide emitted per kilowatt-hour",Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember
 coal_share_elec,Share of electricity consumption that comes from coal,Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember
 coal_cons_change_pct,Annual percentage change in coal consumption,Calculated by Our World in Data based on BP Statistical Review of World Energy
 coal_share_energy,Share of primary energy consumption that comes from coal,Calculated by Our World in Data based on BP Statistical Review of World Energy
@@ -35,7 +34,7 @@ gas_electricity,"Electricity generation from gas, measured in terawatt-hours",Ca
 hydro_electricity,"Electricity generation from hydropower, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember
 nuclear_electricity,"Electricity generation from nuclear power, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember
 oil_electricity,"Electricity generation from oil, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember
-other_renewable_electricity,"Electricity generation from other renewable sources, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember
+other_renewable_electricity,"Electricity generation from other renewable sources including biofuels, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember
 other_renewable_exc_biofuel_electricity,"Electricity generation from other renewable sources excluding biofuels, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember
 renewables_electricity,"Electricity generation from renewables, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember
 solar_electricity,"Electricity generation from solar, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember
@@ -89,8 +88,10 @@ oil_elec_per_capita,"Primary energy consumption from oil, measured in terawatt-h
 oil_energy_per_capita,"Per capita primary energy consumption from oil, measured in kilowatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy; Gapminder and UN Population Estimates
 oil_production,"Oil production, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy and Shift Data Portal
 oil_prod_per_capita,"Per capita oil production, measured in kilowatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy; Gapminder and UN Population Estimates
-other_renewables_elec_per_capita,"Per capita electricity consumption from other renewables, measured in kilowatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy; Ember; and UN Population Estimates
-other_renewables_share_elec,Share of electricity consumption that comes from other renewables,Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember
+other_renewables_elec_per_capita,"Per capita electricity consumption from other renewables including biofuels, measured in kilowatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy; Ember; and UN Population Estimates
+other_renewables_elec_per_capita_exc_biofuel,"Per capita electricity consumption from other renewables excluding biofuels, measured in kilowatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy; Ember; and UN Population Estimates
+other_renewables_share_elec,Share of electricity consumption that comes from other renewables including biofuels,Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember
+other_renewables_share_elec_exc_biofuel,Share of electricity consumption that comes from other renewables excluding biofuels,Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember
 other_renewables_cons_change_pct,Annual percentage change in energy consumption from other renewables,Calculated by Our World in Data based on BP Statistical Review of World Energy
 other_renewables_share_energy,Share of primary energy consumption that comes from other renewables,Calculated by Our World in Data based on BP Statistical Review of World Energy
 other_renewables_cons_change_twh,"Annual change in other renewable consumption, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy

@@ -1,3 +1,19 @@
 .DS_Store
 *.pyc
 scratchpad.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Jupyter notebook checkpoints
+.ipynb_checkpoints
+
+# Config files and folders
+.idea
+

@@ -10,7 +10,6 @@ class TestMakeDataset(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         print('Setting up TestMakeDataset class...')
-        main()
         cls.data = pd.read_csv(os.path.join(OUTPUT_DIR, "owid-energy-data.csv"))
         cls.codebook = pd.read_csv(os.path.join(OUTPUT_DIR, "owid-energy-codebook.csv"))
         cls.index_cols = ['country', 'year', 'iso_code']
