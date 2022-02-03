@@ -11,3 +11,5 @@ ENV/
 env.bak/
 venv.bak/
 
+# Jupyter notebook checkpoints
+.ipynb_checkpoints
