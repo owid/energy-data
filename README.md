@@ -24,6 +24,10 @@ A [full codebook](https://github.com/owid/energy-data/blob/master/owid-energy-co
 
 ## Changelog
 
+- On February 3, 2022, we updated the [Ember global electricity data](https://ember-climate.org/data/global-electricity/), combined with the [European Electricity Review from Ember](https://ember-climate.org/project/european-electricity-review-2022/).
+  - The `carbon_intensity_elec` column was removed from the energy dataset (since no updated data was available).
+  - Columns for electricity from other renewable sources excluding bioenergy were added (namely `other_renewables_elec_per_capita_exc_biofuel`, and `other_renewables_share_elec_exc_biofuel`).
+  - Certain countries and regions have been removed from the dataset, because we identified significant inconsistencies in the original data.
 - On March 31, 2021, we updated 2020 electricity mix data.
 - On September 9, 2020, the first version of this dataset was made available.
 
@@ -41,6 +45,6 @@ The data produced by third parties and made available by _Our World in Data_ is 
 
 ## Authors
 
-This data has been collected, aggregated, and documented by Hannah Ritchie, Max Roser and Edouard Mathieu.
+This data has been collected, aggregated, and documented by Hannah Ritchie, Pablo Rosado, Edouard Mathieu, Max Roser.
 
 The mission of *Our World in Data* is to make data and research on the world’s largest problems understandable and accessible. [Read more about our mission](https://ourworldindata.org/about).
