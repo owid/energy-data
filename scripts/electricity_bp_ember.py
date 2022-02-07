@@ -201,7 +201,7 @@ def main():
     bp_elec = bp_elec.rename(
         errors="raise",
         columns={
-            "Primary Energy Consumption": "Primary Energy (Mtoe)",
+            "Primary Energy Consumption": "Primary Energy (EJ)",
             "Electricity Generation ": "Electricity generation (TWh)",
             "Entity": "Country",
             "Hydro Generation - TWh": "Hydro (TWh)",
@@ -228,11 +228,11 @@ def main():
         bp_elec["Nuclear (TWh)"]
     )
 
-    # Convert primary energy to TWh
-    mtoe_to_twh = 11.63
+    # Convert primary energy from EJ to TWh, which is 1e18 / (1e12 * 3600).
+    ej_to_twh = 277.778
 
-    bp_elec["Primary energy (TWh)"] = bp_elec["Primary Energy (Mtoe)"] * mtoe_to_twh
-    bp_elec = bp_elec.drop(errors="raise", columns=["Primary Energy (Mtoe)"])
+    bp_elec["Primary energy (TWh)"] = bp_elec["Primary Energy (EJ)"] * ej_to_twh
+    bp_elec = bp_elec.drop(errors="raise", columns=["Primary Energy (EJ)"])
 
     # Go from wide to long format and drop NAs
     bp_elec = bp_elec.melt(id_vars=["Country", "Year"]).dropna()
@@ -390,7 +390,7 @@ def main():
     # Drop 'Population' column
     combined = combined.drop(errors="raise", columns=["Population"])
 
-    # Calculate electricity as share of energy
+    # Calculate electricity as share of energy (as a percentage).
     combined["Electricity as share of primary energy"] = (
         combined["Electricity generation (TWh)"]
         / combined["Primary energy (TWh)"]
