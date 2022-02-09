@@ -17,3 +17,5 @@ venv.bak/
 # Config files and folders
 .idea
 
+# Data files that should not be included in git
+*.html
