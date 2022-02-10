@@ -74850,117 +74850,6 @@ Western Sahara,2097,1365609
 Western Sahara,2098,1371752
 Western Sahara,2099,1377801
 Western Sahara,2100,1383773
-Latin America,100,12694655
-Latin America,200,13450847
-Latin America,300,14253298
-Latin America,400,15105313
-Latin America,500,16010564
-Latin America,600,16973172
-Latin America,700,17997828
-Latin America,800,19089954
-Latin America,900,21702980
-Latin America,1000,24329090
-Latin America,1100,27235356
-Latin America,1200,30162988
-Latin America,1300,33126608
-Latin America,1400,36136712
-Latin America,1500,39219552
-Latin America,1600,8808243
-Latin America,1700,12259440
-Latin America,1710,12869362
-Latin America,1720,13503017
-Latin America,1730,14164007
-Latin America,1740,14856724
-Latin America,1750,15586479
-Latin America,1760,16359871
-Latin America,1770,17185104
-Latin America,1780,18086046
-Latin America,1790,19058212
-Latin America,1800,20116440
-Latin America,1810,21695380
-Latin America,1820,23750090
-Latin America,1830,27206032
-Latin America,1840,30531208
-Latin America,1850,34345088
-Latin America,1860,38470660
-Latin America,1870,42262096
-Latin America,1880,47062212
-Latin America,1890,56723460
-Latin America,1900,66091760
-Latin America,1910,79000400
-Latin America,1920,95631248
-Latin America,1930,117370496
-Latin America,1940,132145520
-Latin America,1950,168820992
-Latin America,1951,173280000
-Latin America,1952,177916000
-Latin America,1953,182708992
-Latin America,1954,187648000
-Latin America,1955,192727008
-Latin America,1956,197948992
-Latin America,1957,203320000
-Latin America,1958,208854000
-Latin America,1959,214566000
-Latin America,1960,220470000
-Latin America,1961,226568000
-Latin America,1962,232848992
-Latin America,1963,239283008
-Latin America,1964,245828992
-Latin America,1965,252456000
-Latin America,1966,259154000
-Latin America,1967,265926000
-Latin America,1968,272768000
-Latin America,1969,279684000
-Latin America,1970,286676000
-Latin America,1971,293737984
-Latin America,1972,300868992
-Latin America,1973,308079008
-Latin America,1974,315377984
-Latin America,1975,322776992
-Latin America,1976,330272000
-Latin America,1977,337860000
-Latin America,1978,345548000
-Latin America,1979,353344992
-Latin America,1980,361252992
-Latin America,1981,369275008
-Latin America,1982,377396000
-Latin America,1983,385587008
-Latin America,1984,393806016
-Latin America,1985,402024000
-Latin America,1986,410223008
-Latin America,1987,418404000
-Latin America,1988,426564992
-Latin America,1989,434710016
-Latin America,1990,442840000
-Latin America,1991,450947008
-Latin America,1992,459019008
-Latin America,1993,467055008
-Latin America,1994,475056000
-Latin America,1995,483017984
-Latin America,1996,490944000
-Latin America,1997,498822016
-Latin America,1998,506620992
-Latin America,1999,514300992
-Latin America,2000,521836000
-Latin America,2001,529212992
-Latin America,2002,536441984
-Latin America,2003,543544000
-Latin America,2004,550555008
-Latin America,2005,557500992
-Latin America,2006,564385024
-Latin America,2007,571201984
-Latin America,2008,577963008
-Latin America,2009,584678016
-Latin America,2010,591352000
-Latin America,2011,597995008
-Latin America,2012,604598976
-Latin America,2013,611144000
-Latin America,2014,617596032
-Latin America,2015,623934016
-Latin America,2016,630145024
-Latin America,2017,636233024
-Latin America,2018,642217024
-Latin America,2019,648121024
 High-income countries,2020,1263092934
 Kosovo,2020,1932774
 Land-locked Developing Countries (LLDC),2020,533143398
@@ -74978,3 +74867,341 @@ Serbia (including Kosovo),2020,8737370
 Upper-middle-income countries,2020,2654816331
 Guernsey,2020,67052
 Jersey,2020,101073
+European Union (27),-10000,80367
+European Union (27),-9000,116683
+European Union (27),-8000,171345
+European Union (27),-7000,254639
+European Union (27),-6000,421718
+European Union (27),-5000,656925
+European Union (27),-4000,1200737
+European Union (27),-3000,2212925
+European Union (27),-2000,5294312
+European Union (27),-1000,10539693
+European Union (27),0,27974887
+European Union (27),100,29165419
+European Union (27),200,30302212
+European Union (27),300,28647246
+European Union (27),400,26994303
+European Union (27),500,23379010
+European Union (27),600,19614695
+European Union (27),700,21653769
+European Union (27),800,23757670
+European Union (27),900,26277187
+European Union (27),1000,28958969
+European Union (27),1100,34237348
+European Union (27),1200,44888386
+European Union (27),1300,65408920
+European Union (27),1400,46868890
+European Union (27),1500,60213790
+European Union (27),1600,78870494
+European Union (27),1700,87810908
+European Union (27),1710,93625011
+European Union (27),1720,97554865
+European Union (27),1730,101672292
+European Union (27),1740,105805093
+European Union (27),1750,109979422
+European Union (27),1760,114236586
+European Union (27),1770,118544742
+European Union (27),1780,123326008
+European Union (27),1790,128567606
+European Union (27),1800,131803423
+European Union (27),1801,132593323
+European Union (27),1802,133391993
+European Union (27),1803,134199555
+European Union (27),1804,135016131
+European Union (27),1805,135841842
+European Union (27),1806,136676814
+European Union (27),1807,137521181
+European Union (27),1808,138375064
+European Union (27),1809,139238599
+European Union (27),1810,140151618
+European Union (27),1811,141064942
+European Union (27),1812,141998482
+European Union (27),1813,142952466
+European Union (27),1814,143917228
+European Union (27),1815,144892914
+European Union (27),1816,145879686
+European Union (27),1817,146877692
+European Union (27),1818,147887089
+European Union (27),1819,148937045
+European Union (27),1820,150027417
+European Union (27),1821,151158055
+European Union (27),1822,152328794
+European Union (27),1823,153539455
+European Union (27),1824,154760851
+European Union (27),1825,155996770
+European Union (27),1826,157291927
+European Union (27),1827,158599006
+European Union (27),1828,159918128
+European Union (27),1829,161217134
+European Union (27),1830,162495587
+European Union (27),1831,163712471
+European Union (27),1832,164907135
+European Union (27),1833,166079104
+European Union (27),1834,167260194
+European Union (27),1835,168450469
+European Union (27),1836,169650019
+European Union (27),1837,170858917
+European Union (27),1838,172077242
+European Union (27),1839,173245098
+European Union (27),1840,174362848
+European Union (27),1841,175434884
+European Union (27),1842,176457545
+European Union (27),1843,177431160
+European Union (27),1844,178416006
+European Union (27),1845,179412101
+European Union (27),1846,180419455
+European Union (27),1847,181438076
+European Union (27),1848,182467973
+European Union (27),1849,183496952
+European Union (27),1850,184524848
+European Union (27),1851,185535994
+European Union (27),1852,186545669
+European Union (27),1853,187553707
+European Union (27),1854,188572210
+European Union (27),1855,189601220
+European Union (27),1856,190640784
+European Union (27),1857,191690955
+European Union (27),1858,192751779
+European Union (27),1859,193848255
+European Union (27),1860,194980399
+European Union (27),1861,196142514
+European Union (27),1862,197340265
+European Union (27),1863,198573671
+European Union (27),1864,199817829
+European Union (27),1865,201072830
+European Union (27),1866,202338777
+European Union (27),1867,203615761
+European Union (27),1868,204903881
+European Union (27),1869,206228297
+European Union (27),1870,207589716
+European Union (27),1871,208993848
+European Union (27),1872,210436514
+European Union (27),1873,211918463
+European Union (27),1874,213415393
+European Union (27),1875,214927466
+European Union (27),1876,216454857
+European Union (27),1877,217997739
+European Union (27),1878,219556284
+European Union (27),1879,221130928
+European Union (27),1880,222721837
+European Union (27),1881,224326960
+European Union (27),1882,225948667
+European Union (27),1883,227587119
+European Union (27),1884,229242258
+European Union (27),1885,230914262
+European Union (27),1886,232603304
+European Union (27),1887,234309555
+European Union (27),1888,236033208
+European Union (27),1889,237775379
+European Union (27),1890,239536384
+European Union (27),1891,241325267
+European Union (27),1892,243133715
+European Union (27),1893,244962048
+European Union (27),1894,246809519
+European Union (27),1895,248676356
+European Union (27),1896,250562774
+European Union (27),1897,252469007
+European Union (27),1898,254395278
+European Union (27),1899,256381391
+European Union (27),1900,258428216
+European Union (27),1901,260542118
+European Union (27),1902,262717061
+European Union (27),1903,264954965
+European Union (27),1904,267217179
+European Union (27),1905,269504009
+European Union (27),1906,271814756
+European Union (27),1907,274152735
+European Union (27),1908,276515264
+European Union (27),1909,278378985
+European Union (27),1910,279742761
+European Union (27),1911,280595362
+European Union (27),1912,280937477
+European Union (27),1913,280777695
+European Union (27),1914,280630203
+European Union (27),1915,280437881
+European Union (27),1916,280192609
+European Union (27),1917,279931271
+European Union (27),1918,279666089
+European Union (27),1919,279917505
+European Union (27),1920,280785001
+European Union (27),1921,282102084
+European Union (27),1922,283991281
+European Union (27),1923,286343170
+European Union (27),1924,288721322
+European Union (27),1925,291142803
+European Union (27),1926,293576685
+European Union (27),1927,296022056
+European Union (27),1928,298499013
+European Union (27),1929,300873980
+European Union (27),1930,303149064
+European Union (27),1931,305324390
+European Union (27),1932,307387098
+European Union (27),1933,309333322
+European Union (27),1934,311290925
+European Union (27),1935,313258052
+European Union (27),1936,315235885
+European Union (27),1937,317227584
+European Union (27),1938,319209328
+European Union (27),1939,321141704
+European Union (27),1940,322609095
+European Union (27),1941,323701818
+European Union (27),1942,324461140
+European Union (27),1943,324987270
+European Union (27),1944,325625936
+European Union (27),1945,325794029
+European Union (27),1946,325227446
+European Union (27),1947,325092086
+European Union (27),1948,325783334
+European Union (27),1949,326872493
+European Union (27),1950,328377989
+European Union (27),1951,331046423
+European Union (27),1952,333807125
+European Union (27),1953,336601101
+European Union (27),1954,339389119
+European Union (27),1955,342151631
+European Union (27),1956,344890147
+European Union (27),1957,347625826
+European Union (27),1958,350396188
+European Union (27),1959,353249139
+European Union (27),1960,356225660
+European Union (27),1961,359341046
+European Union (27),1962,362568694
+European Union (27),1963,365833127
+European Union (27),1964,369029793
+European Union (27),1965,372083042
+European Union (27),1966,374960151
+European Union (27),1967,377680514
+European Union (27),1968,380283934
+European Union (27),1969,382834497
+European Union (27),1970,385376848
+European Union (27),1971,387917716
+European Union (27),1972,390433266
+European Union (27),1973,392901059
+European Union (27),1974,395288004
+European Union (27),1975,397567970
+European Union (27),1976,399742618
+European Union (27),1977,401815033
+European Union (27),1978,403763311
+European Union (27),1979,405560698
+European Union (27),1980,407192821
+European Union (27),1981,408646972
+European Union (27),1982,409940455
+European Union (27),1983,411125824
+European Union (27),1984,412275456
+European Union (27),1985,413442348
+European Union (27),1986,414640116
+European Union (27),1987,415856210
+European Union (27),1988,417084937
+European Union (27),1989,418311434
+European Union (27),1990,419520685
+European Union (27),1991,420738738
+European Union (27),1992,421963876
+European Union (27),1993,423120837
+European Union (27),1994,424108292
+European Union (27),1995,424865871
+European Union (27),1996,425342466
+European Union (27),1997,425591139
+European Union (27),1998,425782096
+European Union (27),1999,426150473
+European Union (27),2000,426858604
+European Union (27),2001,427972464
+European Union (27),2002,429423832
+European Union (27),2003,431075385
+European Union (27),2004,432723113
+European Union (27),2005,434216052
+European Union (27),2006,435515041
+European Union (27),2007,436657727
+European Union (27),2008,437662611
+European Union (27),2009,438572266
+European Union (27),2010,439419089
+European Union (27),2011,440190301
+European Union (27),2012,440871150
+European Union (27),2013,441491412
+European Union (27),2014,442091258
+European Union (27),2015,442695541
+European Union (27),2016,443323115
+European Union (27),2017,443955871
+European Union (27),2018,444536829
+European Union (27),2019,444986768
+European Union (27),2020,445250522
+European Union (27),2021,445307650
+European Union (27),2022,445181229
+European Union (27),2023,444913576
+European Union (27),2024,444567847
+European Union (27),2025,444191441
+European Union (27),2026,443797270
+European Union (27),2027,443375219
+European Union (27),2028,442923490
+European Union (27),2029,442433639
+European Union (27),2030,441899772
+European Union (27),2031,441324820
+European Union (27),2032,440714520
+European Union (27),2033,440068420
+European Union (27),2034,439384944
+European Union (27),2035,438662867
+European Union (27),2036,437902381
+European Union (27),2037,437103377
+European Union (27),2038,436264364
+European Union (27),2039,435383065
+European Union (27),2040,434457889
+European Union (27),2041,433488566
+European Union (27),2042,432475088
+European Union (27),2043,431416211
+European Union (27),2044,430310627
+European Union (27),2045,429157570
+European Union (27),2046,427957347
+European Union (27),2047,426711058
+European Union (27),2048,425420163
+European Union (27),2049,424086703
+European Union (27),2050,422712766
+European Union (27),2051,421300514
+European Union (27),2052,419852200
+European Union (27),2053,418370022
+European Union (27),2054,416856294
+European Union (27),2055,415313809
+European Union (27),2056,413745538
+European Union (27),2057,412155694
+European Union (27),2058,410549970
+European Union (27),2059,408935076
+European Union (27),2060,407317170
+European Union (27),2061,405700082
+European Union (27),2062,404087726
+European Union (27),2063,402485774
+European Union (27),2064,400900484
+European Union (27),2065,399337103
+European Union (27),2066,397799435
+European Union (27),2067,396289925
+European Union (27),2068,394810908
+European Union (27),2069,393364038
+European Union (27),2070,391950865
+European Union (27),2071,390573072
+European Union (27),2072,389232195
+European Union (27),2073,387928784
+European Union (27),2074,386662981
+European Union (27),2075,385434678
+European Union (27),2076,384244355
+European Union (27),2077,383091844
+European Union (27),2078,381976622
+European Union (27),2079,380897626
+European Union (27),2080,379853903
+European Union (27),2081,378844561
+European Union (27),2082,377868830
+European Union (27),2083,376925437
+European Union (27),2084,376013153
+European Union (27),2085,375130441
+European Union (27),2086,374276115
+European Union (27),2087,373448571
+European Union (27),2088,372645658
+European Union (27),2089,371865172
+European Union (27),2090,371104814
+European Union (27),2091,370362729
+European Union (27),2092,369637202
+European Union (27),2093,368926737
+European Union (27),2094,368229594
+European Union (27),2095,367544175
+European Union (27),2096,366868559
+European Union (27),2097,366200692
+European Union (27),2098,365538338
+European Union (27),2099,364879076
+European Union (27),2100,364220181
