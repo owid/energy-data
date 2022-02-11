@@ -1,6 +1,7 @@
 """Combine BP energy and Ember electricity data (global and from Europe).
 
 """
+
 import os
 from functools import reduce
 
@@ -26,24 +27,37 @@ EMBER_COUNTRIES_FILE = os.path.join(
 )
 # Define path to BP energy dataset file.
 BP_FILE = os.path.join(INPUT_DIR, "shared", "bp_energy.csv")
-#######################################
+########################################################################################################################
 # TODO: Once owid-catalog is complete, this file will not be necessary.
 # Define file with population data.
 LEGACY_POPULATION_FILE = os.path.join(INPUT_DIR, "shared", "population.csv")
-#######################################
+########################################################################################################################
 # In case data points are shared by BP and Ember dataset, the source with the highest priority will be taken.
 # Assign priority to sources.
 EMBER_PRIORITY = 1
 BP_PRIORITY = 0
 
+# TODO: Remove countries and regions from this blacklist once populations are consistent. In particular, the previous
+#  version of the dataset considered that North America was Canada + US, which is inconsistent with OWID's current
+#  definition (https://ourworldindata.org/grapher/continents-according-to-our-world-in-data).
 # After analysing the resulting time series, we detected several issues with the following countries/regions.
 # For the moment, we remove them from the final dataset.
 REGIONS_WITH_INCONSISTENT_DATA = [
-    "Moldova",
+    "Central America",
     "Europe (other)",
+    "Moldova",
+    "North America",
+    "Other Africa",
     "Other Asia & Pacific",
     "Other CIS",
+    "Other Caribbean",
     "Other Middle East",
+    "Other Northern Africa",
+    "Other S. & Cent. America",
+    "Other South America",
+    "Other Southern Africa",
+    "South & Central America",
+    "USSR",
 ]
 
 
@@ -201,7 +215,7 @@ def main():
     bp_elec = bp_elec.rename(
         errors="raise",
         columns={
-            "Primary Energy Consumption": "Primary Energy (Mtoe)",
+            "Primary Energy Consumption": "Primary Energy (EJ)",
             "Electricity Generation ": "Electricity generation (TWh)",
             "Entity": "Country",
             "Hydro Generation - TWh": "Hydro (TWh)",
@@ -228,11 +242,11 @@ def main():
         bp_elec["Nuclear (TWh)"]
     )
 
-    # Convert primary energy to TWh
-    mtoe_to_twh = 11.63
+    # Convert primary energy from EJ to TWh, which is 1e18 / (1e12 * 3600).
+    ej_to_twh = 277.778
 
-    bp_elec["Primary energy (TWh)"] = bp_elec["Primary Energy (Mtoe)"] * mtoe_to_twh
-    bp_elec = bp_elec.drop(errors="raise", columns=["Primary Energy (Mtoe)"])
+    bp_elec["Primary energy (TWh)"] = bp_elec["Primary Energy (EJ)"] * ej_to_twh
+    bp_elec = bp_elec.drop(errors="raise", columns=["Primary Energy (EJ)"])
 
     # Go from wide to long format and drop NAs
     bp_elec = bp_elec.melt(id_vars=["Country", "Year"]).dropna()
@@ -343,7 +357,7 @@ def main():
             columns={"country": "Country", "year": "Year", "population": "Population"}
         )[["Country", "Year", "Population"]]
     )
-    ##################################################
+    ####################################################################################################################
     # TODO: Remove this temporary solution once all countries and regions have been added to owid-catalog.
     additional_population = pd.read_csv(LEGACY_POPULATION_FILE)
     population = (
@@ -351,7 +365,7 @@ def main():
         .drop_duplicates(subset=["Country", "Year"], keep="first")
         .sort_values(["Country", "Year"])
     )
-    ##################################################
+    ####################################################################################################################
 
     combined = combined.merge(population, on=["Country", "Year"], how="left")
 
@@ -390,7 +404,7 @@ def main():
     # Drop 'Population' column
     combined = combined.drop(errors="raise", columns=["Population"])
 
-    # Calculate electricity as share of energy
+    # Calculate electricity as share of energy (as a percentage).
     combined["Electricity as share of primary energy"] = (
         combined["Electricity generation (TWh)"]
         / combined["Primary energy (TWh)"]
@@ -442,7 +456,7 @@ def main():
     combined[rounded_cols] = combined[rounded_cols].round(3)
     combined = combined[combined.isna().sum(axis=1) < len(rounded_cols)]
 
-    #########################################
+    ####################################################################################################################
     # TODO: Remove this temporary solution once inconsistencies in data have been tackled.
     #  For the moment, remove countries and regions with inconsistent data.
     print(f"WARNING: Removing countries and regions with inconsistent data:")
@@ -451,7 +465,7 @@ def main():
     combined = combined[
         ~combined["Country"].isin(REGIONS_WITH_INCONSISTENT_DATA)
     ].reset_index(drop=True)
-    #########################################
+    ####################################################################################################################
 
     # Save to file as csv
     combined.to_csv(OUTPUT_FILE, index=False)
