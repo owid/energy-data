@@ -40,22 +40,28 @@ from tqdm.auto import tqdm
 # Current folder.
 CURRENT_DIR = os.path.dirname(__file__)
 # Folder where datasets are stored.
-GRAPHER_DATA_DIR = os.path.join(CURRENT_DIR, 'grapher')
+GRAPHER_DATA_DIR = os.path.join(CURRENT_DIR, "grapher")
 # Date tag and output file for visual inspection of potential issues with the dataset.
 DATE_TAG = datetime.now().strftime("%Y-%m-%d")
-OUTPUT_FILE = os.path.join(CURRENT_DIR, f"electricity_bp_ember_sanity_checks_{DATE_TAG}.html")
+OUTPUT_FILE = os.path.join(
+    CURRENT_DIR, f"electricity_bp_ember_sanity_checks_{DATE_TAG}.html"
+)
 # Path to new dataset file.
 CURRENT_YEAR = datetime.now().year
-DATA_FILE_NEW = os.path.join(GRAPHER_DATA_DIR, f'Electricity mix from BP & EMBER ({CURRENT_YEAR}).csv')
+DATA_FILE_NEW = os.path.join(
+    GRAPHER_DATA_DIR, f"Electricity mix from BP & EMBER ({CURRENT_YEAR}).csv"
+)
 # Path to old dataset file.
-DATA_FILE_OLD = os.path.join(GRAPHER_DATA_DIR, f'Electricity mix from BP & EMBER ({CURRENT_YEAR - 1}).csv')
+DATA_FILE_OLD = os.path.join(
+    GRAPHER_DATA_DIR, f"Electricity mix from BP & EMBER ({CURRENT_YEAR - 1}).csv"
+)
 
 # Define parameters for output figures.
 
 # Label to use for old dataset.
-DATA_LABEL_OLD = 'old'
+DATA_LABEL_OLD = "old"
 # Label to use for new dataset.
-DATA_LABEL_NEW = 'new'
+DATA_LABEL_NEW = "new"
 # True to include interactive plots in output HTML file (which can make the inspection slow if there are many figures);
 # False to include plots as static images.
 EXPORT_INTERACTIVE_PLOTS = False
@@ -83,90 +89,92 @@ MIN_RELEVANT_ERROR = 20
 
 # Define default entity names.
 NAME = {
-    'country': 'Country',
-    'year': 'Year',
-    'electricity_generation': 'Electricity generation (TWh)',
-    'electricity_other_renewables': 'Electricity from other renewables including bioenergy (TWh)',
-    'electricity_share_renewables': 'Other renewables including bioenergy (% electricity)',
-    'electricity_other_renewable_per_capita': 'Other renewable electricity including bioenergy per capita (kWh)',
+    "country": "Country",
+    "year": "Year",
+    "electricity_generation": "Electricity generation (TWh)",
+    "electricity_other_renewables": "Electricity from other renewables including bioenergy (TWh)",
+    "electricity_share_renewables": "Other renewables including bioenergy (% electricity)",
+    "electricity_other_renewable_per_capita": "Other renewable electricity including bioenergy per capita (kWh)",
 }
 # Define entity names for old dataset.
 NAME_OLD = {
-    'country': 'Country',
-    'year': 'Year',
-    'electricity_generation': 'Electricity Generation (TWh)',
-    'electricity_other_renewables': 'Electricity from other renewables (TWh)',
-    'electricity_share_renewables': 'Other renewables (% electricity)',
-    'electricity_other_renewable_per_capita': 'Other renewable electricity per capita (kWh)',
+    "country": "Country",
+    "year": "Year",
+    "electricity_generation": "Electricity Generation (TWh)",
+    "electricity_other_renewables": "Electricity from other renewables (TWh)",
+    "electricity_share_renewables": "Other renewables (% electricity)",
+    "electricity_other_renewable_per_capita": "Other renewable electricity per capita (kWh)",
 }
 # Define entity names for new dataset.
 NAME_NEW = {
-    'country': 'Country',
-    'year': 'Year',
-    'electricity_generation': 'Electricity generation (TWh)',
-    'electricity_other_renewables': 'Electricity from other renewables including bioenergy (TWh)',
-    'electricity_share_renewables': 'Other renewables including bioenergy (% electricity)',
-    'electricity_other_renewable_per_capita': 'Other renewable electricity including bioenergy per capita (kWh)',
+    "country": "Country",
+    "year": "Year",
+    "electricity_generation": "Electricity generation (TWh)",
+    "electricity_other_renewables": "Electricity from other renewables including bioenergy (TWh)",
+    "electricity_share_renewables": "Other renewables including bioenergy (% electricity)",
+    "electricity_other_renewable_per_capita": "Other renewable electricity including bioenergy per capita (kWh)",
 }
 # Define entity names for OWID population dataset.
 NAME_POPULATION = {
-    'country': 'country',
-    'year': 'year',
+    "country": "country",
+    "year": "year",
 }
 # Define columns (default entity names) related to electricity share.
 COLUMNS_ELECTRICITY_SHARE = [
-    'Coal (% electricity)',
-    'Oil (% electricity)',
-    'Gas (% electricity)',
-    'Nuclear (% electricity)',
-    'Solar (% electricity)',
-    'Wind (% electricity)',
-    'Hydro (% electricity)',
-    'Other renewables including bioenergy (% electricity)',
-    'Renewables (% electricity)',
-    'Fossil fuels (% electricity)',
-    'Low-carbon electricity (% electricity)',
-    'Bioenergy (% electricity)',
-    'Other renewables excluding bioenergy (% electricity)',
-    'Electricity as share of primary energy',
+    "Coal (% electricity)",
+    "Oil (% electricity)",
+    "Gas (% electricity)",
+    "Nuclear (% electricity)",
+    "Solar (% electricity)",
+    "Wind (% electricity)",
+    "Hydro (% electricity)",
+    "Other renewables including bioenergy (% electricity)",
+    "Renewables (% electricity)",
+    "Fossil fuels (% electricity)",
+    "Low-carbon electricity (% electricity)",
+    "Bioenergy (% electricity)",
+    "Other renewables excluding bioenergy (% electricity)",
+    "Electricity as share of primary energy",
 ]
 # Define columns (default entity names) related to total electricity.
 COLUMNS_ELECTRICITY_TOTAL = [
-    'Electricity from coal (TWh)',
-    'Electricity generation (TWh)',
-    'Electricity from fossil fuels (TWh)',
-    'Electricity from gas (TWh)',
-    'Electricity from hydro (TWh)',
-    'Low-carbon electricity (TWh)',
-    'Electricity from nuclear (TWh)',
-    'Electricity from oil (TWh)',
-    'Electricity from other renewables including bioenergy (TWh)',
-    'Electricity from renewables (TWh)',
-    'Electricity from solar (TWh)',
-    'Electricity from wind (TWh)',
-    'Electricity from bioenergy (TWh)',
-    'Electricity from other renewables excluding bioenergy (TWh)',
+    "Electricity from coal (TWh)",
+    "Electricity generation (TWh)",
+    "Electricity from fossil fuels (TWh)",
+    "Electricity from gas (TWh)",
+    "Electricity from hydro (TWh)",
+    "Low-carbon electricity (TWh)",
+    "Electricity from nuclear (TWh)",
+    "Electricity from oil (TWh)",
+    "Electricity from other renewables including bioenergy (TWh)",
+    "Electricity from renewables (TWh)",
+    "Electricity from solar (TWh)",
+    "Electricity from wind (TWh)",
+    "Electricity from bioenergy (TWh)",
+    "Electricity from other renewables excluding bioenergy (TWh)",
 ]
 # Define columns (default entity names) related to per capita electricity.
 COLUMNS_ELECTRICITY_PER_CAPITA = [
-    'Bioenergy electricity per capita (kWh)',
-    'Coal electricity per capita (kWh)',
-    'Fossil fuel electricity per capita (kWh)',
-    'Gas electricity per capita (kWh)',
-    'Hydro electricity per capita (kWh)',
-    'Low-carbon electricity per capita (kWh)',
-    'Nuclear electricity per capita (kWh)',
-    'Oil electricity per capita (kWh)',
-    'Other renewable electricity excluding bioenergy per capita (kWh)',
-    'Other renewable electricity including bioenergy per capita (kWh)',
-    'Per capita electricity (kWh)',
-    'Renewable electricity per capita (kWh)',
-    'Solar electricity per capita (kWh)',
-    'Wind electricity per capita (kWh)',  
+    "Bioenergy electricity per capita (kWh)",
+    "Coal electricity per capita (kWh)",
+    "Fossil fuel electricity per capita (kWh)",
+    "Gas electricity per capita (kWh)",
+    "Hydro electricity per capita (kWh)",
+    "Low-carbon electricity per capita (kWh)",
+    "Nuclear electricity per capita (kWh)",
+    "Oil electricity per capita (kWh)",
+    "Other renewable electricity excluding bioenergy per capita (kWh)",
+    "Other renewable electricity including bioenergy per capita (kWh)",
+    "Per capita electricity (kWh)",
+    "Renewable electricity per capita (kWh)",
+    "Solar electricity per capita (kWh)",
+    "Wind electricity per capita (kWh)",
 ]
 
 
-def rename_columns(data, entities_to_rename_in_columns, name_dataset, name_default=None):
+def rename_columns(
+    data, entities_to_rename_in_columns, name_dataset, name_default=None
+):
     """Translate columns in a dataframe, from a naming convention to another.
 
     Parameters
@@ -224,12 +232,19 @@ def load_old_data(data_file_old=DATA_FILE_OLD, name_old=None):
     if name_old is None:
         name_old = NAME_OLD
     entities_to_rename_in_columns = [
-        'country', 'year', 'electricity_generation', 'electricity_other_renewables', 'electricity_share_renewables',
-        'electricity_other_renewable_per_capita'
+        "country",
+        "year",
+        "electricity_generation",
+        "electricity_other_renewables",
+        "electricity_share_renewables",
+        "electricity_other_renewable_per_capita",
     ]
     data_old_raw = pd.read_csv(data_file_old)
     data_old = rename_columns(
-        data=data_old_raw, entities_to_rename_in_columns=entities_to_rename_in_columns, name_dataset=name_old)
+        data=data_old_raw,
+        entities_to_rename_in_columns=entities_to_rename_in_columns,
+        name_dataset=name_old,
+    )
 
     return data_old
 
@@ -253,12 +268,19 @@ def load_new_data(data_file_new=DATA_FILE_NEW, name_new=None):
     if name_new is None:
         name_new = NAME_NEW
     entities_to_rename_in_columns = [
-        'country', 'year', 'electricity_generation', 'electricity_other_renewables', 'electricity_share_renewables',
-        'electricity_other_renewable_per_capita'
+        "country",
+        "year",
+        "electricity_generation",
+        "electricity_other_renewables",
+        "electricity_share_renewables",
+        "electricity_other_renewable_per_capita",
     ]
     data_new_raw = pd.read_csv(data_file_new)
     data_new = rename_columns(
-        data=data_new_raw, entities_to_rename_in_columns=entities_to_rename_in_columns, name_dataset=name_new)
+        data=data_new_raw,
+        entities_to_rename_in_columns=entities_to_rename_in_columns,
+        name_dataset=name_new,
+    )
 
     return data_new
 
@@ -280,14 +302,19 @@ def load_population(name_population=None):
     if name_population is None:
         name_population = NAME_POPULATION
     population = catalog.find("population", namespace="owid").load().reset_index()
-    population_renamed = rename_columns(data=population, entities_to_rename_in_columns=['country', 'year'],
-                                        name_dataset=name_population)
+    population_renamed = rename_columns(
+        data=population,
+        entities_to_rename_in_columns=["country", "year"],
+        name_dataset=name_population,
+    )
     ####################################################################################################################
     # TODO: Remove this temporary solution once OWID population dataset is complete.
-    population_file = os.path.join(CURRENT_DIR, '..', 'scripts', 'input', 'shared', 'population.csv')
+    population_file = os.path.join(
+        CURRENT_DIR, "..", "scripts", "input", "shared", "population.csv"
+    )
     population_renamed = pd.read_csv(population_file)
     ####################################################################################################################
-    
+
     return population_renamed
 
 
@@ -314,7 +341,9 @@ def mean_absolute_percentage_error(old, new, epsilon=1e-6):
     return error
 
 
-def detect_variables_outside_expected_ranges(data, columns, min_value, max_value, name=None):
+def detect_variables_outside_expected_ranges(
+    data, columns, min_value, max_value, name=None
+):
     """Detect variables in dataset that have values outside an expected range.
 
     Raise a warning for every country-variable case where this happens.
@@ -340,20 +369,26 @@ def detect_variables_outside_expected_ranges(data, columns, min_value, max_value
     """
     if name is None:
         name = NAME
-    incorrect = data.melt(id_vars=[name['country'], name['year']], var_name='Variable', value_name='Value')
-    incorrect = incorrect[(incorrect['Variable'].isin(columns)) &
-                          ((incorrect['Value'] < min_value) | (incorrect['Value'] > max_value))].\
-        reset_index(drop=True)
-    incorrect = incorrect.groupby([name['country'], 'Variable']).agg({'Value': max}).\
-        sort_values('Value', ascending=False).reset_index()
+    incorrect = data.melt(
+        id_vars=[name["country"], name["year"]], var_name="Variable", value_name="Value"
+    )
+    incorrect = incorrect[
+        (incorrect["Variable"].isin(columns))
+        & ((incorrect["Value"] < min_value) | (incorrect["Value"] > max_value))
+    ].reset_index(drop=True)
+    incorrect = (
+        incorrect.groupby([name["country"], "Variable"])
+        .agg({"Value": max})
+        .sort_values("Value", ascending=False)
+        .reset_index()
+    )
 
     return incorrect
 
 
 class Check(abc.ABC):
-    """Common abstract check.
+    """Common abstract check."""
 
-    """
     def __init__(self):
         self.num_warnings = 0
 
@@ -367,15 +402,22 @@ class Check(abc.ABC):
             HTML with a summary of the results of this check.
 
         """
-        all_checks = [check for check in dir(self) if callable(getattr(self, check)) if check.startswith('check_')]
-        summary = ''
+        all_checks = [
+            check
+            for check in dir(self)
+            if callable(getattr(self, check))
+            if check.startswith("check_")
+        ]
+        summary = ""
         # Ensure the count of warnings starts from zero.
         self.num_warnings = 0
         for i, check in enumerate(tqdm(all_checks)):
             print(f"* Check ({i + 1}/{len(all_checks)}): {check}")
             summary += getattr(self, check)()
         if self.num_warnings > 0:
-            print(f"There were {self.num_warnings} warnings generated. Visually inspect sanity checks file.")
+            print(
+                f"There were {self.num_warnings} warnings generated. Visually inspect sanity checks file."
+            )
         else:
             print("All checks passed without any warning.")
 
@@ -383,14 +425,19 @@ class Check(abc.ABC):
 
 
 class SanityChecksOnSingleDataset(Check):
-    def __init__(self, data, name=None, columns_electricity_share=None, columns_electricity_total=None,
-                 columns_electricity_per_capita=None,
-                 min_accepted_value_electricity_share=MIN_ACCEPTED_VALUE_ELECTRICITY_SHARE,
-                 max_accepted_value_electricity_share=MAX_ACCEPTED_VALUE_ELECTRICITY_SHARE,
-                 min_accepted_value_electricity_total=MIN_ACCEPTED_VALUE_ELECTRICITY_TOTAL,
-                 min_accepted_value_electricity_per_capita=MIN_ACCEPTED_VALUE_ELECTRICITY_PER_CAPITA,
-                 max_accepted_value_electricity_per_capita=MAX_ACCEPTED_VALUE_ELECTRICITY_PER_CAPITA,
-                 ):
+    def __init__(
+        self,
+        data,
+        name=None,
+        columns_electricity_share=None,
+        columns_electricity_total=None,
+        columns_electricity_per_capita=None,
+        min_accepted_value_electricity_share=MIN_ACCEPTED_VALUE_ELECTRICITY_SHARE,
+        max_accepted_value_electricity_share=MAX_ACCEPTED_VALUE_ELECTRICITY_SHARE,
+        min_accepted_value_electricity_total=MIN_ACCEPTED_VALUE_ELECTRICITY_TOTAL,
+        min_accepted_value_electricity_per_capita=MIN_ACCEPTED_VALUE_ELECTRICITY_PER_CAPITA,
+        max_accepted_value_electricity_per_capita=MAX_ACCEPTED_VALUE_ELECTRICITY_PER_CAPITA,
+    ):
         """Sanity checks to apply to a single dataset.
 
         Parameters
@@ -422,10 +469,14 @@ class SanityChecksOnSingleDataset(Check):
         self.min_accepted_value_electricity_share = min_accepted_value_electricity_share
         self.max_accepted_value_electricity_share = max_accepted_value_electricity_share
         self.min_accepted_value_electricity_total = min_accepted_value_electricity_total
-        self.min_accepted_value_electricity_per_capita = min_accepted_value_electricity_per_capita
-        self.max_accepted_value_electricity_per_capita = max_accepted_value_electricity_per_capita
+        self.min_accepted_value_electricity_per_capita = (
+            min_accepted_value_electricity_per_capita
+        )
+        self.max_accepted_value_electricity_per_capita = (
+            max_accepted_value_electricity_per_capita
+        )
         # Load population dataset.
-        self. population = load_population()
+        self.population = load_population()
 
     def check_that_countries_are_in_population_dataset(self):
         """Check that countries/regions in dataset are included in the population dataset.
@@ -439,17 +490,25 @@ class SanityChecksOnSingleDataset(Check):
 
         """
         summary = "<br><br> Check that all countries in new dataset are in the OWID population dataset."
-        missing_in_population = set(self.data[self.name['country']]) - set(self.population[self.name['country']])
+        missing_in_population = set(self.data[self.name["country"]]) - set(
+            self.population[self.name["country"]]
+        )
         if len(missing_in_population) > 0:
-            summary += f"<br><font color='red'>WARNING: {len(missing_in_population)} countries/regions not found in " \
-                       f"population dataset."
-            summary += ''.join([f"<li> {country}.</li>" for country in missing_in_population])
-            summary += '</font>'
+            summary += (
+                f"<br><font color='red'>WARNING: {len(missing_in_population)} countries/regions not found in "
+                f"population dataset."
+            )
+            summary += "".join(
+                [f"<li> {country}.</li>" for country in missing_in_population]
+            )
+            summary += "</font>"
             self.num_warnings += 1
 
         return summary
 
-    def check_year_ranges(self, min_year_latest_possible=2000, max_year_maximum_delay=3):
+    def check_year_ranges(
+        self, min_year_latest_possible=2000, max_year_maximum_delay=3
+    ):
         """Check that dataset has variables within a reasonable range of years.
 
         Parameters
@@ -467,17 +526,24 @@ class SanityChecksOnSingleDataset(Check):
         """
         summary = "<br><br> Check that all countries have at least one data point for each year in a reasonable range."
         # Keep only rows for which we have at least one not null data point.
-        data_clean = self.data.dropna(how='all')
-        year_ranges = data_clean.groupby(self.name['country']).agg(
-            {self.name['year']: (min, max)})[self.name['year']].reset_index()
+        data_clean = self.data.dropna(how="all")
+        year_ranges = (
+            data_clean.groupby(self.name["country"])
+            .agg({self.name["year"]: (min, max)})[self.name["year"]]
+            .reset_index()
+        )
 
         current_year = datetime.today().year
         # Check if minimum year is acceptable.
-        minimum_year_too_recent = year_ranges[year_ranges['min'] > min_year_latest_possible]
+        minimum_year_too_recent = year_ranges[
+            year_ranges["min"] > min_year_latest_possible
+        ]
         if len(minimum_year_too_recent) > 0:
-            summary += f"<br><font color='red'>WARNING: Minimum year is more recent than {min_year_latest_possible} " +\
-                f"for {len(minimum_year_too_recent)} countries/regions."
-            summary += '</font>'
+            summary += (
+                f"<br><font color='red'>WARNING: Minimum year is more recent than {min_year_latest_possible} "
+                + f"for {len(minimum_year_too_recent)} countries/regions."
+            )
+            summary += "</font>"
             self.num_warnings += 1
 
         # Check if maximum year is acceptable.
@@ -485,61 +551,91 @@ class SanityChecksOnSingleDataset(Check):
         year_limit = current_year
         for delay in range(max_year_maximum_delay + 1):
             year_limit = current_year - delay
-            selected_countries = year_ranges[year_ranges['max'] < year_limit]
+            selected_countries = year_ranges[year_ranges["max"] < year_limit]
         if len(selected_countries) > 0:
-            summary += f"<br><font color='red'>WARNING: {len(selected_countries)} countries/regions with latest " \
-                       f"data prior to {year_limit}:"
-            summary += ''.join([f"<li> {country}.</li>"
-                                for country in selected_countries[self.name['country']].tolist()])
-            summary += '</font>'
+            summary += (
+                f"<br><font color='red'>WARNING: {len(selected_countries)} countries/regions with latest "
+                f"data prior to {year_limit}:"
+            )
+            summary += "".join(
+                [
+                    f"<li> {country}.</li>"
+                    for country in selected_countries[self.name["country"]].tolist()
+                ]
+            )
+            summary += "</font>"
             self.num_warnings += 1
 
         return summary
 
     def _generate_warning_for_variables_outside_expected_ranges(self, incorrect):
-        summary = ''
+        summary = ""
         if len(incorrect) > 0:
-            summary += f"<br><font color='red'>WARNING: {len(set(incorrect[self.name['country']]))} countries with " \
-                       f"values outside expected range:"
+            summary += (
+                f"<br><font color='red'>WARNING: {len(set(incorrect[self.name['country']]))} countries with "
+                f"values outside expected range:"
+            )
             for i, row in incorrect.iterrows():
                 summary += f"<li> {row[self.name['country']]} - {row['Variable']}. Value: {row['Value']:.2f}"
-            summary += '</font>'
+            summary += "</font>"
             self.num_warnings += 1
 
         return summary
 
     def _check_electricity_share_ranges(self):
-        summary = f"<br><br> Check that share electricity is within expected range " \
-                  f"({self.min_accepted_value_electricity_share} to {self.max_accepted_value_electricity_share})."
+        summary = (
+            f"<br><br> Check that share electricity is within expected range "
+            f"({self.min_accepted_value_electricity_share} to {self.max_accepted_value_electricity_share})."
+        )
         incorrect = detect_variables_outside_expected_ranges(
-            data=self.data, columns=self.columns_electricity_share, min_value=self.min_accepted_value_electricity_share,
-            max_value=self.max_accepted_value_electricity_share)
-        summary += self._generate_warning_for_variables_outside_expected_ranges(incorrect)
+            data=self.data,
+            columns=self.columns_electricity_share,
+            min_value=self.min_accepted_value_electricity_share,
+            max_value=self.max_accepted_value_electricity_share,
+        )
+        summary += self._generate_warning_for_variables_outside_expected_ranges(
+            incorrect
+        )
 
         return summary
 
     def _check_electricity_total_ranges(self):
-        summary = ''
+        summary = ""
         for column in self.columns_electricity_total:
-            world_maximum = self.data[self.data[self.name['country']] == 'World'][column].max()
-            summary += f"<br> Check {self.min_accepted_value_electricity_total} < electricity < {int(world_maximum)} " \
-                       f"(world's maximum) for: {column}"
+            world_maximum = self.data[self.data[self.name["country"]] == "World"][
+                column
+            ].max()
+            summary += (
+                f"<br> Check {self.min_accepted_value_electricity_total} < electricity < {int(world_maximum)} "
+                f"(world's maximum) for: {column}"
+            )
             incorrect = detect_variables_outside_expected_ranges(
-                data=self.data, columns=[column], min_value=self.min_accepted_value_electricity_total,
-                max_value=world_maximum)
-            summary += self._generate_warning_for_variables_outside_expected_ranges(incorrect)
+                data=self.data,
+                columns=[column],
+                min_value=self.min_accepted_value_electricity_total,
+                max_value=world_maximum,
+            )
+            summary += self._generate_warning_for_variables_outside_expected_ranges(
+                incorrect
+            )
 
         return summary
 
     def _check_electricity_per_capita_ranges(self):
-        summary = f"<br><br> Check that no country has electricity per capita below " \
-                  f"{self.min_accepted_value_electricity_per_capita} or above " \
-                  f"{self.max_accepted_value_electricity_per_capita}."
+        summary = (
+            f"<br><br> Check that no country has electricity per capita below "
+            f"{self.min_accepted_value_electricity_per_capita} or above "
+            f"{self.max_accepted_value_electricity_per_capita}."
+        )
         incorrect = detect_variables_outside_expected_ranges(
-            data=self.data, columns=self.columns_electricity_per_capita,
+            data=self.data,
+            columns=self.columns_electricity_per_capita,
             min_value=self.min_accepted_value_electricity_per_capita,
-            max_value=self.max_accepted_value_electricity_per_capita)
-        summary += self._generate_warning_for_variables_outside_expected_ranges(incorrect)
+            max_value=self.max_accepted_value_electricity_per_capita,
+        )
+        summary += self._generate_warning_for_variables_outside_expected_ranges(
+            incorrect
+        )
 
         return summary
 
@@ -556,7 +652,11 @@ class SanityChecksOnSingleDataset(Check):
         summary_electricity_share = self._check_electricity_share_ranges()
         summary_electricity_total = self._check_electricity_total_ranges()
         summary_electricity_per_capita = self._check_electricity_per_capita_ranges()
-        summary = summary_electricity_share + summary_electricity_total + summary_electricity_per_capita
+        summary = (
+            summary_electricity_share
+            + summary_electricity_total
+            + summary_electricity_per_capita
+        )
 
         return summary
 
@@ -570,25 +670,40 @@ class SanityChecksOnSingleDataset(Check):
 
         """
         summary = "<br><br> Check that all relevant columns have been inspected."
-        unchecked_columns = list(set(self.data.columns) -
-                                 set(self.columns_electricity_share + self.columns_electricity_total +
-                                     self.columns_electricity_per_capita + [self.name['country'], self.name['year']]))
+        unchecked_columns = list(
+            set(self.data.columns)
+            - set(
+                self.columns_electricity_share
+                + self.columns_electricity_total
+                + self.columns_electricity_per_capita
+                + [self.name["country"], self.name["year"]]
+            )
+        )
         if len(unchecked_columns) > 0:
             summary += f"<br><font color='red'>WARNING: There are columns that have not been checked for sanity checks:"
-            summary += ''.join([f"<li> {column}.</li>" for column in unchecked_columns])
-            summary += '</font>'
+            summary += "".join([f"<li> {column}.</li>" for column in unchecked_columns])
+            summary += "</font>"
             self.num_warnings += 1
 
         return summary
 
 
 class SanityChecksComparingTwoDatasets(Check):
-    def __init__(self, data_old, data_new, name=None, data_label_old=DATA_LABEL_OLD, data_label_new=DATA_LABEL_NEW,
-                 columns_electricity_share=None, columns_electricity_total=None, columns_electricity_per_capita=None,
-                 min_relevant_value_electricity_share=MIN_RELEVANT_VALUE_ELECTRICITY_SHARE,
-                 min_relevant_value_electricity_total=MIN_RELEVANT_VALUE_ELECTRICITY_TOTAL,
-                 min_relevant_value_electricity_per_capita=MIN_RELEVANT_VALUE_ELECTRICITY_PER_CAPITA,
-                 min_relevant_error=MIN_RELEVANT_ERROR):
+    def __init__(
+        self,
+        data_old,
+        data_new,
+        name=None,
+        data_label_old=DATA_LABEL_OLD,
+        data_label_new=DATA_LABEL_NEW,
+        columns_electricity_share=None,
+        columns_electricity_total=None,
+        columns_electricity_per_capita=None,
+        min_relevant_value_electricity_share=MIN_RELEVANT_VALUE_ELECTRICITY_SHARE,
+        min_relevant_value_electricity_total=MIN_RELEVANT_VALUE_ELECTRICITY_TOTAL,
+        min_relevant_value_electricity_per_capita=MIN_RELEVANT_VALUE_ELECTRICITY_PER_CAPITA,
+        min_relevant_error=MIN_RELEVANT_ERROR,
+    ):
         """Sanity checks comparing a new dataset with an old one.
 
         Parameters
@@ -624,7 +739,9 @@ class SanityChecksComparingTwoDatasets(Check):
         self.columns_electricity_per_capita = columns_electricity_per_capita
         self.min_relevant_value_electricity_share = min_relevant_value_electricity_share
         self.min_relevant_value_electricity_total = min_relevant_value_electricity_total
-        self.min_relevant_value_electricity_per_capita = min_relevant_value_electricity_per_capita
+        self.min_relevant_value_electricity_per_capita = (
+            min_relevant_value_electricity_per_capita
+        )
         self.min_relevant_error = min_relevant_error
         # Load population dataset.
         self.population = load_population()
@@ -637,10 +754,12 @@ class SanityChecksComparingTwoDatasets(Check):
 
     def _create_comparison_dataframe(self):
         data_old_prepared = self.data_old.copy()
-        data_old_prepared['source'] = self.data_label_old
+        data_old_prepared["source"] = self.data_label_old
         data_new_prepared = self.data_new.copy()
-        data_new_prepared['source'] = self.data_label_new
-        comparison = pd.concat([data_old_prepared, data_new_prepared], ignore_index=True)
+        data_new_prepared["source"] = self.data_label_new
+        comparison = pd.concat(
+            [data_old_prepared, data_new_prepared], ignore_index=True
+        )
 
         return comparison
 
@@ -653,21 +772,33 @@ class SanityChecksComparingTwoDatasets(Check):
             HTML with a summary of the results of this check.
 
         """
-        summary = "<br><br> Check that all countries in old dataset are in the new dataset."
-        missing_in_new = set(self.data_old[self.name['country']]) - set(self.data_new[self.name['country']])
+        summary = (
+            "<br><br> Check that all countries in old dataset are in the new dataset."
+        )
+        missing_in_new = set(self.data_old[self.name["country"]]) - set(
+            self.data_new[self.name["country"]]
+        )
         if len(missing_in_new) > 0:
-            summary += f"<br><font color='red'>WARNING: {len(missing_in_new)} countries/regions in old dataset were " \
-                       f"not found in new dataset."
-            summary += ''.join([f"<li> {country}.</li>" for country in missing_in_new])
-            summary += '<br></font>'
+            summary += (
+                f"<br><font color='red'>WARNING: {len(missing_in_new)} countries/regions in old dataset were "
+                f"not found in new dataset."
+            )
+            summary += "".join([f"<li> {country}.</li>" for country in missing_in_new])
+            summary += "<br></font>"
             self.num_warnings += 1
-        summary += "<br><br> Check that all countries in new dataset are in the old dataset."
-        missing_in_old = set(self.data_new[self.name['country']]) - set(self.data_old[self.name['country']])
+        summary += (
+            "<br><br> Check that all countries in new dataset are in the old dataset."
+        )
+        missing_in_old = set(self.data_new[self.name["country"]]) - set(
+            self.data_old[self.name["country"]]
+        )
         if len(missing_in_old) > 0:
-            summary += f"<br><font color='red'>WARNING: {len(missing_in_old)} countries/regions in new dataset were " \
-                       f"not found in old dataset."
-            summary += ''.join([f"<li> {country}.</li>" for country in missing_in_old])
-            summary += '<br></font>'
+            summary += (
+                f"<br><font color='red'>WARNING: {len(missing_in_old)} countries/regions in new dataset were "
+                f"not found in old dataset."
+            )
+            summary += "".join([f"<li> {country}.</li>" for country in missing_in_old])
+            summary += "<br></font>"
             self.num_warnings += 1
 
         return summary
@@ -682,24 +813,38 @@ class SanityChecksComparingTwoDatasets(Check):
 
         """
         # Compare columns in old and new dataset.
-        variables_old = [column for column in self.data_old.columns
-                         if column not in [self.name['country'], self.name['year']]]
-        variables_new = [column for column in self.data_new.columns
-                         if column not in [self.name['country'], self.name['year']]]
+        variables_old = [
+            column
+            for column in self.data_old.columns
+            if column not in [self.name["country"], self.name["year"]]
+        ]
+        variables_new = [
+            column
+            for column in self.data_new.columns
+            if column not in [self.name["country"], self.name["year"]]
+        ]
         variables_missing_in_data_new = list(set(variables_old) - set(variables_new))
         variables_added_in_data_new = list(set(variables_new) - set(variables_old))
 
         if len(variables_missing_in_data_new):
-            summary = f"<br><br> Check that all columns in old dataset are in new dataset."
+            summary = (
+                f"<br><br> Check that all columns in old dataset are in new dataset."
+            )
             summary += f"<br><font color='red'>WARNING: There are variables in old dataset that are not in new:"
-            summary += ''.join([f"<li> {variable}.</li>" for variable in variables_missing_in_data_new])
-            summary += '<br></font>'
+            summary += "".join(
+                [f"<li> {variable}.</li>" for variable in variables_missing_in_data_new]
+            )
+            summary += "<br></font>"
             self.num_warnings += 1
         if len(variables_added_in_data_new):
-            summary += f"<br><br> Check that all columns in new dataset are in old dataset."
+            summary += (
+                f"<br><br> Check that all columns in new dataset are in old dataset."
+            )
             summary += f"<br><font color='red'>WARNING: There are variables in new dataset that are not in old:"
-            summary += ''.join([f"<li> {variable}.</li>" for variable in variables_added_in_data_new])
-            summary += '</font>'
+            summary += "".join(
+                [f"<li> {variable}.</li>" for variable in variables_added_in_data_new]
+            )
+            summary += "</font>"
             self.num_warnings += 1
 
         return summary
@@ -722,29 +867,61 @@ class SanityChecksComparingTwoDatasets(Check):
 
         """
         # Select data for country.
-        comparison = self.comparison[self.comparison[self.name['country']] == country].reset_index(drop=True)[[
-            self.name['year'], variable, 'source']]
+        comparison = self.comparison[
+            self.comparison[self.name["country"]] == country
+        ].reset_index(drop=True)[[self.name["year"], variable, "source"]]
         # Add columns for plotting parameters.
-        comparison['size'] = 0.003
-        comparison.loc[comparison['source'] == self.data_label_new, 'size'] = 0.001
+        comparison["size"] = 0.003
+        comparison.loc[comparison["source"] == self.data_label_new, "size"] = 0.001
         # hover_data = {'source': False, name['year']: False, variable: True, 'size': False}
         hover_data = {}
 
-        fig = px.scatter(comparison, x=self.name['year'], y=variable, color='source', size='size', size_max=10,
-                         color_discrete_sequence=['red', 'green'], opacity=0.9, hover_name=self.name['year'],
-                         hover_data=hover_data).\
-            update_xaxes(showgrid=True, title='Year', autorange=False,
-                         range=[comparison[self.name['year']].min() - 1, comparison[self.name['year']].max() + 1]).\
-            update_yaxes(showgrid=True, title=variable, autorange=False,
-                         range=[comparison[variable].min() * 0.9, comparison[variable].max() * 1.1]).\
-            update_layout(clickmode='event+select', autosize=True,
-                          title=f"{country} - {variable}").\
-            update_layout(font={'size': 9})
+        fig = (
+            px.scatter(
+                comparison,
+                x=self.name["year"],
+                y=variable,
+                color="source",
+                size="size",
+                size_max=10,
+                color_discrete_sequence=["red", "green"],
+                opacity=0.9,
+                hover_name=self.name["year"],
+                hover_data=hover_data,
+            )
+            .update_xaxes(
+                showgrid=True,
+                title="Year",
+                autorange=False,
+                range=[
+                    comparison[self.name["year"]].min() - 1,
+                    comparison[self.name["year"]].max() + 1,
+                ],
+            )
+            .update_yaxes(
+                showgrid=True,
+                title=variable,
+                autorange=False,
+                range=[
+                    comparison[variable].min() * 0.9,
+                    comparison[variable].max() * 1.1,
+                ],
+            )
+            .update_layout(
+                clickmode="event+select", autosize=True, title=f"{country} - {variable}"
+            )
+            .update_layout(font={"size": 9})
+        )
 
         return fig
 
     def get_error_for_all_countries_and_specific_variables(
-            self, variables, min_relevant_value=0, error_name='mape', error_metric=mean_absolute_percentage_error):
+        self,
+        variables,
+        min_relevant_value=0,
+        error_name="mape",
+        error_metric=mean_absolute_percentage_error,
+    ):
         """Compute the deviation between old and new datasets (by means of an error metric) for all countries and a list
         of specific variables.
 
@@ -770,33 +947,61 @@ class SanityChecksComparingTwoDatasets(Check):
 
         """
         errors = pd.DataFrame()
-        for country in tqdm(self.comparison[self.name['country']].unique().tolist()):
+        for country in tqdm(self.comparison[self.name["country"]].unique().tolist()):
             for variable in variables:
-                comparison_pivot = self.comparison[self.comparison[self.name['country']] == country].\
-                    pivot(index=self.name['year'], columns='source', values=variable).dropna(how='any').\
-                    reset_index()
+                comparison_pivot = (
+                    self.comparison[self.comparison[self.name["country"]] == country]
+                    .pivot(index=self.name["year"], columns="source", values=variable)
+                    .dropna(how="any")
+                    .reset_index()
+                )
                 for source in [self.data_label_old, self.data_label_new]:
                     if source not in comparison_pivot:
                         comparison_pivot[source] = np.nan
                 # Omit rows where both old and new values are too small (to avoid large errors on irrelevant values).
                 comparison_pivot = comparison_pivot[
-                    (comparison_pivot[self.data_label_old] > min_relevant_value) |
-                    (comparison_pivot[self.data_label_new] > min_relevant_value)].\
-                    reset_index(drop=True)
+                    (comparison_pivot[self.data_label_old] > min_relevant_value)
+                    | (comparison_pivot[self.data_label_new] > min_relevant_value)
+                ].reset_index(drop=True)
                 error = error_metric(
-                    old=comparison_pivot[self.data_label_old], new=comparison_pivot[self.data_label_new])
-                errors = pd.concat([
-                    errors,
-                    pd.DataFrame({self.name['country']: [country], 'Variable': [variable], error_name: [error]})
-                ], ignore_index=True)
+                    old=comparison_pivot[self.data_label_old],
+                    new=comparison_pivot[self.data_label_new],
+                )
+                errors = pd.concat(
+                    [
+                        errors,
+                        pd.DataFrame(
+                            {
+                                self.name["country"]: [country],
+                                "Variable": [variable],
+                                error_name: [error],
+                            }
+                        ),
+                    ],
+                    ignore_index=True,
+                )
 
         # Compare errors with mean value of a variables.
-        mean_variable_value = self.comparison.groupby([self.name['country']]).mean().reset_index().\
-            drop(columns=self.name['year']).\
-            melt(id_vars=self.name['country'], var_name='Variable', value_name='mean_variable_value')
-        mean_variable_value = mean_variable_value[mean_variable_value['Variable'].isin(variables)].\
-            reset_index(drop=True)
-        errors = pd.merge(mean_variable_value, errors, on=[self.name['country'], 'Variable'], how='inner')
+        mean_variable_value = (
+            self.comparison.groupby([self.name["country"]])
+            .mean()
+            .reset_index()
+            .drop(columns=self.name["year"])
+            .melt(
+                id_vars=self.name["country"],
+                var_name="Variable",
+                value_name="mean_variable_value",
+            )
+        )
+        mean_variable_value = mean_variable_value[
+            mean_variable_value["Variable"].isin(variables)
+        ].reset_index(drop=True)
+        errors = pd.merge(
+            mean_variable_value,
+            errors,
+            on=[self.name["country"], "Variable"],
+            how="inner",
+        )
 
         return errors
 
@@ -812,10 +1017,14 @@ class SanityChecksComparingTwoDatasets(Check):
 
         """
         for variable in variables:
-            fig = self.plot_time_series_for_country_and_variable(country=country, variable=variable)
+            fig = self.plot_time_series_for_country_and_variable(
+                country=country, variable=variable
+            )
             fig.show()
 
-    def save_comparison_plots_for_specific_variables_of_country(self, country, variables, output_file):
+    def save_comparison_plots_for_specific_variables_of_country(
+        self, country, variables, output_file
+    ):
         """Save plots comparing the old and new time series of a list of variables, for a specific country, in an HTML
         file.
 
@@ -839,13 +1048,18 @@ class SanityChecksComparingTwoDatasets(Check):
         if not os.path.isdir(output_dir):
             os.makedirs(output_dir)
         # Create an HTML file with all figures.
-        with open(output_file, 'w') as f:
+        with open(output_file, "w") as f:
             for variable in variables:
-                fig = self.plot_time_series_for_country_and_variable(country=country, variable=variable)
-                f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
+                fig = self.plot_time_series_for_country_and_variable(
+                    country=country, variable=variable
+                )
+                f.write(fig.to_html(full_html=False, include_plotlyjs="cdn"))
 
-    def plot_comparison_for_problematic_cases(self, max_num_plots=MAX_NUM_PLOTS,
-                                              export_interactive_plots=EXPORT_INTERACTIVE_PLOTS):
+    def plot_comparison_for_problematic_cases(
+        self,
+        max_num_plots=MAX_NUM_PLOTS,
+        export_interactive_plots=EXPORT_INTERACTIVE_PLOTS,
+    ):
         """Plot time series from the old and new dataset, in certain, potentially problematic cases (country-variables),
         and return all these plots together as a string (HTML or base64).
 
@@ -865,26 +1079,35 @@ class SanityChecksComparingTwoDatasets(Check):
         """
         if self.problems is None:
             self.problems = self.gather_potential_problems()
-        figures = ''
+        figures = ""
         if len(self.problems) > max_num_plots:
-            figures += f"<br><font color='red'>WARNING: {len(self.problems)} figures to plot, only {max_num_plots} " \
-                       f"will be shown.</font><br>"
+            figures += (
+                f"<br><font color='red'>WARNING: {len(self.problems)} figures to plot, only {max_num_plots} "
+                f"will be shown.</font><br>"
+            )
             self.num_warnings += 1
         for i, problem in tqdm(self.problems.iterrows(), total=len(self.problems)):
             fig = self.plot_time_series_for_country_and_variable(
-                country=problem[self.name['country']], variable=problem['Variable'])
-            if 'mape' in problem:
-                fig.update_layout(title=f"{fig.layout.title['text']} - Relevant MAPE: {problem['mape']} % ")
+                country=problem[self.name["country"]], variable=problem["Variable"]
+            )
+            if "mape" in problem:
+                fig.update_layout(
+                    title=f"{fig.layout.title['text']} - Relevant MAPE: {problem['mape']} % "
+                )
             if export_interactive_plots:
-                figures += fig.to_html(full_html=False, include_plotlyjs='cdn')
+                figures += fig.to_html(full_html=False, include_plotlyjs="cdn")
             else:
                 img = plotly.io.to_image(fig, scale=1.2)
-                img_base64 = base64.b64encode(img).decode('utf8')
-                figures += f"<br><img class='icon' src='data:image/png;base64,{img_base64}'>"
+                img_base64 = base64.b64encode(img).decode("utf8")
+                figures += (
+                    f"<br><img class='icon' src='data:image/png;base64,{img_base64}'>"
+                )
 
         return figures
 
-    def detect_abrupt_changes_in_data(self, columns, min_relevant_value, min_error, error_name='mape'):
+    def detect_abrupt_changes_in_data(
+        self, columns, min_relevant_value, min_error, error_name="mape"
+    ):
         """Detect abrupt changes in variables when going from the old to the new dataset.
 
         Return a dataframe with all country-variables that are potentially problematic, since they changed too much in
@@ -909,21 +1132,28 @@ class SanityChecksComparingTwoDatasets(Check):
         """
         # Calculate errors between old and new time series.
         errors = self.get_error_for_all_countries_and_specific_variables(
-            variables=columns, min_relevant_value=min_relevant_value)
+            variables=columns, min_relevant_value=min_relevant_value
+        )
         errors[error_name] = errors[error_name].round(1)
 
         # Visually inspect any variable with a large error.
-        problems = errors[(errors[error_name] > min_error)].sort_values(error_name, ascending=False)
+        problems = errors[(errors[error_name] > min_error)].sort_values(
+            error_name, ascending=False
+        )
 
         return problems
 
-    def _generate_summary_for_checks_on_abrupt_changes(self, problems, min_relevant_value, min_error, electricity_type):
+    def _generate_summary_for_checks_on_abrupt_changes(
+        self, problems, min_relevant_value, min_error, electricity_type
+    ):
         summary = f"<br><br> Check that {electricity_type} did not change abruptly between old and new dataset, where:"
         summary += f"<li> At least one of the two values compared is larger than {min_relevant_value}.</li>"
         summary += f"<li> The resulting error is larger than {min_error}.</li>"
         if len(problems) > 0:
-            summary += f"<br><font color='red'>WARNING: Data for {len(problems['Country'].unique())} countries " \
-                       f"changed significantly:"
+            summary += (
+                f"<br><font color='red'>WARNING: Data for {len(problems['Country'].unique())} countries "
+                f"changed significantly:"
+            )
             self.num_warnings += 1
             for i, row in problems.iterrows():
                 summary += f"<li> {row['Country']:<30} - {row['Variable']:<55}. MAPE: {round(row['mape']):>2}%.</li>"
@@ -942,18 +1172,30 @@ class SanityChecksComparingTwoDatasets(Check):
         """
         print(f"Gathering potential problems related to electricity share.")
         problems_electricity_share = self.detect_abrupt_changes_in_data(
-            columns=self.columns_electricity_share, min_relevant_value=self.min_relevant_value_electricity_share,
-            min_error=self.min_relevant_error)
+            columns=self.columns_electricity_share,
+            min_relevant_value=self.min_relevant_value_electricity_share,
+            min_error=self.min_relevant_error,
+        )
         print(f"Gathering potential problems related to total electricity.")
         problems_electricity_total = self.detect_abrupt_changes_in_data(
-            columns=self.columns_electricity_total, min_relevant_value=self.min_relevant_value_electricity_total,
-            min_error=self.min_relevant_error)
+            columns=self.columns_electricity_total,
+            min_relevant_value=self.min_relevant_value_electricity_total,
+            min_error=self.min_relevant_error,
+        )
         print(f"Gathering potential problems related to per capita electricity.")
         problems_electricity_per_capita = self.detect_abrupt_changes_in_data(
             columns=self.columns_electricity_per_capita,
-            min_relevant_value=self.min_relevant_value_electricity_per_capita, min_error=self.min_relevant_error)
-        problems = pd.concat([problems_electricity_share, problems_electricity_total, problems_electricity_per_capita],
-                             ignore_index=True)
+            min_relevant_value=self.min_relevant_value_electricity_per_capita,
+            min_error=self.min_relevant_error,
+        )
+        problems = pd.concat(
+            [
+                problems_electricity_share,
+                problems_electricity_total,
+                problems_electricity_per_capita,
+            ],
+            ignore_index=True,
+        )
 
         return problems
 
@@ -968,25 +1210,47 @@ class SanityChecksComparingTwoDatasets(Check):
         """
         if self.problems is None:
             self.problems = self.gather_potential_problems()
-        problems_electricity_share = self.problems[self.problems['Variable'].isin(self.columns_electricity_share)]
-        problems_electricity_total = self.problems[self.problems['Variable'].isin(self.columns_electricity_total)]
+        problems_electricity_share = self.problems[
+            self.problems["Variable"].isin(self.columns_electricity_share)
+        ]
+        problems_electricity_total = self.problems[
+            self.problems["Variable"].isin(self.columns_electricity_total)
+        ]
         problems_electricity_per_capita = self.problems[
-            self.problems['Variable'].isin(self.columns_electricity_per_capita)]
+            self.problems["Variable"].isin(self.columns_electricity_per_capita)
+        ]
         summary_electricity_share = self._generate_summary_for_checks_on_abrupt_changes(
-            problems=problems_electricity_share, min_relevant_value=self.min_relevant_value_electricity_share,
-            min_error=self.min_relevant_error, electricity_type='electricity share')
+            problems=problems_electricity_share,
+            min_relevant_value=self.min_relevant_value_electricity_share,
+            min_error=self.min_relevant_error,
+            electricity_type="electricity share",
+        )
         summary_electricity_total = self._generate_summary_for_checks_on_abrupt_changes(
-            problems=problems_electricity_total, min_relevant_value=self.min_relevant_value_electricity_total,
-            min_error=self.min_relevant_error, electricity_type='total electricity')
-        summary_electricity_per_capita = self._generate_summary_for_checks_on_abrupt_changes(
-            problems=problems_electricity_per_capita, min_relevant_value=self.min_relevant_value_electricity_per_capita,
-            min_error=self.min_relevant_error, electricity_type='per capita electricity')
-        summary = summary_electricity_share + summary_electricity_total + summary_electricity_per_capita
+            problems=problems_electricity_total,
+            min_relevant_value=self.min_relevant_value_electricity_total,
+            min_error=self.min_relevant_error,
+            electricity_type="total electricity",
+        )
+        summary_electricity_per_capita = (
+            self._generate_summary_for_checks_on_abrupt_changes(
+                problems=problems_electricity_per_capita,
+                min_relevant_value=self.min_relevant_value_electricity_per_capita,
+                min_error=self.min_relevant_error,
+                electricity_type="per capita electricity",
+            )
+        )
+        summary = (
+            summary_electricity_share
+            + summary_electricity_total
+            + summary_electricity_per_capita
+        )
 
         return summary
 
 
-def main(data_file_old=DATA_FILE_OLD, data_file_new=DATA_FILE_NEW, output_file=OUTPUT_FILE):
+def main(
+    data_file_old=DATA_FILE_OLD, data_file_new=DATA_FILE_NEW, output_file=OUTPUT_FILE
+):
     """Apply all sanity checks and store the result as an HTML file to be visually inspected.
 
     Parameters
@@ -1008,7 +1272,9 @@ def main(data_file_old=DATA_FILE_OLD, data_file_new=DATA_FILE_NEW, output_file=O
     summary = single_dataset_checks.apply_all_checks()
 
     print("Performing sanity checks comparing to previous dataset.")
-    comparison_checks = SanityChecksComparingTwoDatasets(data_old=data_old, data_new=data_new)
+    comparison_checks = SanityChecksComparingTwoDatasets(
+        data_old=data_old, data_new=data_new
+    )
     summary += comparison_checks.apply_all_checks()
 
     print("Preparing final summary of figures to be visually inspected.")
@@ -1020,24 +1286,46 @@ def main(data_file_old=DATA_FILE_OLD, data_file_new=DATA_FILE_NEW, output_file=O
         output_file_.write(summary)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Perform sanity checks on the Electricity mix from BP & Ember dataset, and compare the most recent "
-                    "version of the dataset with the previous..")
-    parser.add_argument("-f", "--output_file", default=OUTPUT_FILE,
-                        help=f"Path to output HTML file to be visually inspected. Default: "
-                             f"{OUTPUT_FILE}")
-    parser.add_argument("-new", "--data_file_new", default=DATA_FILE_NEW,
-                        help=f"Path to new dataset file. Default: {DATA_FILE_NEW}")
-    parser.add_argument("-old", "--data_file_old", default=DATA_FILE_OLD,
-                        help=f"Path to old dataset file. Default: {DATA_FILE_OLD}")
-    parser.add_argument("-s", "--show_in_browser", default=False, action="store_true",
-                        help="If given, display output file in browser.")
+        "version of the dataset with the previous.."
+    )
+    parser.add_argument(
+        "-f",
+        "--output_file",
+        default=OUTPUT_FILE,
+        help=f"Path to output HTML file to be visually inspected. Default: "
+        f"{OUTPUT_FILE}",
+    )
+    parser.add_argument(
+        "-new",
+        "--data_file_new",
+        default=DATA_FILE_NEW,
+        help=f"Path to new dataset file. Default: {DATA_FILE_NEW}",
+    )
+    parser.add_argument(
+        "-old",
+        "--data_file_old",
+        default=DATA_FILE_OLD,
+        help=f"Path to old dataset file. Default: {DATA_FILE_OLD}",
+    )
+    parser.add_argument(
+        "-s",
+        "--show_in_browser",
+        default=False,
+        action="store_true",
+        help="If given, display output file in browser.",
+    )
     args = parser.parse_args()
 
-    main(data_file_old=args.data_file_old, data_file_new=args.data_file_new, output_file=args.output_file)
+    main(
+        data_file_old=args.data_file_old,
+        data_file_new=args.data_file_new,
+        output_file=args.output_file,
+    )
     if args.show_in_browser:
-        webbrowser.open('file://' + args.output_file)
+        webbrowser.open("file://" + args.output_file)
 
 
 # Conclusions and latest manual corrections:

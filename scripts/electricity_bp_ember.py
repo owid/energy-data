@@ -43,21 +43,21 @@ BP_PRIORITY = 0
 # After analysing the resulting time series, we detected several issues with the following countries/regions.
 # For the moment, we remove them from the final dataset.
 REGIONS_WITH_INCONSISTENT_DATA = [
-    'Central America',
-    'Europe (other)',
-    'Moldova',
-    'North America',
-    'Other Africa',
-    'Other Asia & Pacific',
-    'Other CIS',
-    'Other Caribbean',
-    'Other Middle East',
-    'Other Northern Africa',
-    'Other S. & Cent. America',
-    'Other South America',
-    'Other Southern Africa',
-    'South & Central America',
-    'USSR',
+    "Central America",
+    "Europe (other)",
+    "Moldova",
+    "North America",
+    "Other Africa",
+    "Other Asia & Pacific",
+    "Other CIS",
+    "Other Caribbean",
+    "Other Middle East",
+    "Other Northern Africa",
+    "Other S. & Cent. America",
+    "Other South America",
+    "Other Southern Africa",
+    "South & Central America",
+    "USSR",
 ]
 
 
