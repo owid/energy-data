@@ -1,9 +1,10 @@
-kaleido==0.2.1  # Only required for sanity checks.
+kaleido==0.2.1
+boto3==1.20.53
 numpy==1.22.1
 openpyxl==3.0.9
 owid-catalog==0.2.5
 pandas==1.4.0
-plotly==5.5.0  # Only required for sanity checks.
+plotly==5.5.0
 pytest==6.2.5
-tqdm==4.62.3  # Only required for sanity checks.
+tqdm==4.62.3
 xlrd==2.0.1
