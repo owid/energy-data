@@ -18,17 +18,23 @@ from tqdm.auto import tqdm
 # Define path to current directory.
 CURRENT_DIR = os.path.dirname(__file__)
 # Define S3 base URL.
-S3_URL = 'https://nyc3.digitaloceanspaces.com'
+S3_URL = "https://nyc3.digitaloceanspaces.com"
 # Profile name to use for S3 client (as defined in .aws/config).
-S3_PROFILE_NAME = 'default'
+S3_PROFILE_NAME = "default"
 # S3 bucket name and folder where energy dataset files will be stored.
-S3_BUCKET_NAME = 'owid-public'
-S3_ENERGY_DIR = os.path.join('data', 'energy')
+S3_BUCKET_NAME = "owid-public"
+S3_ENERGY_DIR = os.path.join("data", "energy")
 # Local files to upload.
 FILES_TO_UPLOAD = {
-    os.path.join(CURRENT_DIR, '..', 'owid-energy-data.csv'): os.path.join(S3_ENERGY_DIR, 'owid-energy-data.csv'),
-    os.path.join(CURRENT_DIR, '..', 'owid-energy-data.json'): os.path.join(S3_ENERGY_DIR, 'owid-energy-data.json'),
-    os.path.join(CURRENT_DIR, '..', 'owid-energy-data.xlsx'): os.path.join(S3_ENERGY_DIR, 'owid-energy-data.xlsx'),
+    os.path.join(CURRENT_DIR, "..", "owid-energy-data.csv"): os.path.join(
+        S3_ENERGY_DIR, "owid-energy-data.csv"
+    ),
+    os.path.join(CURRENT_DIR, "..", "owid-energy-data.json"): os.path.join(
+        S3_ENERGY_DIR, "owid-energy-data.json"
+    ),
+    os.path.join(CURRENT_DIR, "..", "owid-energy-data.xlsx"): os.path.join(
+        S3_ENERGY_DIR, "owid-energy-data.xlsx"
+    ),
 }
 
 
@@ -66,13 +72,15 @@ class S3:
             Objects found in folder.
 
         """
-        objects_request = self.client.list_objects_v2(Bucket=bucket_name, Prefix=path_to_folder)
+        objects_request = self.client.list_objects_v2(
+            Bucket=bucket_name, Prefix=path_to_folder
+        )
         # List all objects with a prefix starting like the given path.
         # Remove the first element (which is the folder itself).
-        objects_list = [obj['Key'] for obj in objects_request['Contents']][1:]
+        objects_list = [obj["Key"] for obj in objects_request["Contents"]][1:]
 
         return objects_list
-    
+
     def upload_file(self, local_file, bucket_name, s3_file, public=False):
         """Upload local file to a certain folder in an S3 bucket.
 
@@ -90,8 +98,10 @@ class S3:
 
         """
         extra_args = {"ACL": "public-read"} if public else {}
-        self.client.upload_file(Filename=local_file, Bucket=bucket_name, Key=s3_file, ExtraArgs=extra_args)
-    
+        self.client.upload_file(
+            Filename=local_file, Bucket=bucket_name, Key=s3_file, ExtraArgs=extra_args
+        )
+
     def download_file(self, s3_file, bucket_name, local_file):
         """Download file from S3 bucket.
 
@@ -111,7 +121,9 @@ class S3:
             Downloaded file.
 
         """
-        downloaded_file = self.client.download_file(Bucket=bucket_name, Key=s3_file, Filename=local_file)
+        downloaded_file = self.client.download_file(
+            Bucket=bucket_name, Key=s3_file, Filename=local_file
+        )
 
         return downloaded_file
 
@@ -124,13 +136,21 @@ def main(files_to_upload, s3_bucket_name=S3_BUCKET_NAME):
     # Upload and make public each of the files.
     for local_file in tqdm(files_to_upload):
         s3_file = files_to_upload[local_file]
-        print(f"Uploading file {local_file} to S3 bucket {s3_bucket_name} as {s3_file}.")
-        s3.upload_file(local_file=local_file, bucket_name=s3_bucket_name, s3_file=s3_file, public=public)
+        print(
+            f"Uploading file {local_file} to S3 bucket {s3_bucket_name} as {s3_file}."
+        )
+        s3.upload_file(
+            local_file=local_file,
+            bucket_name=s3_bucket_name,
+            s3_file=s3_file,
+            public=public,
+        )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Upload OWID energy dataset files to S3, and make them publicly readable.")
+        description="Upload OWID energy dataset files to S3, and make them publicly readable."
+    )
     args = parser.parse_args()
 
     main(files_to_upload=FILES_TO_UPLOAD)
