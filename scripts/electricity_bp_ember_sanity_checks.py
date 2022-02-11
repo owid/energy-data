@@ -1328,7 +1328,7 @@ if __name__ == "__main__":
         webbrowser.open("file://" + args.output_file)
 
 
-# Conclusions and latest manual corrections:
+# Conclusions and latest manual corrections (February 2022):
 # * Electricity as share of primary energy was fixed (the unit of the source changed from Mtoe to EJ).
 # * Moldova has been removed from the dataset, since there are clear inconsistencies between global and European data.
 # * Some regions have been removed (e.g. 'North America'), since their definition by the original source did not match
