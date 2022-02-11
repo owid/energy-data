@@ -136,7 +136,7 @@ def main(files_to_upload, s3_bucket_name=S3_BUCKET_NAME):
     # Upload and make public each of the files.
     for local_file in tqdm(files_to_upload):
         s3_file = files_to_upload[local_file]
-        print(
+        tqdm.write(
             f"Uploading file {local_file} to S3 bucket {s3_bucket_name} as {s3_file}."
         )
         s3.upload_file(
