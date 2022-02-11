@@ -3,9 +3,9 @@
 This script requires OWID credentials to write files in the S3 bucket.
 
 Files should be accessible at the following urls:
-* https://nyc3.digitaloceanspaces.com/energy-data/public/owid-energy-data.csv
-* https://nyc3.digitaloceanspaces.com/energy-data/public/owid-energy-data.xlsx
-* https://nyc3.digitaloceanspaces.com/energy-data/public/owid-energy-data.json
+* https://nyc3.digitaloceanspaces.com/owid-public/data/energy/owid-energy-data.csv
+* https://nyc3.digitaloceanspaces.com/owid-public/data/energy/owid-energy-data.xlsx
+* https://nyc3.digitaloceanspaces.com/owid-public/data/energy/owid-energy-data.json
 
 """
 
@@ -21,13 +21,14 @@ CURRENT_DIR = os.path.dirname(__file__)
 S3_URL = 'https://nyc3.digitaloceanspaces.com'
 # Profile name to use for S3 client (as defined in .aws/config).
 S3_PROFILE_NAME = 'default'
-# S3 bucket name where energy dataset will be stored.
-S3_BUCKET_NAME = 'energy-data'
+# S3 bucket name and folder where energy dataset files will be stored.
+S3_BUCKET_NAME = 'owid-public'
+S3_ENERGY_DIR = os.path.join('data', 'energy')
 # Local files to upload.
 FILES_TO_UPLOAD = {
-    os.path.join(CURRENT_DIR, '..', 'owid-energy-data.csv'): os.path.join('public', 'owid-energy-data.csv'),
-    os.path.join(CURRENT_DIR, '..', 'owid-energy-data.json'): os.path.join('public', 'owid-energy-data.json'),
-    os.path.join(CURRENT_DIR, '..', 'owid-energy-data.xlsx'): os.path.join('public', 'owid-energy-data.xlsx'),
+    os.path.join(CURRENT_DIR, '..', 'owid-energy-data.csv'): os.path.join(S3_ENERGY_DIR, 'owid-energy-data.csv'),
+    os.path.join(CURRENT_DIR, '..', 'owid-energy-data.json'): os.path.join(S3_ENERGY_DIR, 'owid-energy-data.json'),
+    os.path.join(CURRENT_DIR, '..', 'owid-energy-data.xlsx'): os.path.join(S3_ENERGY_DIR, 'owid-energy-data.xlsx'),
 }
 
 
