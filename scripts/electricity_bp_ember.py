@@ -21,6 +21,9 @@ EMBER_GLOBAL_DATA_URL = "https://ember-climate.org/wp-content/uploads/2021/03/Da
 EMBER_EUROPE_FILE = os.path.join(
     INPUT_DIR, "electricity-bp-ember", "EER_2022_generation.csv"
 )
+EMBER_EUROPE_CARBON_INTENSITY_FILE = os.path.join(
+    INPUT_DIR, "electricity-bp-ember", "eu_electricity_ember.xlsx"
+)
 # Define path to file with country names in the Ember dataset.
 EMBER_COUNTRIES_FILE = os.path.join(
     INPUT_DIR, "electricity-bp-ember", "ember_countries.csv"
@@ -212,6 +215,42 @@ def prepare_european_electricity_review_data_from_ember():
     return eu_ember_elec
 
 
+def load_carbon_intensities():
+    """Load carbon intensities (in gCO2/kWh) of European countries from an older Ember dataset (since this variable is
+    not available in the European Electricity Review).
+
+    Returns
+    -------
+    eu_carbon_intensities : pd.DataFrame
+        Carbon intensities for european countries.
+
+    """
+    eu_carbon_intensities = pd.read_excel(
+        EMBER_EUROPE_CARBON_INTENSITY_FILE, sheet_name="Carbon intensities"
+    )
+    eu_carbon_intensities = (
+        eu_carbon_intensities.melt(
+            id_vars=["Area", "Variable"],
+            var_name="Year",
+            value_name="Carbon intensity of electricity (gCO2/kWh)",
+        )
+        .drop(columns=["Variable"])
+        .rename(columns={"Area": "Country"})
+        .sort_values(["Country", "Year"])
+        .reset_index(drop=True)
+    )
+
+    # Standardize country names.
+    ember_countries = pd.read_csv(EMBER_COUNTRIES_FILE)
+    eu_carbon_intensities = (
+        eu_carbon_intensities.merge(ember_countries, on="Country")
+        .drop(errors="raise", columns=["Country"])
+        .rename(errors="raise", columns={"OWID Country": "Country"})
+    )
+
+    return eu_carbon_intensities
+
+
 def main():
 
     # Import and clean BP data
@@ -314,6 +353,14 @@ def main():
 
     # Load updated European Electricity Review data from Ember.
     eu_ember_elec = prepare_european_electricity_review_data_from_ember()
+
+    # Load carbon intensities of European countries from older Ember dataset.
+    eu_carbon_intensities = load_carbon_intensities()
+
+    # Add data on carbon intensities to European Electricity Review data.
+    eu_ember_elec = pd.merge(
+        eu_ember_elec, eu_carbon_intensities, on=["Country", "Year"], how="left"
+    )
 
     # Replace only those rows where country & year correspond to those in the new file.
     ember_elec = (
