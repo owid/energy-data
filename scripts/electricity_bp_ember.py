@@ -25,6 +25,8 @@ EMBER_EUROPE_FILE = os.path.join(
 EMBER_COUNTRIES_FILE = os.path.join(
     INPUT_DIR, "electricity-bp-ember", "ember_countries.csv"
 )
+# Define URL to download current list of EU countries.
+EU_COUNTRIES_URL = "https://raw.githubusercontent.com/owid/covid-19-data/master/scripts/input/owid/eu_countries.csv"
 # Define path to BP energy dataset file.
 BP_FILE = os.path.join(INPUT_DIR, "shared", "bp_energy.csv")
 ########################################################################################################################
@@ -187,6 +189,25 @@ def prepare_european_electricity_review_data_from_ember():
                 f"{row['Country']} - {row['Year']}: Missing {row[row.isnull()].index.tolist()}"
             )
     eu_ember_elec = eu_ember_elec.fillna(0)
+
+    # Add European Union (27) to population dataset (otherwise the outdated EU 27 data from ember_elec will be used).
+    eu_countries = pd.read_csv(EU_COUNTRIES_URL)["Country"].tolist()
+    aggregations = {
+        col: sum for col in eu_ember_elec.columns if col not in ["Year", "Country"]
+    }
+    aggregations["Country"] = lambda x: len(list(x))
+    eu_ember_elec_added = (
+        eu_ember_elec[eu_ember_elec["Country"].isin(eu_countries)]
+        .reset_index(drop=True)
+        .groupby("Year")
+        .agg(aggregations)
+        .reset_index()
+    )
+    # Check that there are indeed 27 countries each year.
+    # This is historically inaccurate, but we assume the EU corresponds to its current state.
+    assert all(eu_ember_elec_added["Country"] == 27)
+    eu_ember_elec_added["Country"] = "European Union (27)"
+    eu_ember_elec = pd.concat([eu_ember_elec, eu_ember_elec_added], ignore_index=True)
 
     return eu_ember_elec
 
