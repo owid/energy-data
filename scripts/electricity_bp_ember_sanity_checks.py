@@ -680,7 +680,7 @@ class SanityChecksOnSingleDataset(Check):
             )
         )
         if len(unchecked_columns) > 0:
-            summary += f"<br><font color='red'>WARNING: There are columns that have not been checked for sanity checks:"
+            summary += f"<br><font color='red'>WARNING: Some columns were not included in any sanity check:"
             summary += "".join([f"<li> {column}.</li>" for column in unchecked_columns])
             summary += "</font>"
             self.num_warnings += 1
@@ -826,20 +826,16 @@ class SanityChecksComparingTwoDatasets(Check):
         variables_missing_in_data_new = list(set(variables_old) - set(variables_new))
         variables_added_in_data_new = list(set(variables_new) - set(variables_old))
 
-        if len(variables_missing_in_data_new):
-            summary = (
-                f"<br><br> Check that all columns in old dataset are in new dataset."
-            )
+        summary = f"<br><br> Check that all columns in old dataset are in new dataset."
+        if len(variables_missing_in_data_new) > 0:
             summary += f"<br><font color='red'>WARNING: There are variables in old dataset that are not in new:"
             summary += "".join(
                 [f"<li> {variable}.</li>" for variable in variables_missing_in_data_new]
             )
             summary += "<br></font>"
             self.num_warnings += 1
-        if len(variables_added_in_data_new):
-            summary += (
-                f"<br><br> Check that all columns in new dataset are in old dataset."
-            )
+        summary += f"<br><br> Check that all columns in new dataset are in old dataset."
+        if len(variables_added_in_data_new) > 0:
             summary += f"<br><font color='red'>WARNING: There are variables in new dataset that are not in old:"
             summary += "".join(
                 [f"<li> {variable}.</li>" for variable in variables_added_in_data_new]
