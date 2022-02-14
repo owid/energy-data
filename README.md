@@ -2,19 +2,19 @@
 
 Our complete Energy dataset is a collection of key metrics maintained by [*Our World in Data*](https://ourworldindata.org/energy). It is updated regularly and includes data on energy consumption (primary energy, per capita, and growth rates), energy mix, electricity mix and other relevant metrics.
 
-### 🗂️ Download our complete Energy dataset : [CSV](https://github.com/owid/energy-data/raw/master/owid-energy-data.csv) | [XLSX](https://github.com/owid/energy-data/raw/master/owid-energy-data.xlsx) | [JSON](https://github.com/owid/energy-data/raw/master/owid-energy-data.json)
+### 🗂️ Download our complete Energy dataset : [CSV](https://nyc3.digitaloceanspaces.com/owid-public/data/energy/owid-energy-data.csv) | [XLSX](https://nyc3.digitaloceanspaces.com/owid-public/data/energy/owid-energy-data.xlsx) | [JSON](https://nyc3.digitaloceanspaces.com/owid-public/data/energy/owid-energy-data.json)
 
 We will continue to publish updated data on Energy as it becomes available. Most metrics are published on an annual basis.
 
 ## Our data sources
 
 - **Energy consumption (primary energy, energy mix and energy intensity):** this data is sourced from a combination of two sources—the [BP Statistical Review of World Energy](https://www.bp.com/en/global/corporate/energy-economics/statistical-review-of-world-energy.html) and [SHIFT Data Portal](https://www.theshiftdataportal.org/energy).
-- **Electricity consumption (electricity consumption, and electricity mix):** this data is sourced from a combination of two sources—the [BP Statistical Review of World Energy](https://www.bp.com/en/global/corporate/energy-economics/statistical-review-of-world-energy.html) and [EMBER – Global Electricity Dashboard](https://ember.shinyapps.io/GlobalElectricityDashboard/).
+- **Electricity consumption (electricity consumption, and electricity mix):** this data is sourced from a combination of three sources—the [BP Statistical Review of World Energy](https://www.bp.com/en/global/corporate/energy-economics/statistical-review-of-world-energy.html), the [Ember – Global Electricity Dashboard](https://ember.shinyapps.io/GlobalElectricityDashboard/) and the [Ember European Electricity Review](https://ember-climate.org/project/european-electricity-review-2022/).
 - **Other variables:** this data is collected from a variety of sources (United Nations, World Bank, Gapminder, Maddison Project Database, etc.). More information is available in [our codebook](https://github.com/owid/energy-data/blob/master/owid-energy-codebook.csv).
 
 ## The complete *Our World in Data* Energy dataset
 
-**Our complete Energy dataset is available in [CSV](https://github.com/owid/energy-data/raw/master/owid-energy-data.csv), [XLSX](https://github.com/owid/energy-data/raw/master/owid-energy-data.xlsx), and [JSON](https://github.com/owid/energy-data/raw/master/owid-energy-data.json) formats.**
+**Our complete Energy dataset is available in [CSV](https://nyc3.digitaloceanspaces.com/owid-public/data/energy/owid-energy-data.csv), [XLSX](https://nyc3.digitaloceanspaces.com/owid-public/data/energy/owid-energy-data.xlsx), and [JSON](https://nyc3.digitaloceanspaces.com/owid-public/data/energy/owid-energy-data.json) formats.**
 
 The CSV and XLSX files follow a format of 1 row per location and year. The JSON version is split by country, with an array of yearly records.
 
@@ -24,6 +24,7 @@ A [full codebook](https://github.com/owid/energy-data/blob/master/owid-energy-co
 
 ## Changelog
 
+- On February 14, 2022, we corrected some issues in the electricity data and updated the energy dataset accordingly. The dataset files have been removed from GitHub (and stored in Digital Ocean) to keep this repository at a reasonable size.
 - On February 3, 2022, we updated the [Ember global electricity data](https://ember-climate.org/data/global-electricity/), combined with the [European Electricity Review from Ember](https://ember-climate.org/project/european-electricity-review-2022/).
   - The `carbon_intensity_elec` column was removed from the energy dataset (since no updated data was available).
   - Columns for electricity from other renewable sources excluding bioenergy were added (namely `other_renewables_elec_per_capita_exc_biofuel`, and `other_renewables_share_elec_exc_biofuel`).
