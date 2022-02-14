@@ -183,6 +183,7 @@ def main():
             "Bioenergy electricity per capita (kWh)": "biofuel_elec_per_capita",
             "Biofuels (TWh)": "biofuel_consumption",
             "Biofuels per capita (kWh)": "biofuel_cons_per_capita",
+            "Carbon intensity of electricity (gCO2/kWh)": "carbon_intensity_elec",
             "Coal Consumption - TWh": "coal_consumption",
             "Coal (% electricity)": "coal_share_elec",
             "Coal (% growth)": "coal_cons_change_pct",
