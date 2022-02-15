@@ -26,7 +26,7 @@ A [full codebook](https://github.com/owid/energy-data/blob/master/owid-energy-co
 
 - On February 14, 2022:
   - Some issues were corrected in the electricity data, and the energy dataset was updated accordingly.
-  - The json and xlsx dataset files were removed from GitHub (and stored in Digital Ocean) to keep this repository at a reasonable size.
+  - The json and xlsx dataset files were removed from GitHub in favor of an external storage service, to keep this repository at a reasonable size.
   - The `carbon_intensity_elec` column was added back into the energy dataset.
 - On February 3, 2022, we updated the [Ember global electricity data](https://ember-climate.org/data/global-electricity/), combined with the [European Electricity Review from Ember](https://ember-climate.org/project/european-electricity-review-2022/).
   - The `carbon_intensity_elec` column was removed from the energy dataset (since no updated data was available).
