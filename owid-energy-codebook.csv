@@ -17,6 +17,7 @@ biofuel_cons_change_twh,"Annual change in biofuel consumption, measured in teraw
 biofuel_consumption,"Primary energy consumption from biofuels, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy
 biofuel_elec_per_capita,"Per capita electricity consumption from biofuels, measured in kilowatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember
 biofuel_cons_per_capita,"Per capita primary energy consumption from biofuels, measured in kilowatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy and UN Population estimates
+carbon_intensity_elec,"Carbon intensity of electricity production, measured in grams of carbon dioxide emitted per kilowatt-hour",Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember
 coal_share_elec,Share of electricity consumption that comes from coal,Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember
 coal_cons_change_pct,Annual percentage change in coal consumption,Calculated by Our World in Data based on BP Statistical Review of World Energy
 coal_share_energy,Share of primary energy consumption that comes from coal,Calculated by Our World in Data based on BP Statistical Review of World Energy

@@ -21,10 +21,15 @@ EMBER_GLOBAL_DATA_URL = "https://ember-climate.org/wp-content/uploads/2021/03/Da
 EMBER_EUROPE_FILE = os.path.join(
     INPUT_DIR, "electricity-bp-ember", "EER_2022_generation.csv"
 )
+EMBER_EUROPE_CARBON_INTENSITY_FILE = os.path.join(
+    INPUT_DIR, "electricity-bp-ember", "eu_electricity_ember.xlsx"
+)
 # Define path to file with country names in the Ember dataset.
 EMBER_COUNTRIES_FILE = os.path.join(
     INPUT_DIR, "electricity-bp-ember", "ember_countries.csv"
 )
+# Define URL to download current list of EU countries.
+EU_COUNTRIES_URL = "https://raw.githubusercontent.com/owid/covid-19-data/master/scripts/input/owid/eu_countries.csv"
 # Define path to BP energy dataset file.
 BP_FILE = os.path.join(INPUT_DIR, "shared", "bp_energy.csv")
 ########################################################################################################################
@@ -188,7 +193,62 @@ def prepare_european_electricity_review_data_from_ember():
             )
     eu_ember_elec = eu_ember_elec.fillna(0)
 
+    # Add European Union (27) to population dataset (otherwise the outdated EU 27 data from ember_elec will be used).
+    eu_countries = pd.read_csv(EU_COUNTRIES_URL)["Country"].tolist()
+    aggregations = {
+        col: sum for col in eu_ember_elec.columns if col not in ["Year", "Country"]
+    }
+    aggregations["Country"] = lambda x: len(list(x))
+    eu_ember_elec_added = (
+        eu_ember_elec[eu_ember_elec["Country"].isin(eu_countries)]
+        .reset_index(drop=True)
+        .groupby("Year")
+        .agg(aggregations)
+        .reset_index()
+    )
+    # Check that there are indeed 27 countries each year.
+    # This is historically inaccurate, but we assume the EU corresponds to its current state.
+    assert all(eu_ember_elec_added["Country"] == 27)
+    eu_ember_elec_added["Country"] = "European Union (27)"
+    eu_ember_elec = pd.concat([eu_ember_elec, eu_ember_elec_added], ignore_index=True)
+
     return eu_ember_elec
+
+
+def load_carbon_intensities():
+    """Load carbon intensities (in gCO2/kWh) of European countries from an older Ember dataset (since this variable is
+    not available in the European Electricity Review).
+
+    Returns
+    -------
+    eu_carbon_intensities : pd.DataFrame
+        Carbon intensities for european countries.
+
+    """
+    eu_carbon_intensities = pd.read_excel(
+        EMBER_EUROPE_CARBON_INTENSITY_FILE, sheet_name="Carbon intensities"
+    )
+    eu_carbon_intensities = (
+        eu_carbon_intensities.melt(
+            id_vars=["Area", "Variable"],
+            var_name="Year",
+            value_name="Carbon intensity of electricity (gCO2/kWh)",
+        )
+        .drop(columns=["Variable"])
+        .rename(columns={"Area": "Country"})
+        .sort_values(["Country", "Year"])
+        .reset_index(drop=True)
+    )
+
+    # Standardize country names.
+    ember_countries = pd.read_csv(EMBER_COUNTRIES_FILE)
+    eu_carbon_intensities = (
+        eu_carbon_intensities.merge(ember_countries, on="Country")
+        .drop(errors="raise", columns=["Country"])
+        .rename(errors="raise", columns={"OWID Country": "Country"})
+    )
+
+    return eu_carbon_intensities
 
 
 def main():
@@ -293,6 +353,14 @@ def main():
 
     # Load updated European Electricity Review data from Ember.
     eu_ember_elec = prepare_european_electricity_review_data_from_ember()
+
+    # Load carbon intensities of European countries from older Ember dataset.
+    eu_carbon_intensities = load_carbon_intensities()
+
+    # Add data on carbon intensities to European Electricity Review data.
+    eu_ember_elec = pd.merge(
+        eu_ember_elec, eu_carbon_intensities, on=["Country", "Year"], how="left"
+    )
 
     # Replace only those rows where country & year correspond to those in the new file.
     ember_elec = (

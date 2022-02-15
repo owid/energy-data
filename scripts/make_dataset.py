@@ -6,8 +6,11 @@ Running this script will generate the full energy dataset in three different for
 * owid-energy-data.json
 
 """
-import os
+
 import json
+import os
+
+import numpy as np
 import pandas as pd
 
 
@@ -180,6 +183,7 @@ def main():
             "Bioenergy electricity per capita (kWh)": "biofuel_elec_per_capita",
             "Biofuels (TWh)": "biofuel_consumption",
             "Biofuels per capita (kWh)": "biofuel_cons_per_capita",
+            "Carbon intensity of electricity (gCO2/kWh)": "carbon_intensity_elec",
             "Coal Consumption - TWh": "coal_consumption",
             "Coal (% electricity)": "coal_share_elec",
             "Coal (% growth)": "coal_cons_change_pct",
@@ -289,6 +293,18 @@ def main():
     )
 
     combined.sort_values(["country", "year"], inplace=True)
+
+    # Remove spurious infinity values (which should be further investigated during sanity checks).
+    for column in combined.columns:
+        issues_mask = combined[column] == np.inf
+        issues = combined[issues_mask]
+        if len(issues) > 0:
+            print(
+                f"WARNING: Removing {len(issues)} infinity values found in '{column}'. Affected countries:"
+            )
+            for country in set(issues["country"]):
+                print(f"* {country}")
+            combined.loc[issues_mask, column] = np.nan
 
     # Save output files
     combined.to_csv(OUTPUT_CSV_FILE, index=False)
