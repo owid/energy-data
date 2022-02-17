@@ -1285,7 +1285,7 @@ def main(
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Perform sanity checks on the Electricity mix from BP & Ember dataset, and compare the most recent "
-        "version of the dataset with the previous.."
+        "version of the dataset with the previous."
     )
     parser.add_argument(
         "-f",
