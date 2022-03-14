@@ -41,7 +41,7 @@ renewables_electricity,"Electricity generation from renewables, measured in tera
 solar_electricity,"Electricity generation from solar, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember
 wind_electricity,"Electricity generation from wind, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember
 energy_per_gdp,Energy consumption per unit of GDP. This is measured in kilowatt-hours per 2011 international-$.,Calculated by Our World in Data based on BP Statistical Review of World Energy; Shift Data Portal and Maddison Project Database
-energy_per_capita,"Primary energy consumption per capita, measured in kilowatt-hours per year",Calculated by Our World in Data based on BP Statistical Review of World Energy; Shift Data Portal and UN Population estimates
+energy_per_capita,"Primary energy consumption per capita, measured in kilowatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy; Shift Data Portal and UN Population estimates
 fossil_cons_change_pct,Annual percentage change in fossil fuel consumption,Calculated by Our World in Data based on BP Statistical Review of World Energy
 fossil_share_energy,Share of primary energy consumption that comes from fossil fuels,Calculated by Our World in Data based on BP Statistical Review of World Energy
 fossil_cons_change_twh,"Annual change in fossil fuel consumption, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy
@@ -85,7 +85,7 @@ oil_cons_change_pct,Annual percentage change in oil consumption,Calculated by Ou
 oil_share_energy,Share of primary energy consumption that comes from oil,Calculated by Our World in Data based on BP Statistical Review of World Energy
 oil_cons_change_twh,"Annual change in oil consumption, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy
 oil_consumption,"Primary energy consumption from oil, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy
-oil_elec_per_capita,"Primary energy consumption from oil, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy
+oil_elec_per_capita,"Per capita electricity generation from oil, measured in kilowatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy
 oil_energy_per_capita,"Per capita primary energy consumption from oil, measured in kilowatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy; Gapminder and UN Population Estimates
 oil_production,"Oil production, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy and Shift Data Portal
 oil_prod_per_capita,"Per capita oil production, measured in kilowatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy; Gapminder and UN Population Estimates
