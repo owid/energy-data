@@ -418,7 +418,7 @@ def main():
 
     # Calculate per capita electricity
     population = (
-        catalog.find("population", namespace="owid")
+        catalog.find("population", namespace="owid", dataset="key_indicators")
         .load()
         .reset_index()
         .rename(
