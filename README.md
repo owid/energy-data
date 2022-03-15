@@ -9,7 +9,7 @@ We will continue to publish updated data on Energy as it becomes available. Most
 ## Our data sources
 
 - **Energy consumption (primary energy, energy mix and energy intensity):** this data is sourced from a combination of two sources—the [BP Statistical Review of World Energy](https://www.bp.com/en/global/corporate/energy-economics/statistical-review-of-world-energy.html) and [SHIFT Data Portal](https://www.theshiftdataportal.org/energy).
-- **Electricity consumption (electricity consumption, and electricity mix):** this data is sourced from a combination of three sources—the [BP Statistical Review of World Energy](https://www.bp.com/en/global/corporate/energy-economics/statistical-review-of-world-energy.html), the [Ember – Global Electricity Dashboard](https://ember.shinyapps.io/GlobalElectricityDashboard/) and the [Ember European Electricity Review](https://ember-climate.org/project/european-electricity-review-2022/).
+- **Electricity generation (electricity generation, and electricity mix):** this data is sourced from a combination of three sources—the [BP Statistical Review of World Energy](https://www.bp.com/en/global/corporate/energy-economics/statistical-review-of-world-energy.html), the [Ember – Data Explorer](https://ember-climate.org/global-electricity-review-2021/data-explorer/) and the [Ember European Electricity Review](https://ember-climate.org/project/european-electricity-review-2022/).
 - **Other variables:** this data is collected from a variety of sources (United Nations, World Bank, Gapminder, Maddison Project Database, etc.). More information is available in [our codebook](https://github.com/owid/energy-data/blob/master/owid-energy-codebook.csv).
 
 ## The complete *Our World in Data* Energy dataset
