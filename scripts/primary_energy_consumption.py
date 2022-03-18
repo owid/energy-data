@@ -1,6 +1,8 @@
 """Load BP and EIA data on primary energy consumption, combine both datasets, add variables, and export as a csv file.
 
 """
+
+import argparse
 import json
 import os
 
@@ -125,16 +127,12 @@ def main():
     population = catalog.find("population", namespace="owid", dataset="key_indicators").load().reset_index().rename(
             columns={"country": "Country", "year": "Year", "population": "Population"}
     )[["Country", "Year", "Population"]]
-    ####################################################################################################################
-    # TODO: Remove this temporary solution once European Union (27) and income groups are added to population dataset.
-    # TODO: Consider updating data in population.csv file for "European Union (27)" and income groups:
-    #  'High-income countries', 'Land-locked Developing Countries (LLDC)', 'Least developed countries',
-    #  'Less developed regions', 'Low-income countries', 'Lower-middle-income countries', 'Middle-income countries',
-    #  'More developed regions', 'Upper-middle-income countries'
-    additional_population = pd.read_csv(os.path.join(INPUT_DIR, "shared", "population.csv"))
-    additional_population = additional_population[~additional_population['Country'].isin(population['Country'])]
-    population = pd.concat([population, additional_population], ignore_index=True)
-    ####################################################################################################################
+    # Check if there is any missing country.
+    missing_countries = set(combined['Country']) - set(population['Country'])
+    if len(missing_countries) > 0:
+        print(f"WARNING: {len(missing_countries)} countries not found in population dataset:.")
+        print("  They will remain in the dataset, but have no population data.")
+        print('\n'.join(missing_countries))
     combined = combined.merge(population, on=["Country", "Year"], how="left")
     combined["Energy per capita (kWh)"] = (
         combined["Primary energy consumption (TWh)"]
@@ -172,4 +170,6 @@ def main():
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    args = parser.parse_args()
     main()
