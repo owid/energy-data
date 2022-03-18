@@ -1,38 +1,59 @@
-import os
-import pandas as pd
-import numpy as np
+"""Generate energy mix dataset using data from BP's statistical review.
 
-CURRENT_DIR = os.path.dirname(__file__)
-INPUT_DIR = os.path.join(CURRENT_DIR, "input")
-GRAPHER_DIR = os.path.join(CURRENT_DIR, "grapher")
+"""
+
+import argparse
+import os
+
+import numpy as np
+import pandas as pd
+from owid import catalog
+
+from scripts import GRAPHER_DIR, INPUT_DIR
+
+# Original BP statistical review can be accessed at
+# https://www.bp.com/en/global/corporate/energy-economics/statistical-review-of-world-energy.html
+# The data has been processed by OWID to generate a dataset with a convenient choice of variables and units.
+# The code for this processing can be found in
+# https://github.com/owid/importers/tree/master/bp_statreview
+# TODO: Add dataset to owid catalog instead of manually adding it to this repository.
+#   As a temporary solution, in importers, create a function that directly outputs the csv.
+BP_INPUT_FILE = os.path.join(INPUT_DIR, "shared", "Statistical Review of World Energy - BP (2021).csv")
+# Output file.
+BP_OUTPUT_FILE = os.path.join(GRAPHER_DIR, "Energy mix from BP (2021).csv")
+
+# Conversion factors.
+# Terawatt-hours to kilowatt-hours.
+TWH_TO_KWH = 1e9
+# Exajoules to terawatt-hours.
+EJ_TO_TWH = 277.778
+# Petajoules to exajoules.
+PJ_TO_EJ = 1e-3
 
 
 def main():
 
-    primary_energy = pd.read_csv(
-        os.path.join(INPUT_DIR, "shared/bp_energy.csv"),
-        usecols=[
-            "Entity",
-            "Year",
-            "Coal Consumption - EJ",
-            "Gas Consumption - EJ",
-            "Oil Consumption - EJ",
-            "Hydro Consumption - EJ",
-            "Nuclear Consumption - EJ",
-            "Biofuels Consumption - PJ - Total",
-            "Primary Energy Consumption",
-            "Solar Consumption - EJ",
-            "Wind Consumption - EJ",
-            "Geo Biomass Other - EJ",
-            "Hydro Generation - TWh",
-            "Nuclear Generation - TWh",
-            "Solar Generation - TWh",
-            "Wind Generation -TWh",
-            "Geo Biomass Other - TWh",
-        ],
-    )
+    bp_data = pd.read_csv(BP_INPUT_FILE, usecols=[
+        "Entity",
+        "Year",
+        "Coal Consumption - EJ",
+        "Gas Consumption - EJ",
+        "Oil Consumption - EJ",
+        "Hydro Consumption - EJ",
+        "Nuclear Consumption - EJ",
+        "Biofuels Consumption - PJ - Total",
+        "Primary Energy Consumption - TWh",
+        "Solar Consumption - EJ",
+        "Wind Consumption - EJ",
+        "Geo Biomass Other - EJ",
+        "Hydro Generation - TWh",
+        "Nuclear Generation - TWh",
+        "Solar Generation - TWh",
+        "Wind Generation - TWh",
+        "Geo Biomass Other - TWh",
+            ])
 
-    primary_energy = primary_energy.rename(
+    primary_energy = bp_data.rename(
         errors="raise",
         columns={
             "Coal Consumption - EJ": "Coal (EJ)",
@@ -43,43 +64,40 @@ def main():
             "Solar Consumption - EJ": "Solar (EJ)",
             "Wind Consumption - EJ": "Wind (EJ)",
             "Geo Biomass Other - EJ": "Other renewables (EJ)",
-            "Primary Energy Consumption": "Primary Energy (EJ)",
+            "Primary Energy Consumption - TWh": "Primary Energy (EJ)",
             "Entity": "Country",
             "Hydro Generation - TWh": "Hydro (TWh)",
             "Nuclear Generation - TWh": "Nuclear (TWh)",
             "Solar Generation - TWh": "Solar (TWh)",
-            "Wind Generation -TWh": "Wind (TWh)",
+            "Wind Generation - TWh": "Wind (TWh)",
             "Geo Biomass Other - TWh": "Other renewables (TWh)",
             "Biofuels Consumption - PJ - Total": "Biofuels (PJ)",
         },
     )
 
-    primary_energy["Biofuels (PJ)"] = primary_energy["Biofuels (PJ)"].fillna(0)
+    primary_energy["Biofuels (EJ)"] = primary_energy["Biofuels (PJ)"] * PJ_TO_EJ
 
-    pj_to_ej = 0.001
-
-    primary_energy["Biofuels (EJ)"] = primary_energy["Biofuels (PJ)"] * pj_to_ej
     primary_energy["Fossil Fuels (EJ)"] = (
         primary_energy["Coal (EJ)"]
         .add(primary_energy["Oil (EJ)"])
         .add(primary_energy["Gas (EJ)"])
     )
+    # To avoid many missing values in total renewable energy, assume missing values in Biofuels mean zero consumption.
+    # By visually inspecting the original data, this seems to be a reasonable assumption: most missing values .
     primary_energy["Renewables (EJ)"] = (
         primary_energy["Hydro (EJ)"]
         .add(primary_energy["Solar (EJ)"])
         .add(primary_energy["Wind (EJ)"])
         .add(primary_energy["Other renewables (EJ)"])
-        .add(primary_energy["Biofuels (EJ)"])
+        .add(primary_energy["Biofuels (EJ)"].fillna(0))
     )
     primary_energy["Low-carbon energy (EJ)"] = primary_energy["Renewables (EJ)"].add(
         primary_energy["Nuclear (EJ)"]
     )
 
     # Converting all sources to TWh (primary energy – sub method)
-    ej_to_twh = 277.778
-
     for cat in ["Coal", "Oil", "Gas", "Biofuels"]:
-        primary_energy[f"{cat} (TWh)"] = primary_energy[f"{cat} (EJ)"] * ej_to_twh
+        primary_energy[f"{cat} (TWh)"] = primary_energy[f"{cat} (EJ)"] * EJ_TO_TWH
 
     for cat in [
         "Hydro",
@@ -91,7 +109,7 @@ def main():
         "Low-carbon energy",
     ]:
         primary_energy[f"{cat} (TWh – sub method)"] = (
-            primary_energy[f"{cat} (EJ)"] * ej_to_twh
+            primary_energy[f"{cat} (EJ)"] * EJ_TO_TWH
         )
 
     primary_energy["Renewables (TWh)"] = (
@@ -185,14 +203,21 @@ def main():
             "Country"
         )[f"{cat} (TWh – sub method)"].diff()
 
-    # Calculate per capita energy
-    population = pd.read_csv(os.path.join(INPUT_DIR, "shared/population.csv"))
-
+    # Load population data and calculate per capita energy.
+    population = catalog.find("population", namespace="owid", dataset="key_indicators").load().reset_index().rename(
+            columns={"country": "Country", "year": "Year", "population": "Population"}
+    )[["Country", "Year", "Population"]]
+    # Check if there is any missing country.
+    missing_countries = set(primary_energy['Country']) - set(population['Country'])
+    if len(missing_countries) > 0:
+        print(f"WARNING: {len(missing_countries)} countries not found in population dataset:.")
+        print("  They will remain in the dataset, but have no population data.")
+        print('\n'.join(missing_countries))
     primary_energy = primary_energy.merge(population, on=["Country", "Year"])
 
     for cat in ["Coal", "Oil", "Gas", "Biofuels", "Fossil Fuels"]:
         primary_energy[f"{cat} per capita (kWh)"] = (
-            primary_energy[f"{cat} (TWh)"] / primary_energy["Population"] * 1000000000
+            primary_energy[f"{cat} (TWh)"] / primary_energy["Population"] * TWH_TO_KWH
         )
 
     for cat in [
@@ -207,7 +232,7 @@ def main():
         primary_energy[f"{cat} per capita (kWh)"] = (
             primary_energy[f"{cat} (TWh – sub method)"]
             / primary_energy["Population"]
-            * 1000000000
+            * TWH_TO_KWH
         )
 
     energy_mix = primary_energy.drop(
@@ -248,10 +273,10 @@ def main():
     energy_mix = energy_mix[energy_mix.isna().sum(axis=1) < len(rounded_cols)]
 
     # Save to files as csv
-    energy_mix.to_csv(
-        os.path.join(GRAPHER_DIR, "Energy mix from BP (2020).csv"), index=False
-    )
+    energy_mix.to_csv(BP_OUTPUT_FILE, index=False)
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    args = parser.parse_args()
     main()
