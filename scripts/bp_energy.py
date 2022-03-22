@@ -254,6 +254,9 @@ def main():
     energy_mix[rounded_cols] = energy_mix[rounded_cols].round(3)
     energy_mix = energy_mix[energy_mix.isna().sum(axis=1) < len(rounded_cols)]
 
+    # Sort conveniently.
+    energy_mix = energy_mix.sort_values(['Country', 'Year']).reset_index(drop=True)
+
     # Save to files as csv
     energy_mix.to_csv(BP_OUTPUT_FILE, index=False)
 
