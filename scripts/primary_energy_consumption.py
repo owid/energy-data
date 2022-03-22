@@ -3,16 +3,16 @@
 """
 
 import argparse
-import json
 import os
 
 import pandas as pd
-from owid import catalog
 
 from scripts import GRAPHER_DIR, INPUT_DIR
+from utils import add_population_to_dataframe, standardize_countries
 
 # Input data files.
 # BP data file.
+# TODO: Use updated dataset (statistical review).
 BP_DATA_FILE = os.path.join(INPUT_DIR, "shared", "bp_energy.csv")
 # EIA data file, manually downloaded from
 # https://www.eia.gov/international/data/world/total-energy/more-total-energy-data
@@ -24,7 +24,7 @@ EIA_POPULATION_FILE = os.path.join(INPUT_DIR, "shared", "eia_countries.json")
 # TODO: Instead of loading it from a file, add it to the owid catalog and import it from there.
 GDP_MADDISON_FILE = os.path.join(INPUT_DIR, "shared", "total-gdp-maddison.csv")
 # Output file of combined BP & EIA data.
-OUTPUT_FILE = os.path.join(GRAPHER_DIR, "Primary energy consumption (BP & EIA).csv")
+OUTPUT_FILE = os.path.join(GRAPHER_DIR, "Primary energy consumption BP & EIA (2022).csv")
 
 # Conversion factors.
 # Million tonnes of oil equivalent to terawatt-hours.
@@ -64,10 +64,10 @@ def load_eia_data():
     # Remove appended spaces on country names.
     eia_data["Country"] = eia_data["Country"].str.lstrip()
 
-    # Load mapping of EIA countries, and standardize country names.
-    with open(EIA_POPULATION_FILE, "r") as _eia_population_file:
-        eia_population = json.loads(_eia_population_file.read())
-    eia_data['Country'] = eia_data['Country'].replace(eia_population)
+    # Standardize country names.
+    eia_data = standardize_countries(df=eia_data, countries_file=EIA_POPULATION_FILE, country_col='Country',
+                                     warn_on_missing_countries=True, make_missing_countries_nan=False,
+                                     warn_on_unused_countries=True, show_full_warning=True)
 
     # Drop rows with missing values and sort rows conveniently.
     eia_data = eia_data.dropna(subset=[col_name]).sort_values(['Country', 'Year']).reset_index(drop=True)
@@ -84,14 +84,13 @@ def load_bp_data():
         BP data.
 
     """
+    columns = {
+        "Entity": "Country",
+        "Year": "Year",
+        "Primary Energy Consumption": "Primary energy consumption (EJ)",
+    }
     # Import total primary energy consumption data from BP.
-    bp_data = pd.read_csv(BP_DATA_FILE, usecols=["Entity", "Year", "Primary Energy Consumption"]).rename(
-        errors="raise",
-        columns={
-            "Entity": "Country",
-            "Primary Energy Consumption": "Primary energy consumption (EJ)",
-        },
-    )
+    bp_data = pd.read_csv(BP_DATA_FILE, usecols=list(columns)).rename(errors="raise", columns=columns)
 
     # Convert units.
     bp_data["Primary energy consumption (TWh)"] = bp_data["Primary energy consumption (EJ)"] * EJ_TO_TWH
@@ -123,17 +122,11 @@ def main():
         "Country"
     )["Primary energy consumption (TWh)"].diff()
 
-    # Load population data and calculate primary energy consumption per capita.
-    population = catalog.find("population", namespace="owid", dataset="key_indicators").load().reset_index().rename(
-            columns={"country": "Country", "year": "Year", "population": "Population"}
-    )[["Country", "Year", "Population"]]
-    # Check if there is any missing country.
-    missing_countries = set(combined['Country']) - set(population['Country'])
-    if len(missing_countries) > 0:
-        print(f"WARNING: {len(missing_countries)} countries not found in population dataset:.")
-        print("  They will remain in the dataset, but have no population data.")
-        print('\n'.join(missing_countries))
-    combined = combined.merge(population, on=["Country", "Year"], how="left")
+    # Add population to primary energy dataframe
+    combined = add_population_to_dataframe(df=combined, country_col='Country', year_col='Year',
+                                           population_col='Population', warn_on_missing_countries=True,
+                                           show_full_warning=True)
+
     combined["Energy per capita (kWh)"] = (
         combined["Primary energy consumption (TWh)"]
         / combined["Population"]
