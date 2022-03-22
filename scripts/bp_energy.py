@@ -1,4 +1,4 @@
-"""Generate energy mix dataset using data from BP's statistical review.
+"""Generate energy mix dataset using data from BP's statistical review of the world energy.
 
 """
 
@@ -7,18 +7,20 @@ import os
 
 import numpy as np
 import pandas as pd
-from owid import catalog
 
 from scripts import GRAPHER_DIR, INPUT_DIR
+from utils import add_population_to_dataframe, standardize_countries
 
-# Original BP statistical review can be accessed at
+# The original BP statistical review can be accessed at
 # https://www.bp.com/en/global/corporate/energy-economics/statistical-review-of-world-energy.html
 # The data has been processed by OWID to generate a dataset with a convenient choice of variables and units.
 # The code for this processing can be found in
 # https://github.com/owid/importers/tree/master/bp_statreview
 # TODO: As a temporary solution, the Statistical Review of the World Energy by BP (processed in importers repository)
-#  has been downloaded as a csv file and added here. Once that dataset is in owid catalog, remove this file.
+#  has been downloaded as a csv file and added here. Once that dataset is in owid catalog, remove this file and import
+#  dataset directly from catalog.
 BP_INPUT_FILE = os.path.join(INPUT_DIR, "shared", "statistical_review_of_world_energy_bp_2021.csv")
+BP_COUNTRIES_FILE = os.path.join(INPUT_DIR, "shared", "statistical_review_of_world_energy_bp_2021.countries.json")
 # Output file.
 BP_OUTPUT_FILE = os.path.join(GRAPHER_DIR, "Energy mix from BP (2021).csv")
 
@@ -32,50 +34,33 @@ PJ_TO_EJ = 1e-3
 
 
 def main():
-    bp_data = pd.read_csv(BP_INPUT_FILE, usecols=[
-        "Entity",
-        "Year",
-        "Coal Consumption - EJ",
-        "Gas Consumption - EJ",
-        "Oil Consumption - EJ",
-        "Hydro Consumption - EJ",
-        "Nuclear Consumption - EJ",
-        "Biofuels Consumption - PJ - Total",
-        "Primary Energy Consumption - TWh",
-        "Solar Consumption - EJ",
-        "Wind Consumption - EJ",
-        "Geo Biomass Other - EJ",
-        "Hydro Generation - TWh",
-        "Nuclear Generation - TWh",
-        "Solar Generation - TWh",
-        "Wind Generation - TWh",
-        "Geo Biomass Other - TWh",
-            ])
+    # Define columns to import from BP dataset, and how to rename them.
+    columns = {
+        "Entity": "Country",
+        "Year": "Year",
+        "Coal Consumption - EJ": "Coal (EJ)",
+        "Gas Consumption - EJ": "Gas (EJ)",
+        "Oil Consumption - EJ": "Oil (EJ)",
+        "Hydro Consumption - EJ": "Hydro (EJ)",
+        "Nuclear Consumption - EJ": "Nuclear (EJ)",
+        "Solar Consumption - EJ": "Solar (EJ)",
+        "Wind Consumption - EJ": "Wind (EJ)",
+        "Geo Biomass Other - EJ": "Other renewables (EJ)",
+        "Primary Energy Consumption - TWh": "Primary Energy (EJ)",
+        "Hydro Generation - TWh": "Hydro (TWh)",
+        "Nuclear Generation - TWh": "Nuclear (TWh)",
+        "Solar Generation - TWh": "Solar (TWh)",
+        "Wind Generation - TWh": "Wind (TWh)",
+        "Geo Biomass Other - TWh": "Other renewables (TWh)",
+        "Biofuels Consumption - PJ - Total": "Biofuels (PJ)",
+        }
+    bp_data = pd.read_csv(BP_INPUT_FILE, usecols=np.array(list(columns)))
+    primary_energy = bp_data.rename(errors="raise", columns=columns)
 
-    primary_energy = bp_data.rename(
-        errors="raise",
-        columns={
-            "Coal Consumption - EJ": "Coal (EJ)",
-            "Gas Consumption - EJ": "Gas (EJ)",
-            "Oil Consumption - EJ": "Oil (EJ)",
-            "Hydro Consumption - EJ": "Hydro (EJ)",
-            "Nuclear Consumption - EJ": "Nuclear (EJ)",
-            "Solar Consumption - EJ": "Solar (EJ)",
-            "Wind Consumption - EJ": "Wind (EJ)",
-            "Geo Biomass Other - EJ": "Other renewables (EJ)",
-            "Primary Energy Consumption - TWh": "Primary Energy (EJ)",
-            "Entity": "Country",
-            "Hydro Generation - TWh": "Hydro (TWh)",
-            "Nuclear Generation - TWh": "Nuclear (TWh)",
-            "Solar Generation - TWh": "Solar (TWh)",
-            "Wind Generation - TWh": "Wind (TWh)",
-            "Geo Biomass Other - TWh": "Other renewables (TWh)",
-            "Biofuels Consumption - PJ - Total": "Biofuels (PJ)",
-        },
-    )
-
+    # Convert units.
     primary_energy["Biofuels (EJ)"] = primary_energy["Biofuels (PJ)"] * PJ_TO_EJ
 
+    # Add useful aggregates.
     primary_energy["Fossil Fuels (EJ)"] = (
         primary_energy["Coal (EJ)"]
         .add(primary_energy["Oil (EJ)"])
@@ -202,17 +187,15 @@ def main():
             "Country"
         )[f"{cat} (TWh – sub method)"].diff()
 
-    # Load population data and calculate per capita energy.
-    population = catalog.find("population", namespace="owid", dataset="key_indicators").load().reset_index().rename(
-            columns={"country": "Country", "year": "Year", "population": "Population"}
-    )[["Country", "Year", "Population"]]
-    # Check if there is any missing country.
-    missing_countries = set(primary_energy['Country']) - set(population['Country'])
-    if len(missing_countries) > 0:
-        print(f"WARNING: {len(missing_countries)} countries not found in population dataset:.")
-        print("  They will remain in the dataset, but have no population data.")
-        print('\n'.join(missing_countries))
-    primary_energy = primary_energy.merge(population, on=["Country", "Year"])
+    # Ensure all country names are standardized.
+    primary_energy = standardize_countries(
+        df=primary_energy, country_col='Country', countries_file=BP_COUNTRIES_FILE, warn_on_missing_countries=True,
+        make_missing_countries_nan=False, warn_on_unused_countries=True, show_full_warning=True)
+
+    # Add population to primary energy dataframe.
+    primary_energy = add_population_to_dataframe(
+        df=primary_energy, country_col='Country', year_col='Year', population_col='Population',
+        warn_on_missing_countries=True, show_full_warning=True)
 
     for cat in ["Coal", "Oil", "Gas", "Biofuels", "Fossil Fuels"]:
         primary_energy[f"{cat} per capita (kWh)"] = (
