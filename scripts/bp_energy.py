@@ -16,9 +16,9 @@ from scripts import GRAPHER_DIR, INPUT_DIR
 # The data has been processed by OWID to generate a dataset with a convenient choice of variables and units.
 # The code for this processing can be found in
 # https://github.com/owid/importers/tree/master/bp_statreview
-# TODO: Add dataset to owid catalog instead of manually adding it to this repository.
-#   As a temporary solution, in importers, create a function that directly outputs the csv.
-BP_INPUT_FILE = os.path.join(INPUT_DIR, "shared", "Statistical Review of World Energy - BP (2021).csv")
+# TODO: As a temporary solution, the Statistical Review of the World Energy by BP (processed in importers repository)
+#  has been downloaded as a csv file and added here. Once that dataset is in owid catalog, remove this file.
+BP_INPUT_FILE = os.path.join(INPUT_DIR, "shared", "statistical_review_of_world_energy_bp_2021.csv")
 # Output file.
 BP_OUTPUT_FILE = os.path.join(GRAPHER_DIR, "Energy mix from BP (2021).csv")
 
@@ -32,7 +32,6 @@ PJ_TO_EJ = 1e-3
 
 
 def main():
-
     bp_data = pd.read_csv(BP_INPUT_FILE, usecols=[
         "Entity",
         "Year",
