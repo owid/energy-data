@@ -1,4 +1,5 @@
-"""Load BP and EIA data on primary energy consumption, combine both datasets, add variables, and export as a csv file.
+"""Load BP and EIA data on primary energy consumption (and energy per GDP, taken from the
+Maddison Project Database), combine data, add variables, and export as a csv file.
 
 """
 
@@ -6,31 +7,27 @@ import argparse
 import os
 
 import pandas as pd
+from owid import catalog
 
 from scripts import GRAPHER_DIR, INPUT_DIR
 from utils import add_population_to_dataframe, standardize_countries
 
 # Input data files.
 # BP data file.
-# TODO: Use updated dataset (statistical review).
-BP_DATA_FILE = os.path.join(INPUT_DIR, "shared", "bp_energy.csv")
+BP_DATA_FILE = os.path.join(INPUT_DIR, "shared", "statistical_review_of_world_energy_bp_2021.csv")
+BP_COUNTRIES_FILE = os.path.join(INPUT_DIR, "shared", "statistical_review_of_world_energy_bp_2021.countries.json")
 # EIA data file, manually downloaded from
 # https://www.eia.gov/international/data/world/total-energy/more-total-energy-data
 # after selecting all countries, only "Consumption" in activities, "MTOE" in units, and downloaded as CSV (table).
 EIA_DATA_FILE = os.path.join(INPUT_DIR, "energy-consumption", "eia_primary_energy_consumption.csv")
-# EIA population file, mapping EIA country names to OWID country names, generated using the etl.harmonize tool.
-EIA_POPULATION_FILE = os.path.join(INPUT_DIR, "energy-consumption", "eia.countries.json")
-# GDP Maddison file.
-# TODO: Instead of loading it from a file, import it from owid catalog.
-GDP_MADDISON_FILE = os.path.join(INPUT_DIR, "shared", "total-gdp-maddison.csv")
+# EIA countries file, mapping EIA country names to OWID country names, generated using the etl.harmonize tool.
+EIA_COUNTRIES_FILE = os.path.join(INPUT_DIR, "energy-consumption", "eia.countries.json")
 # Output file of combined BP & EIA data.
 OUTPUT_FILE = os.path.join(GRAPHER_DIR, "Primary energy consumption BP & EIA (2022).csv")
 
 # Conversion factors.
 # Million tonnes of oil equivalent to terawatt-hours.
 MTOE_TO_TWH = 11.63
-# Exajoules to terawatt-hours.
-EJ_TO_TWH = 277.778
 # Terawatt-hours to kilowatt-hours.
 TWH_TO_KWH = 1e9
 
@@ -39,6 +36,33 @@ TWH_TO_KWH = 1e9
 REGIONS_WITH_INCONSISTENT_DATA = [
     "Gibraltar",
 ]
+
+
+def load_maddison_data():
+    """Load Maddison Project Database data on GDP.
+
+    Returns
+    -------
+    gdp : pd.DataFrame
+        Data on GDP.
+
+    """
+    columns = {
+        'country': 'Country',
+        'year': 'Year',
+        'gdp': 'GDP',
+    }
+    dtypes = {
+        'Country': str,
+        'Year': int,
+        'GDP': float,
+    }
+    gdp = catalog.find(table='maddison', dataset='ggdc_maddison', namespace='ggdc').load()
+    gdp = gdp.reset_index().rename(columns=columns)[columns.values()]
+
+    gdp = gdp.astype(dtypes)
+
+    return gdp
 
 
 def load_eia_data():
@@ -65,9 +89,7 @@ def load_eia_data():
     eia_data["Country"] = eia_data["Country"].str.lstrip()
 
     # Standardize country names.
-    eia_data = standardize_countries(df=eia_data, countries_file=EIA_POPULATION_FILE, country_col='Country',
-                                     warn_on_missing_countries=True, make_missing_countries_nan=False,
-                                     warn_on_unused_countries=True, show_full_warning=True)
+    eia_data = standardize_countries(df=eia_data, countries_file=EIA_COUNTRIES_FILE, country_col='Country')
 
     # Drop rows with missing values and sort rows conveniently.
     eia_data = eia_data.dropna(subset=[col_name]).sort_values(['Country', 'Year']).reset_index(drop=True)
@@ -87,14 +109,14 @@ def load_bp_data():
     columns = {
         "Entity": "Country",
         "Year": "Year",
-        "Primary Energy Consumption": "Primary energy consumption (EJ)",
+        "Primary Energy Consumption - TWh": "Primary energy consumption (TWh)",
     }
+
     # Import total primary energy consumption data from BP.
     bp_data = pd.read_csv(BP_DATA_FILE, usecols=list(columns)).rename(errors="raise", columns=columns)
 
-    # Convert units.
-    bp_data["Primary energy consumption (TWh)"] = bp_data["Primary energy consumption (EJ)"] * EJ_TO_TWH
-    bp_data = bp_data.drop(errors="raise", columns=["Primary energy consumption (EJ)"])
+    # Standardize country names.
+    bp_data = standardize_countries(df=bp_data, countries_file=BP_COUNTRIES_FILE, country_col='Country')
 
     # Drop rows with missing values and sort rows conveniently.
     bp_data = bp_data.dropna(subset="Primary energy consumption (TWh)").sort_values(['Country', 'Year']).\
@@ -135,25 +157,28 @@ def main():
     combined = combined.drop(errors="raise", columns=["Population"])
 
     # Load GDP data and calculate energy consumption per unit GDP.
-    gdp = pd.read_csv(GDP_MADDISON_FILE, usecols=["Country", "Year", "Total real GDP"])
+    gdp = load_maddison_data()
+
     combined = combined.merge(gdp, on=["Country", "Year"], how="left")
     combined["Energy per GDP (kWh per $)"] = (
         combined["Primary energy consumption (TWh)"]
-        / combined["Total real GDP"]
+        / combined["GDP"]
         * TWH_TO_KWH
     )
-    combined = combined.drop(errors="raise", columns=["Total real GDP"])
+    combined = combined.drop(errors="raise", columns=["GDP"])
 
     # Round all values to 3 decimal places
     rounded_cols = [col for col in list(combined) if col not in ("Country", "Year")]
     combined[rounded_cols] = combined[rounded_cols].round(3)    
 
-    print(f"Removing countries and regions with inconsistent data:")
+    ####################################################################################################################
+    # TODO: Remove this temporary solution once inconsistencies in data have been tackled.
+    print(f"WARNING: Removing countries and regions with inconsistent data:")
     for region in REGIONS_WITH_INCONSISTENT_DATA:
-        print(f" * {region}")
-    combined = combined[
-        ~combined["Country"].isin(REGIONS_WITH_INCONSISTENT_DATA)
-    ].reset_index(drop=True)
+        if region in sorted(set(combined['Country'])):
+            print(f" * {region}")
+    combined = combined[~combined["Country"].isin(REGIONS_WITH_INCONSISTENT_DATA)].reset_index(drop=True)
+    ####################################################################################################################
 
     # Remove rows without any relevant data and sort conveniently.
     combined = combined.dropna(subset=rounded_cols, how='all').sort_values(['Country', 'Year']).reset_index(drop=True)
