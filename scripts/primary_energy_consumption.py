@@ -19,9 +19,9 @@ BP_DATA_FILE = os.path.join(INPUT_DIR, "shared", "bp_energy.csv")
 # after selecting all countries, only "Consumption" in activities, "MTOE" in units, and downloaded as CSV (table).
 EIA_DATA_FILE = os.path.join(INPUT_DIR, "energy-consumption", "eia_primary_energy_consumption.csv")
 # EIA population file, mapping EIA country names to OWID country names, generated using the etl.harmonize tool.
-EIA_POPULATION_FILE = os.path.join(INPUT_DIR, "shared", "eia_countries.json")
+EIA_POPULATION_FILE = os.path.join(INPUT_DIR, "shared", "eia.countries.json")
 # GDP Maddison file.
-# TODO: Instead of loading it from a file, add it to the owid catalog and import it from there.
+# TODO: Instead of loading it from a file, import it from owid catalog.
 GDP_MADDISON_FILE = os.path.join(INPUT_DIR, "shared", "total-gdp-maddison.csv")
 # Output file of combined BP & EIA data.
 OUTPUT_FILE = os.path.join(GRAPHER_DIR, "Primary energy consumption BP & EIA (2022).csv")
