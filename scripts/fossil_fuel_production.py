@@ -11,12 +11,20 @@ import numpy as np
 from scripts import GRAPHER_DIR, INPUT_DIR
 from utils import add_population_to_dataframe, standardize_countries
 
-BP_DATA_FILE = os.path.join(INPUT_DIR, "shared", "statistical_review_of_world_energy_bp_2021.csv")
-BP_COUNTRIES_FILE = os.path.join(INPUT_DIR, "shared", "statistical_review_of_world_energy_bp_2021.countries.json")
-SHIFT_COAL_DATA_FILE = os.path.join(INPUT_DIR, "fossil-fuel-production", "shift_coal.csv")
+BP_DATA_FILE = os.path.join(
+    INPUT_DIR, "shared", "statistical_review_of_world_energy_bp_2021.csv"
+)
+BP_COUNTRIES_FILE = os.path.join(
+    INPUT_DIR, "shared", "statistical_review_of_world_energy_bp_2021.countries.json"
+)
+SHIFT_COAL_DATA_FILE = os.path.join(
+    INPUT_DIR, "fossil-fuel-production", "shift_coal.csv"
+)
 SHIFT_GAS_DATA_FILE = os.path.join(INPUT_DIR, "fossil-fuel-production", "shift_gas.csv")
 SHIFT_OIL_DATA_FILE = os.path.join(INPUT_DIR, "fossil-fuel-production", "shift_oil.csv")
-SHIFT_COUNTRIES_FILE = os.path.join(INPUT_DIR, "fossil-fuel-production", "shift.countries.json")
+SHIFT_COUNTRIES_FILE = os.path.join(
+    INPUT_DIR, "fossil-fuel-production", "shift.countries.json"
+)
 OUTPUT_FILE = os.path.join(GRAPHER_DIR, "Fossil fuel production BP & Shift (2022).csv")
 # Conversion factors.
 # Convert exajoules to terawatt-hours.
@@ -33,7 +41,9 @@ def load_bp_data():
         "Gas Production - TWh": "Gas production (TWh)",
         "Oil Production - TWh": "Oil production (TWh)",
     }
-    bp_data = pd.read_csv(BP_DATA_FILE, usecols=list(columns)).rename(errors='raise', columns=columns)
+    bp_data = pd.read_csv(BP_DATA_FILE, usecols=list(columns)).rename(
+        errors="raise", columns=columns
+    )
 
     bp_data = bp_data.sort_values(["Country", "Year"]).reset_index(drop=True)
 
@@ -73,19 +83,33 @@ def load_shift_data():
     shift_fossil = shift_fossil.merge(shift_gas, on=["Country", "Year"], how="outer")
 
     # Convert units.
-    shift_fossil["Coal production (TWh)"] = shift_fossil["Coal Production (EJ)"] * EJ_TO_TWH
-    shift_fossil["Oil production (TWh)"] = shift_fossil["Oil Production (EJ)"] * EJ_TO_TWH
-    shift_fossil["Gas production (TWh)"] = shift_fossil["Gas Production (EJ)"] * EJ_TO_TWH
+    shift_fossil["Coal production (TWh)"] = (
+        shift_fossil["Coal Production (EJ)"] * EJ_TO_TWH
+    )
+    shift_fossil["Oil production (TWh)"] = (
+        shift_fossil["Oil Production (EJ)"] * EJ_TO_TWH
+    )
+    shift_fossil["Gas production (TWh)"] = (
+        shift_fossil["Gas Production (EJ)"] * EJ_TO_TWH
+    )
     shift_fossil = shift_fossil.drop(
-        columns=["Coal Production (EJ)", "Oil Production (EJ)", "Gas Production (EJ)"])
+        columns=["Coal Production (EJ)", "Oil Production (EJ)", "Gas Production (EJ)"]
+    )
 
     # Standardize countries.
-    shift_fossil = standardize_countries(df=shift_fossil, countries_file=SHIFT_COUNTRIES_FILE, country_col="Country",
-                                         make_missing_countries_nan=True)
+    shift_fossil = standardize_countries(
+        df=shift_fossil,
+        countries_file=SHIFT_COUNTRIES_FILE,
+        country_col="Country",
+        make_missing_countries_nan=True,
+    )
 
     # Remove missing countries and sort conveniently.
-    shift_fossil = shift_fossil[shift_fossil['Country'].notnull()].sort_values(['Country', 'Year']).\
-        reset_index(drop=True)
+    shift_fossil = (
+        shift_fossil[shift_fossil["Country"].notnull()]
+        .sort_values(["Country", "Year"])
+        .reset_index(drop=True)
+    )
 
     return shift_fossil
 
@@ -108,10 +132,11 @@ def add_annual_change(df):
 
 def add_per_capita_variables(df):
     combined = df.copy()
-    
+
     # Add population to data.
     combined = add_population_to_dataframe(
-        df=combined, country_col='Country', year_col='Year', population_col='Population')
+        df=combined, country_col="Country", year_col="Year", population_col="Population"
+    )
 
     # Calculate production per capita.
     for cat in ("Coal", "Oil", "Gas"):
@@ -124,7 +149,7 @@ def add_per_capita_variables(df):
 
 
 def combine_bp_and_shift_data(bp_data, shift_data):
-    fixed_variables = ['Country', 'Year']
+    fixed_variables = ["Country", "Year"]
 
     # We should not concatenate bp and shift data directly, since there are nans in different places.
     variables = [col for col in bp_data.columns if col not in fixed_variables]
@@ -132,13 +157,23 @@ def combine_bp_and_shift_data(bp_data, shift_data):
     combined = pd.DataFrame({fixed_variable: [] for fixed_variable in fixed_variables})
 
     for variable in variables:
-        bp_data_for_variable = bp_data[fixed_variables + [variable]].dropna(subset=variable)
-        shift_data_for_variable = shift_data[fixed_variables + [variable]].dropna(subset=variable)
-        combined_for_variable = pd.concat([bp_data_for_variable, shift_data_for_variable], ignore_index=True)
+        bp_data_for_variable = bp_data[fixed_variables + [variable]].dropna(
+            subset=variable
+        )
+        shift_data_for_variable = shift_data[fixed_variables + [variable]].dropna(
+            subset=variable
+        )
+        combined_for_variable = pd.concat(
+            [bp_data_for_variable, shift_data_for_variable], ignore_index=True
+        )
         # On rows where both datasets overlap, give priority to BP data (which is more up-to-date).
-        combined_for_variable = combined_for_variable.drop_duplicates(subset=fixed_variables, keep='first')    
+        combined_for_variable = combined_for_variable.drop_duplicates(
+            subset=fixed_variables, keep="first"
+        )
         # Combine data for different variables.
-        combined = pd.merge(combined, combined_for_variable, on=fixed_variables, how='outer')
+        combined = pd.merge(
+            combined, combined_for_variable, on=fixed_variables, how="outer"
+        )
 
     # Sort data appropriately.
     combined = combined.sort_values(fixed_variables).reset_index(drop=True)
@@ -146,7 +181,7 @@ def combine_bp_and_shift_data(bp_data, shift_data):
     return combined
 
 
-def main(): 
+def main():
     print("Load BP data")
     bp_data = load_bp_data()
 

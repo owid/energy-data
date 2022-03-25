@@ -301,7 +301,11 @@ def load_population(name_population=None):
     """
     if name_population is None:
         name_population = NAME_POPULATION
-    population = catalog.find("population", namespace="owid", dataset="key_indicators").load().reset_index()
+    population = (
+        catalog.find("population", namespace="owid", dataset="key_indicators")
+        .load()
+        .reset_index()
+    )
     population_renamed = rename_columns(
         data=population,
         entities_to_rename_in_columns=["country", "year"],

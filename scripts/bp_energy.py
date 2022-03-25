@@ -19,8 +19,12 @@ from utils import add_population_to_dataframe, standardize_countries
 # TODO: As a temporary solution, the Statistical Review of the World Energy by BP (processed in importers repository)
 #  has been downloaded as a csv file and added here. Once that dataset is in owid catalog, remove this file and import
 #  dataset directly from catalog.
-BP_INPUT_FILE = os.path.join(INPUT_DIR, "shared", "statistical_review_of_world_energy_bp_2021.csv")
-BP_COUNTRIES_FILE = os.path.join(INPUT_DIR, "shared", "statistical_review_of_world_energy_bp_2021.countries.json")
+BP_INPUT_FILE = os.path.join(
+    INPUT_DIR, "shared", "statistical_review_of_world_energy_bp_2021.csv"
+)
+BP_COUNTRIES_FILE = os.path.join(
+    INPUT_DIR, "shared", "statistical_review_of_world_energy_bp_2021.countries.json"
+)
 # Output file.
 BP_OUTPUT_FILE = os.path.join(GRAPHER_DIR, "Energy mix from BP (2021).csv")
 
@@ -53,7 +57,7 @@ def main():
         "Wind Generation - TWh": "Wind (TWh)",
         "Geo Biomass Other - TWh": "Other renewables (TWh)",
         "Biofuels Consumption - PJ - Total": "Biofuels (PJ)",
-        }
+    }
     bp_data = pd.read_csv(BP_INPUT_FILE, usecols=np.array(list(columns)))
     primary_energy = bp_data.rename(errors="raise", columns=columns)
 
@@ -189,13 +193,24 @@ def main():
 
     # Ensure all country names are standardized.
     primary_energy = standardize_countries(
-        df=primary_energy, country_col='Country', countries_file=BP_COUNTRIES_FILE, warn_on_missing_countries=True,
-        make_missing_countries_nan=False, warn_on_unused_countries=True, show_full_warning=True)
+        df=primary_energy,
+        country_col="Country",
+        countries_file=BP_COUNTRIES_FILE,
+        warn_on_missing_countries=True,
+        make_missing_countries_nan=False,
+        warn_on_unused_countries=True,
+        show_full_warning=True,
+    )
 
     # Add population to primary energy dataframe.
     primary_energy = add_population_to_dataframe(
-        df=primary_energy, country_col='Country', year_col='Year', population_col='Population',
-        warn_on_missing_countries=True, show_full_warning=True)
+        df=primary_energy,
+        country_col="Country",
+        year_col="Year",
+        population_col="Population",
+        warn_on_missing_countries=True,
+        show_full_warning=True,
+    )
 
     for cat in ["Coal", "Oil", "Gas", "Biofuels", "Fossil Fuels"]:
         primary_energy[f"{cat} per capita (kWh)"] = (
@@ -255,7 +270,7 @@ def main():
     energy_mix = energy_mix[energy_mix.isna().sum(axis=1) < len(rounded_cols)]
 
     # Sort conveniently.
-    energy_mix = energy_mix.sort_values(['Country', 'Year']).reset_index(drop=True)
+    energy_mix = energy_mix.sort_values(["Country", "Year"]).reset_index(drop=True)
 
     # Save to files as csv
     energy_mix.to_csv(BP_OUTPUT_FILE, index=False)

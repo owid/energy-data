@@ -13,23 +13,23 @@ from owid import catalog
 
 
 class ExceptionFromDocstring(Exception):
-    """Exception that, if no exception message is explicitly given, returns its own docstring.
-    """
+    """Exception that, if no exception message is explicitly given, returns its own docstring."""
+
     def __init__(self, exception_message=None, *args):
         super().__init__(exception_message or self.__doc__, *args)
 
 
 class DataFramesHaveDifferentLengths(ExceptionFromDocstring):
-    """Dataframes cannot be compared because they have different number of rows.
-    """
+    """Dataframes cannot be compared because they have different number of rows."""
 
 
 class ObjectsAreNotDataframes(ExceptionFromDocstring):
-    """Given objects are not dataframes.
-    """
+    """Given objects are not dataframes."""
 
 
-def compare_dataframes(df1, df2, columns=None, absolute_tolerance=1e-8, relative_tolerance=1e-8):
+def compare_dataframes(
+    df1, df2, columns=None, absolute_tolerance=1e-8, relative_tolerance=1e-8
+):
     # Condition to be equal based on absolute tolerance: abs(a - b) <= absolute_tolerance
     # Condition to be equal based on relative tolerance: abs(a - b) <= relative_tolerance * absolute(b)
     # TODO: Add documentation.
@@ -45,7 +45,9 @@ def compare_dataframes(df1, df2, columns=None, absolute_tolerance=1e-8, relative
         if (df1[col].dtype == object) or (df2[col].dtype == object):
             compared_row = df1[col] == df2[col]
         else:
-            compared_row = np.isclose(df1[col], df2[col], atol=absolute_tolerance, rtol=relative_tolerance)
+            compared_row = np.isclose(
+                df1[col], df2[col], atol=absolute_tolerance, rtol=relative_tolerance
+            )
             # Treat nans as equal.
             compared_row[np.isnan(df1[col]) & np.isnan(df2[col])] = True
         compared[col] = compared_row
@@ -89,10 +91,14 @@ def are_dataframes_equal(df1, df2, absolute_tolerance=1e-8, relative_tolerance=1
             are_equal = False
         for col in common_columns:
             if df1[col].dtype != df2[col].dtype:
-                print(f"  * Column {col} is of type {df1[col].dtype} for df1, but type {df2[col].dtype} for df2.")
+                print(
+                    f"  * Column {col} is of type {df1[col].dtype} for df1, but type {df2[col].dtype} for df2."
+                )
                 are_equal = False
     else:
-        print(f"* Only {len(common_columns)} common columns out of {len(all_columns)} distinct columns.")
+        print(
+            f"* Only {len(common_columns)} common columns out of {len(all_columns)} distinct columns."
+        )
         are_equal = False
 
     if not can_be_compared:
@@ -101,15 +107,22 @@ def are_dataframes_equal(df1, df2, absolute_tolerance=1e-8, relative_tolerance=1
         are_equal = False
     else:
         # Dataframes can be compared cell by cell.
-        compared = compare_dataframes(df1, df2, columns=common_columns, absolute_tolerance=absolute_tolerance,
-                                      relative_tolerance=relative_tolerance)
+        compared = compare_dataframes(
+            df1,
+            df2,
+            columns=common_columns,
+            absolute_tolerance=absolute_tolerance,
+            relative_tolerance=relative_tolerance,
+        )
         # Dataframes are equal only if all previous checks have passed and cells are identical
         # Two nans are considered identical.
         are_equal = are_equal & compared.all().all()
 
     if are_equal:
-        print(f"Dataframes are identical (within absolute tolerance of {absolute_tolerance} and relative tolerance of "
-              f"{relative_tolerance}).")
+        print(
+            f"Dataframes are identical (within absolute tolerance of {absolute_tolerance} and relative tolerance of "
+            f"{relative_tolerance})."
+        )
 
     return are_equal, compared
 
@@ -120,8 +133,15 @@ def _warn_on_list_of_entities(list_of_entities, warning_message, show_list):
         print("\n".join(["* " + entity for entity in list_of_entities]))
 
 
-def standardize_countries(df, countries_file, country_col='country', warn_on_missing_countries=True,
-                          make_missing_countries_nan=False, warn_on_unused_countries=True, show_full_warning=True):
+def standardize_countries(
+    df,
+    countries_file,
+    country_col="country",
+    warn_on_missing_countries=True,
+    make_missing_countries_nan=False,
+    warn_on_unused_countries=True,
+    show_full_warning=True,
+):
     """Standardize country names in dataframe, following the mapping given in a file.
 
     Parameters
@@ -167,9 +187,12 @@ def standardize_countries(df, countries_file, country_col='country', warn_on_mis
             _warn_on_list_of_entities(
                 list_of_entities=missing_countries,
                 warning_message=f"WARNING: {len(missing_countries)} entities in dataframe missing in countries file.",
-                show_list=show_full_warning)
+                show_list=show_full_warning,
+            )
         if make_missing_countries_nan:
-            df_standardized.loc[df_standardized[country_col].isin(missing_countries), country_col] = np.nan
+            df_standardized.loc[
+                df_standardized[country_col].isin(missing_countries), country_col
+            ] = np.nan
 
     # Optionally warn if countries file has entities that have not been found in dataframe.
     if warn_on_unused_countries:
@@ -178,13 +201,20 @@ def standardize_countries(df, countries_file, country_col='country', warn_on_mis
             _warn_on_list_of_entities(
                 list_of_entities=unused_countries,
                 warning_message=f"WARNING: {len(unused_countries)} unused entities in countries file.",
-                show_list=show_full_warning)
+                show_list=show_full_warning,
+            )
 
     return df_standardized
 
 
-def add_population_to_dataframe(df, country_col='country', year_col='year', population_col='population',
-                                warn_on_missing_countries=True, show_full_warning=True):
+def add_population_to_dataframe(
+    df,
+    country_col="country",
+    year_col="year",
+    population_col="population",
+    warn_on_missing_countries=True,
+    show_full_warning=True,
+):
     """Add column of population to a dataframe.
 
     Parameters
@@ -209,9 +239,18 @@ def add_population_to_dataframe(df, country_col='country', year_col='year', popu
 
     """
     # Load population data and calculate per capita energy.
-    population = catalog.find("population", namespace="owid", dataset="key_indicators").load().reset_index().rename(
-            columns={"country": country_col, "year": year_col, "population": population_col}
-    )[[country_col, year_col, population_col]]
+    population = (
+        catalog.find("population", namespace="owid", dataset="key_indicators")
+        .load()
+        .reset_index()
+        .rename(
+            columns={
+                "country": country_col,
+                "year": year_col,
+                "population": population_col,
+            }
+        )[[country_col, year_col, population_col]]
+    )
 
     # Check if there is any missing country.
     missing_countries = set(df[country_col]) - set(population[country_col])
@@ -220,10 +259,13 @@ def add_population_to_dataframe(df, country_col='country', year_col='year', popu
             _warn_on_list_of_entities(
                 list_of_entities=missing_countries,
                 warning_message=f"WARNING: {len(missing_countries)} countries not found in population dataset. "
-                                f"They will remain in the dataset, but have nan population.",
-                show_list=show_full_warning)
+                f"They will remain in the dataset, but have nan population.",
+                show_list=show_full_warning,
+            )
 
     # Add population to original dataframe.
-    df_with_population = pd.merge(df, population, on=[country_col, year_col], how='left')
+    df_with_population = pd.merge(
+        df, population, on=[country_col, year_col], how="left"
+    )
 
     return df_with_population

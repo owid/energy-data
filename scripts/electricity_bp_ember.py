@@ -25,17 +25,24 @@ EMBER_GLOBAL_COUNTRIES_FILE = os.path.join(
     INPUT_DIR, "electricity-bp-ember", "ember.countries.json"
 )
 # URL to Ember Europe Electricity Review raw data file.
-EMBER_EUROPE_DATA_FILE = "https://ember-climate.org/app/uploads/2022/02/EER_2022_raw_data.zip"
+EMBER_EUROPE_DATA_FILE = (
+    "https://ember-climate.org/app/uploads/2022/02/EER_2022_raw_data.zip"
+)
 EMBER_EUROPE_COUNTRIES_FILE = os.path.join(
-    INPUT_DIR, "electricity-bp-ember", "european_electricity_review.countries.json")
+    INPUT_DIR, "electricity-bp-ember", "european_electricity_review.countries.json"
+)
 # Carbon intensity is also included in the EER (including 2021), however they do not include UK.
 # This is data from the previous release (which includes UK, although only until 2020).
 EMBER_EUROPE_CARBON_INTENSITY_FILE = os.path.join(
     INPUT_DIR, "electricity-bp-ember", "eu_electricity_ember.xlsx"
 )
 # Path to BP energy dataset file.
-BP_DATA_FILE = os.path.join(INPUT_DIR, "shared", "statistical_review_of_world_energy_bp_2021.csv")
-BP_COUNTRIES_FILE = os.path.join(INPUT_DIR, "shared", "statistical_review_of_world_energy_bp_2021.countries.json")
+BP_DATA_FILE = os.path.join(
+    INPUT_DIR, "shared", "statistical_review_of_world_energy_bp_2021.csv"
+)
+BP_COUNTRIES_FILE = os.path.join(
+    INPUT_DIR, "shared", "statistical_review_of_world_energy_bp_2021.countries.json"
+)
 # Name of files inside zip folder of European Electricity Review raw data.
 EU_EMBER_GENERATION_NAME = "EER_2022_generation.csv"
 EU_EMBER_EMISSIONS_NAME = "EER_2022_emissions.csv"
@@ -43,8 +50,8 @@ EU_EMBER_OVERVIEW_NAME = "EER_2022_country_overview.csv"
 
 # Decide which dataset to prioritize if there is overlap.
 # In general, we use BP as a default source of data, but we may prioritize another dataset if it is more up-to-date.
-BP_VS_EMBER_PRIORITY = 'Ember'
-GLOBAL_VS_EU_EMBER_PRIORITY = 'EU'
+BP_VS_EMBER_PRIORITY = "Ember"
+GLOBAL_VS_EU_EMBER_PRIORITY = "EU"
 
 # Conversion factors.
 # Terawatt-hours to kilowatt-hours.
@@ -72,7 +79,7 @@ def read_csv_files_inside_remote_zip(url):
     # List files inside zip folder, ignore files that are not csv, and ignore hidden files, and read csv files.
     for name in zip_folder.namelist():
         csv_file_name = os.path.basename(name)
-        if csv_file_name.endswith('.csv') and not csv_file_name.startswith('.'):
+        if csv_file_name.endswith(".csv") and not csv_file_name.startswith("."):
             with zip_folder.open(name) as csv_file:
                 df = pd.read_csv(csv_file)
                 dataframes[csv_file_name] = df
@@ -82,10 +89,12 @@ def read_csv_files_inside_remote_zip(url):
 
 def load_eu_27_countries():
     # Load OWID countries regions dataset.
-    countries_regions = catalog.find(table='countries_regions', dataset='reference', namespace='owid').load()
+    countries_regions = catalog.find(
+        table="countries_regions", dataset="reference", namespace="owid"
+    ).load()
 
     # Get list of countries in the EU.
-    eu_countries = json.loads(countries_regions.loc["OWID_EU27"]['members'])
+    eu_countries = json.loads(countries_regions.loc["OWID_EU27"]["members"])
 
     return eu_countries
 
@@ -104,7 +113,9 @@ def load_european_electricity_review_data():
 
     """
     # Get data on electricity generation.
-    eu_ember_elec = read_csv_files_inside_remote_zip(url=EMBER_EUROPE_DATA_FILE)[EU_EMBER_GENERATION_NAME]
+    eu_ember_elec = read_csv_files_inside_remote_zip(url=EMBER_EUROPE_DATA_FILE)[
+        EU_EMBER_GENERATION_NAME
+    ]
 
     # TODO: Instead of doing this, export to csv the names of countries and follow the harmonize process.
 
@@ -113,13 +124,13 @@ def load_european_electricity_review_data():
     eu_ember_elec = eu_ember_elec[
         ["country_code", "year", "fuel_desc", "generation_twh"]
     ].rename(
-        errors='raise',
+        errors="raise",
         columns={
             "country_code": "iso_alpha3",
             "year": "Year",
             "fuel_desc": "Variable",
             "generation_twh": "Value (TWh)",
-        }
+        },
     )
 
     # Standardize country names.
@@ -132,7 +143,7 @@ def load_european_electricity_review_data():
         countries_regions[["iso_alpha3", "name"]],
         on="iso_alpha3",
         how="left",
-    ).rename(errors='raise', columns={"name": "Country"})[
+    ).rename(errors="raise", columns={"name": "Country"})[
         ["Country", "Year", "Variable", "Value (TWh)", "iso_alpha3"]
     ]
 
@@ -254,21 +265,24 @@ def load_carbon_intensities():
 
     """
     # Get EU Ember data on carbon intensities.
-    eu_carbon_intensities = read_csv_files_inside_remote_zip(url=EMBER_EUROPE_DATA_FILE)[EU_EMBER_EMISSIONS_NAME]
+    eu_carbon_intensities = read_csv_files_inside_remote_zip(
+        url=EMBER_EUROPE_DATA_FILE
+    )[EU_EMBER_EMISSIONS_NAME]
 
     # Select relevant data.
     intensity_col = "Carbon intensity of electricity (gCO2/kWh)"
     columns = {
-        'country_name': 'Country',
-        'year': 'Year',
-        'emissions_intensity_gco2_kwh': intensity_col,
+        "country_name": "Country",
+        "year": "Year",
+        "emissions_intensity_gco2_kwh": intensity_col,
     }
     eu_carbon_intensities = eu_carbon_intensities.rename(
-        errors='raise', columns=columns)[columns.values()]
+        errors="raise", columns=columns
+    )[columns.values()]
 
-    #############################################################################################
+    ####################################################################################################################
     # TODO: Remove this temporary solution once we have a carbon intensity dataset that includes all countries.
-    assert 'United Kingdom' not in eu_carbon_intensities['Country'].tolist()
+    assert "United Kingdom" not in eu_carbon_intensities["Country"].tolist()
     old_carbon_intensities = pd.read_excel(
         EMBER_EUROPE_CARBON_INTENSITY_FILE, sheet_name="Carbon intensities"
     )
@@ -279,53 +293,68 @@ def load_carbon_intensities():
             value_name=intensity_col,
         )
         .drop(columns=["Variable"])
-        .rename(errors='raise', columns={"Area": "Country"})
+        .rename(errors="raise", columns={"Area": "Country"})
         .sort_values(["Country", "Year"])
         .reset_index(drop=True)
     )
-    old_carbon_intensities = old_carbon_intensities[old_carbon_intensities['Country'] == 'United Kingdom']
-    eu_carbon_intensities = pd.concat([eu_carbon_intensities, old_carbon_intensities], ignore_index=True)
-    #############################################################################################
+    old_carbon_intensities = old_carbon_intensities[
+        old_carbon_intensities["Country"] == "United Kingdom"
+    ]
+    eu_carbon_intensities = pd.concat(
+        [eu_carbon_intensities, old_carbon_intensities], ignore_index=True
+    )
+    ####################################################################################################################
 
     # Standardize country names.
     eu_carbon_intensities = standardize_countries(
-        df=eu_carbon_intensities, countries_file=EMBER_EUROPE_COUNTRIES_FILE, country_col='Country',
-        warn_on_unused_countries=False)
+        df=eu_carbon_intensities,
+        countries_file=EMBER_EUROPE_COUNTRIES_FILE,
+        country_col="Country",
+        warn_on_unused_countries=False,
+    )
 
     # Sort conveniently.
-    eu_carbon_intensities = eu_carbon_intensities.sort_values(['Country', 'Year']).reset_index(drop=True)
+    eu_carbon_intensities = eu_carbon_intensities.sort_values(
+        ["Country", "Year"]
+    ).reset_index(drop=True)
 
     return eu_carbon_intensities
 
 
 def load_european_net_imports_and_demand():
     # Get EU Ember data on net imports and electricity demand.
-    net_imports_and_demand_data = read_csv_files_inside_remote_zip(url=EMBER_EUROPE_DATA_FILE)[EU_EMBER_OVERVIEW_NAME]
+    net_imports_and_demand_data = read_csv_files_inside_remote_zip(
+        url=EMBER_EUROPE_DATA_FILE
+    )[EU_EMBER_OVERVIEW_NAME]
 
     # Select relevant data.
     net_imports_col = "Net imports (TWh)"
     demand_col = "Electricity demand (TWh)"
     columns = {
-        'country_name': 'Country',
-        'year': 'Year',
-        'net_import_twh': net_imports_col,
-        'demand_twh': demand_col,
+        "country_name": "Country",
+        "year": "Year",
+        "net_import_twh": net_imports_col,
+        "demand_twh": demand_col,
     }
     net_imports_and_demand_data = net_imports_and_demand_data.rename(
-        errors='raise', columns=columns)[columns.values()]
+        errors="raise", columns=columns
+    )[columns.values()]
 
     net_imports_and_demand_data = standardize_countries(
-        df=net_imports_and_demand_data, countries_file=EMBER_EUROPE_COUNTRIES_FILE, country_col='Country')
+        df=net_imports_and_demand_data,
+        countries_file=EMBER_EUROPE_COUNTRIES_FILE,
+        country_col="Country",
+    )
 
     return net_imports_and_demand_data
 
 
 def load_bp_data():
     columns = {
-        'Entity': 'Country',
-        'Year': 'Year',
-        'Electricity Generation': "Electricity generation (TWh)",
-        'Primary Energy Consumption - TWh': 'Primary energy (TWh)',
+        "Entity": "Country",
+        "Year": "Year",
+        "Electricity Generation": "Electricity generation (TWh)",
+        "Primary Energy Consumption - TWh": "Primary energy (TWh)",
         "Hydro Generation - TWh": "Hydro (TWh)",
         "Nuclear Generation - TWh": "Nuclear (TWh)",
         "Solar Generation - TWh": "Solar (TWh)",
@@ -336,12 +365,12 @@ def load_bp_data():
         "Elec Gen from Gas": "Gas (TWh)",
     }
 
-    bp_elec = pd.read_csv(BP_DATA_FILE).rename(errors='raise', columns=columns)[columns.values()]
+    bp_elec = pd.read_csv(BP_DATA_FILE).rename(errors="raise", columns=columns)[
+        columns.values()
+    ]
 
     bp_elec["Fossil fuels (TWh)"] = (
-        bp_elec["Coal (TWh)"]
-        .add(bp_elec["Oil (TWh)"])
-        .add(bp_elec["Gas (TWh)"])
+        bp_elec["Coal (TWh)"].add(bp_elec["Oil (TWh)"]).add(bp_elec["Gas (TWh)"])
     )
     bp_elec["Renewables (TWh)"] = (
         bp_elec["Hydro (TWh)"]
@@ -349,13 +378,14 @@ def load_bp_data():
         .add(bp_elec["Wind (TWh)"])
         .add(bp_elec["Other renewables including bioenergy (TWh)"])
     )
-    bp_elec["Low-carbon electricity (TWh)"] = (
-        bp_elec["Renewables (TWh)"]
-        .add(bp_elec["Nuclear (TWh)"])
+    bp_elec["Low-carbon electricity (TWh)"] = bp_elec["Renewables (TWh)"].add(
+        bp_elec["Nuclear (TWh)"]
     )
 
     # Ensure countries are standardized.
-    bp_elec = standardize_countries(df=bp_elec, countries_file=BP_COUNTRIES_FILE, country_col='Country')
+    bp_elec = standardize_countries(
+        df=bp_elec, countries_file=BP_COUNTRIES_FILE, country_col="Country"
+    )
 
     return bp_elec
 
@@ -365,13 +395,13 @@ def load_global_ember_data():
         "Area": "Country",
         "Year": "Year",
         "Variable": "Variable",
-        "Generation (TWh)": "Value (TWh)"
+        "Generation (TWh)": "Value (TWh)",
     }
     # Download global data from Ember.
     response = requests.get(EMBER_GLOBAL_DATA_FILE)
     ember_elec = pd.read_excel(response.content, sheet_name="Data", skiprows=1)
     # Rename and select columns.
-    ember_elec = ember_elec.rename(errors='raise', columns=columns)[columns.values()]
+    ember_elec = ember_elec.rename(errors="raise", columns=columns)[columns.values()]
 
     rows = {
         "Production": "Electricity generation (TWh)",
@@ -388,16 +418,20 @@ def load_global_ember_data():
         "Net imports": "Net imports (TWh)",
     }
 
-    ember_elec['Variable'] = ember_elec['Variable'].replace(rows)
+    ember_elec["Variable"] = ember_elec["Variable"].replace(rows)
 
-    ember_elec = ember_elec.pivot(index=['Country', 'Year'], columns='Variable', values='Value (TWh)').\
-        reset_index()[['Country', 'Year'] + list(rows.values())]
+    ember_elec = ember_elec.pivot(
+        index=["Country", "Year"], columns="Variable", values="Value (TWh)"
+    ).reset_index()[["Country", "Year"] + list(rows.values())]
 
     # Standardize countries, warn about countries not included in countries file, and remove them.
     ember_elec = standardize_countries(
-        df=ember_elec, countries_file=EMBER_GLOBAL_COUNTRIES_FILE, country_col='Country',
-        make_missing_countries_nan=True)
-    ember_elec = ember_elec.dropna(subset='Country').reset_index(drop=True)
+        df=ember_elec,
+        countries_file=EMBER_GLOBAL_COUNTRIES_FILE,
+        country_col="Country",
+        make_missing_countries_nan=True,
+    )
+    ember_elec = ember_elec.dropna(subset="Country").reset_index(drop=True)
 
     return ember_elec
 
@@ -430,23 +464,20 @@ def combine_global_and_eu_ember_data(global_ember_data, eu_ember_data):
     eu_ember_elec = eu_ember_data.copy()
 
     # Combine global and European data, and when overlapping, keep the latter (which is more recent).
-    combined = pd.concat([ember_elec, eu_ember_elec], ignore_index=True)    
-    if GLOBAL_VS_EU_EMBER_PRIORITY == 'EU':
+    combined = pd.concat([ember_elec, eu_ember_elec], ignore_index=True)
+    if GLOBAL_VS_EU_EMBER_PRIORITY == "EU":
         combined = combined.drop_duplicates(subset=("Country", "Year"), keep="last")
     else:
         combined = combined.drop_duplicates(subset=("Country", "Year"), keep="first")
-    
+
     combined = combined.sort_values(["Country", "Year"]).reset_index(drop=True)
 
     # Add other useful aggregations.
-    # TODO: Could all aggregations be done inside a common function?
     combined["Other renewables including bioenergy (TWh)"] = combined[
         "Other renewables excluding bioenergy (TWh)"
     ].add(combined["Bioenergy (TWh)"])
     combined["Fossil fuels (TWh)"] = (
-        combined["Gas (TWh)"]
-        .add(combined["Oil (TWh)"])
-        .add(combined["Coal (TWh)"])
+        combined["Gas (TWh)"].add(combined["Oil (TWh)"]).add(combined["Coal (TWh)"])
     )
     combined["Renewables (TWh)"] = (
         combined["Solar (TWh)"]
@@ -465,7 +496,7 @@ def combine_global_and_eu_ember_data(global_ember_data, eu_ember_data):
 def combine_bp_and_ember_data(bp_data, ember_data):
     bp_elec = bp_data.copy()
     ember_elec = ember_data.copy()
-    
+
     # Go from wide to long format and drop NAs
     ember_elec = ember_elec.melt(id_vars=["Country", "Year"]).dropna()
 
@@ -474,22 +505,32 @@ def combine_bp_and_ember_data(bp_data, ember_data):
 
     combined = pd.concat([bp_elec, ember_elec], ignore_index=True)
 
-    if BP_VS_EMBER_PRIORITY == 'BP':
-        combined = combined.drop_duplicates(subset=['Country', 'Year', 'variable'], keep='first')
+    if BP_VS_EMBER_PRIORITY == "BP":
+        combined = combined.drop_duplicates(
+            subset=["Country", "Year", "variable"], keep="first"
+        )
     else:
-        combined = combined.drop_duplicates(subset=['Country', 'Year', 'variable'], keep='last')
+        combined = combined.drop_duplicates(
+            subset=["Country", "Year", "variable"], keep="last"
+        )
 
     # Go back to wide format.
-    combined = combined.pivot_table(
-        values="value", index=["Country", "Year"], columns="variable"
-    ).sort_values(["Country", "Year"]).reset_index()
+    combined = (
+        combined.pivot_table(
+            values="value", index=["Country", "Year"], columns="variable"
+        )
+        .sort_values(["Country", "Year"])
+        .reset_index()
+    )
 
     return combined
 
 
 def add_per_capita_variables(df):
     # Add population.
-    combined = add_population_to_dataframe(df=df, country_col='Country', year_col='Year', population_col='Population')
+    combined = add_population_to_dataframe(
+        df=df, country_col="Country", year_col="Year", population_col="Population"
+    )
 
     for cat in [
         "Electricity generation",
@@ -517,10 +558,8 @@ def add_per_capita_variables(df):
             "Electricity generation electricity per capita (kWh)": "Per capita electricity (kWh)",
             "Low-carbon electricity electricity per capita (kWh)": "Low-carbon electricity per capita (kWh)",
             "Renewables electricity per capita (kWh)": "Renewable electricity per capita (kWh)",
-            "Other renewables excluding bioenergy electricity per capita (kWh)":
-                "Other renewable electricity excluding bioenergy per capita (kWh)",
-            "Other renewables including bioenergy electricity per capita (kWh)":
-                "Other renewable electricity including bioenergy per capita (kWh)",
+            "Other renewables excluding bioenergy electricity per capita (kWh)": "Other renewable electricity excluding bioenergy per capita (kWh)",
+            "Other renewables including bioenergy electricity per capita (kWh)": "Other renewable electricity including bioenergy per capita (kWh)",
             "Fossil fuels electricity per capita (kWh)": "Fossil fuel electricity per capita (kWh)",
         },
     )
@@ -608,7 +647,9 @@ def main():
     eu_ember_elec = load_eu_ember_data()
 
     print("Combine Global and EU Ember data.")
-    ember_data = combine_global_and_eu_ember_data(global_ember_data=ember_elec, eu_ember_data=eu_ember_elec)
+    ember_data = combine_global_and_eu_ember_data(
+        global_ember_data=ember_elec, eu_ember_data=eu_ember_elec
+    )
 
     print("Combine BP and Ember data.")
     combined = combine_bp_and_ember_data(bp_data=bp_data, ember_data=ember_data)
@@ -621,14 +662,16 @@ def main():
 
     print("Prepare data for grapher.")
     combined = prepare_data_for_grapher(df=combined)
-    
+
     ####################################################################################################################
     # TODO: Remove this temporary solution once inconsistencies in data have been tackled.
     print(f"WARNING: Removing countries and regions with inconsistent data:")
     for region in REGIONS_WITH_INCONSISTENT_DATA:
-        if region in sorted(set(combined['Country'])):
+        if region in sorted(set(combined["Country"])):
             print(f" * {region}")
-    combined = combined[~combined["Country"].isin(REGIONS_WITH_INCONSISTENT_DATA)].reset_index(drop=True)
+    combined = combined[
+        ~combined["Country"].isin(REGIONS_WITH_INCONSISTENT_DATA)
+    ].reset_index(drop=True)
     ####################################################################################################################
 
     # Save to file as csv
