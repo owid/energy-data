@@ -311,13 +311,6 @@ def load_population(name_population=None):
         entities_to_rename_in_columns=["country", "year"],
         name_dataset=name_population,
     )
-    ####################################################################################################################
-    # TODO: Remove this temporary solution once OWID population dataset is complete.
-    population_file = os.path.join(
-        CURRENT_DIR, "..", "scripts", "input", "shared", "population.csv"
-    )
-    population_renamed = pd.read_csv(population_file)
-    ####################################################################################################################
 
     return population_renamed
 
