@@ -16,6 +16,7 @@ import pandas as pd
 
 
 from scripts import GRAPHER_DIR, INPUT_DIR, OUTPUT_DIR
+from scripts.primary_energy_consumption import load_maddison_data
 
 # Define paths to output files.
 OUTPUT_CSV_FILE = os.path.join(OUTPUT_DIR, "owid-energy-data.csv")
@@ -25,7 +26,9 @@ OUTPUT_JSON_FILE = os.path.join(OUTPUT_DIR, "owid-energy-data.json")
 PRIMARY_ENERGY_CONSUMPTION_FILE = os.path.join(
     GRAPHER_DIR, "Primary energy consumption BP & EIA (2022).csv"
 )
-BP_ENERGY_FILE = os.path.join(INPUT_DIR, "shared", "statistical_review_of_world_energy_bp_2021.csv")
+BP_ENERGY_FILE = os.path.join(
+    INPUT_DIR, "shared", "statistical_review_of_world_energy_bp_2021.csv"
+)
 ENERGY_MIX_FROM_BP_FILE = os.path.join(GRAPHER_DIR, "Energy mix from BP (2021).csv")
 ELECTRICITY_MIX_FROM_BP_AND_EMBER_FILE = os.path.join(
     GRAPHER_DIR, "Electricity mix from BP & EMBER (2022).csv"
@@ -33,10 +36,8 @@ ELECTRICITY_MIX_FROM_BP_AND_EMBER_FILE = os.path.join(
 FOSSIL_FUEL_PRODUCTION_FILE = os.path.join(
     GRAPHER_DIR, "Fossil fuel production BP & Shift (2022).csv"
 )
-# TODO: Load population from owid catalog, possibly including additional populations from this file.
+# TODO: Load population from owid catalog and include missing populations from this file.
 POPULATION_FILE = os.path.join(INPUT_DIR, "shared", "population.csv")
-# TODO: Load GDP from owid catalog.
-TOTAL_GDP_FILE = os.path.join(INPUT_DIR, "shared", "total-gdp-maddison.csv")
 ISO_CODES_FILE = os.path.join(INPUT_DIR, "shared", "iso_codes.csv")
 
 
@@ -67,7 +68,9 @@ def load_bp_data():
         "Oil Consumption - TWh": "Oil Consumption - TWh",
         "Gas Consumption - TWh": "Gas Consumption - TWh",
     }
-    bp_data = pd.read_csv(BP_ENERGY_FILE).rename(errors='raise', columns=columns)[columns.values()]
+    bp_data = pd.read_csv(BP_ENERGY_FILE).rename(errors="raise", columns=columns)[
+        columns.values()
+    ]
 
     return bp_data
 
@@ -90,7 +93,7 @@ def main():
 
     # Add population and GDP data
     population = pd.read_csv(POPULATION_FILE)
-    gdp = pd.read_csv(TOTAL_GDP_FILE)
+    gdp = load_maddison_data()
     iso_codes = pd.read_csv(ISO_CODES_FILE)
 
     # merges together energy datasets
@@ -266,7 +269,7 @@ def main():
             "Solar (TWh – sub method)": "solar_consumption",
             "Solar electricity per capita (kWh)": "solar_elec_per_capita",
             "Solar per capita (kWh)": "solar_energy_per_capita",
-            "Total real GDP": "gdp",
+            "GDP": "gdp",
             "Wind (% electricity)": "wind_share_elec",
             "Wind (% growth)": "wind_cons_change_pct",
             "Wind (% sub energy)": "wind_share_energy",
