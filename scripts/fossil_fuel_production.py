@@ -34,6 +34,14 @@ TWH_TO_KWH = 1e9
 
 
 def load_bp_data():
+    """Load data from BP.
+
+    Returns
+    -------
+    bp_data : pd.DataFrame
+        Data from BP.
+
+    """
     columns = {
         "Entity": "Country",
         "Year": "Year",
@@ -51,6 +59,14 @@ def load_bp_data():
 
 
 def load_shift_data():
+    """Load data on fossil fuel production from the Shift Dataportal.
+
+    Returns
+    -------
+    shift_fossil : pd.DataFrame
+        Data from the Shift Dataportal.
+
+    """
     # Load data on coal production from the Shift dataportal.
     shift_coal = pd.read_csv(SHIFT_COAL_DATA_FILE)
     shift_coal = pd.melt(
@@ -114,41 +130,22 @@ def load_shift_data():
     return shift_fossil
 
 
-def add_annual_change(df):
-    combined = df.copy()
-
-    # Calculate annual change.
-    combined = combined.sort_values(["Country", "Year"]).reset_index(drop=True)
-    for cat in ("Coal", "Oil", "Gas"):
-        combined[f"Annual change in {cat.lower()} production (%)"] = (
-            combined.groupby("Country")[f"{cat} production (TWh)"].pct_change() * 100
-        )
-        combined[f"Annual change in {cat.lower()} production (TWh)"] = combined.groupby(
-            "Country"
-        )[f"{cat} production (TWh)"].diff()
-
-    return combined
-
-
-def add_per_capita_variables(df):
-    combined = df.copy()
-
-    # Add population to data.
-    combined = add_population_to_dataframe(
-        df=combined, country_col="Country", year_col="Year", population_col="Population"
-    )
-
-    # Calculate production per capita.
-    for cat in ("Coal", "Oil", "Gas"):
-        combined[f"{cat} production per capita (kWh)"] = (
-            combined[f"{cat} production (TWh)"] / combined["Population"] * TWH_TO_KWH
-        )
-    combined = combined.drop(errors="raise", columns=["Population"])
-
-    return combined
-
-
 def combine_bp_and_shift_data(bp_data, shift_data):
+    """Combine BP and Shift data.
+
+    Parameters
+    ----------
+    bp_data : pd.DataFrame
+        Data from BP.
+    shift_data : pd.DataFrame
+        Data from Shift.
+
+    Returns
+    -------
+    combined : pd.DataFrame
+        Combined data from BP and Shift.
+
+    """
     fixed_variables = ["Country", "Year"]
 
     # We should not concatenate bp and shift data directly, since there are nans in different places.
@@ -177,6 +174,66 @@ def combine_bp_and_shift_data(bp_data, shift_data):
 
     # Sort data appropriately.
     combined = combined.sort_values(fixed_variables).reset_index(drop=True)
+
+    return combined
+
+
+def add_annual_change(df):
+    """Add annual change variables to combined BP & Shift dataset.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Combined BP & Shift dataset.
+
+    Returns
+    -------
+    combined : pd.DataFrame
+        Combined BP & Shift dataset after adding annual change variables.
+
+    """
+    combined = df.copy()
+
+    # Calculate annual change.
+    combined = combined.sort_values(["Country", "Year"]).reset_index(drop=True)
+    for cat in ("Coal", "Oil", "Gas"):
+        combined[f"Annual change in {cat.lower()} production (%)"] = (
+            combined.groupby("Country")[f"{cat} production (TWh)"].pct_change() * 100
+        )
+        combined[f"Annual change in {cat.lower()} production (TWh)"] = combined.groupby(
+            "Country"
+        )[f"{cat} production (TWh)"].diff()
+
+    return combined
+
+
+def add_per_capita_variables(df):
+    """Add per-capita variables to combined BP & Shift dataset.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Combined BP & Shift dataset.
+
+    Returns
+    -------
+    combined : pd.DataFrame
+        Combined BP & Shift dataset after adding per-capita variables.
+
+    """
+    combined = df.copy()
+
+    # Add population to data.
+    combined = add_population_to_dataframe(
+        df=combined, country_col="Country", year_col="Year", population_col="Population"
+    )
+
+    # Calculate production per capita.
+    for cat in ("Coal", "Oil", "Gas"):
+        combined[f"{cat} production per capita (kWh)"] = (
+            combined[f"{cat} production (TWh)"] / combined["Population"] * TWH_TO_KWH
+        )
+    combined = combined.drop(errors="raise", columns=["Population"])
 
     return combined
 

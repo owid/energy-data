@@ -30,21 +30,53 @@ class ObjectsAreNotDataframes(ExceptionFromDocstring):
 def compare_dataframes(
     df1, df2, columns=None, absolute_tolerance=1e-8, relative_tolerance=1e-8
 ):
-    # Condition to be equal based on absolute tolerance: abs(a - b) <= absolute_tolerance
-    # Condition to be equal based on relative tolerance: abs(a - b) <= relative_tolerance * absolute(b)
-    # TODO: Add documentation.
+    """Compare two dataframes element by element, assuming that nans are all identical, and assuming certain absolute
+    and relative tolerances for the comparison of floats.
+
+    NOTE: Dataframes must have the same number of rows to be able to compare them.
+
+    Parameters
+    ----------
+    df1 : pd.DataFrame
+        First dataframe.
+    df2 : pd.DataFrame
+        Second dataframe.
+    columns : list or None
+        List of columns to compare (they both must exist in both dataframes). If None, common columns will be compared.
+    absolute_tolerance : float
+        Absolute tolerance to assume in the comparison of each cell in the dataframes. A value a of an element in df1 is
+        considered equal to the corresponding element b at the same position in df2, if:
+        abs(a - b) <= absolute_tolerance
+    relative_tolerance : float
+        Relative tolerance to assume in the comparison of each cell in the dataframes. A value a of an element in df1 is
+        considered equal to the corresponding element b at the same position in df2, if:
+        abs(a - b) / abs(b) <= relative_tolerance
+
+    Returns
+    -------
+    compared : pd.DataFrame
+        Dataframe with as many rows as df1 and df2, and as many columns as specified by `columns` argument (or as many
+        common columns between df1 and df2, if `columns` is None).
+
+    """
+    # Ensure dataframes can be compared.
     if (type(df1) != pd.DataFrame) or (type(df2) != pd.DataFrame):
         raise ObjectsAreNotDataframes
     if len(df1) != len(df2):
         raise DataFramesHaveDifferentLengths
+
+    # If columns are not specified, assume common columns.
     if columns is None:
-        # If columns are not specified, assume common columns.
         columns = sorted(set(df1.columns) & set(df2.columns))
+
+    # Compare, column by column, the elements of the two dataframes.
     compared = pd.DataFrame()
     for col in columns:
         if (df1[col].dtype == object) or (df2[col].dtype == object):
+            # Apply a direct comparison for strings.
             compared_row = df1[col] == df2[col]
         else:
+            # For numeric data, consider them equal within certain absolute and relative tolerances.
             compared_row = np.isclose(
                 df1[col], df2[col], atol=absolute_tolerance, rtol=relative_tolerance
             )
@@ -56,7 +88,33 @@ def compare_dataframes(
 
 
 def are_dataframes_equal(df1, df2, absolute_tolerance=1e-8, relative_tolerance=1e-8):
-    # TODO: Add documentation.
+    """Check whether two dataframes are equal, assuming that all nans are identical, and comparing floats by means of
+    certain absolute and relative tolerances.
+
+    Parameters
+    ----------
+    df1 : pd.DataFrame
+        First dataframe.
+    df2 : pd.DataFrame
+        Second dataframe.
+    absolute_tolerance : float
+        Absolute tolerance to assume in the comparison of each cell in the dataframes. A value a of an element in df1 is
+        considered equal to the corresponding element b at the same position in df2, if:
+        abs(a - b) <= absolute_tolerance
+    relative_tolerance : float
+        Relative tolerance to assume in the comparison of each cell in the dataframes. A value a of an element in df1 is
+        considered equal to the corresponding element b at the same position in df2, if:
+        abs(a - b) / abs(b) <= relative_tolerance
+
+    Returns
+    -------
+    are_equal : bool
+        True if the two dataframes are equal (given the conditions explained above).
+    compared : pd.DataFrame
+        Dataframe with the same shape as df1 and df2 (if they have the same shape) that is True on each element where
+        both dataframes have equal values. If dataframes have different shapes, compared will be empty.
+
+    """
     # Initialise flag that is True only if both dataframes are equal.
     are_equal = True
     # Initialise flag that is True if dataframes can be compared cell by cell.
