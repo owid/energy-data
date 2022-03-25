@@ -7,6 +7,7 @@ Running this script will generate the full energy dataset in three different for
 
 """
 
+import argparse
 import json
 import os
 
@@ -14,11 +15,7 @@ import numpy as np
 import pandas as pd
 
 
-# Define common paths.
-CURRENT_DIR = os.path.dirname(__file__)
-INPUT_DIR = os.path.join(CURRENT_DIR, "input")
-GRAPHER_DIR = os.path.join(CURRENT_DIR, "grapher")
-OUTPUT_DIR = os.path.join(CURRENT_DIR, "..")
+from scripts import GRAPHER_DIR, INPUT_DIR, OUTPUT_DIR
 
 # Define paths to output files.
 OUTPUT_CSV_FILE = os.path.join(OUTPUT_DIR, "owid-energy-data.csv")
@@ -26,17 +23,19 @@ OUTPUT_EXCEL_FILE = os.path.join(OUTPUT_DIR, "owid-energy-data.xlsx")
 OUTPUT_JSON_FILE = os.path.join(OUTPUT_DIR, "owid-energy-data.json")
 # Define paths to input files.
 PRIMARY_ENERGY_CONSUMPTION_FILE = os.path.join(
-    GRAPHER_DIR, "Primary Energy Consumption (BP & Shift).csv"
+    GRAPHER_DIR, "Primary energy consumption BP & EIA (2022).csv"
 )
-BP_ENERGY_FILE = os.path.join(INPUT_DIR, "shared", "bp_energy.csv")
-ENERGY_MIX_FROM_BP_FILE = os.path.join(GRAPHER_DIR, "Energy mix from BP (2020).csv")
+BP_ENERGY_FILE = os.path.join(INPUT_DIR, "shared", "statistical_review_of_world_energy_bp_2021.csv")
+ENERGY_MIX_FROM_BP_FILE = os.path.join(GRAPHER_DIR, "Energy mix from BP (2021).csv")
 ELECTRICITY_MIX_FROM_BP_AND_EMBER_FILE = os.path.join(
     GRAPHER_DIR, "Electricity mix from BP & EMBER (2022).csv"
 )
 FOSSIL_FUEL_PRODUCTION_FILE = os.path.join(
-    GRAPHER_DIR, "Fossil fuel production (BP & Shift).csv"
+    GRAPHER_DIR, "Fossil fuel production BP & Shift (2022).csv"
 )
+# TODO: Load population from owid catalog, possibly including additional populations from this file.
 POPULATION_FILE = os.path.join(INPUT_DIR, "shared", "population.csv")
+# TODO: Load GDP from owid catalog.
 TOTAL_GDP_FILE = os.path.join(INPUT_DIR, "shared", "total-gdp-maddison.csv")
 ISO_CODES_FILE = os.path.join(INPUT_DIR, "shared", "iso_codes.csv")
 
@@ -60,39 +59,25 @@ def df_to_json(complete_dataset, output_path, static_columns):
         file.write(json.dumps(megajson, indent=4))
 
 
-def main():
+def load_bp_data():
+    columns = {
+        "Entity": "Country",
+        "Year": "Year",
+        "Coal Consumption - TWh": "Coal Consumption - TWh",
+        "Oil Consumption - TWh": "Oil Consumption - TWh",
+        "Gas Consumption - TWh": "Gas Consumption - TWh",
+    }
+    bp_data = pd.read_csv(BP_ENERGY_FILE).rename(errors='raise', columns=columns)[columns.values()]
 
+    return bp_data
+
+
+def main():
     # Add Primary Energy Consumption
     primary_energy = pd.read_csv(PRIMARY_ENERGY_CONSUMPTION_FILE)
 
     # Add BP data for Coal, Oil and Gas consumption
-    bp_energy = pd.read_csv(
-        BP_ENERGY_FILE,
-        usecols=[
-            "Entity",
-            "Year",
-            "Coal Consumption - EJ",
-            "Oil Consumption - EJ",
-            "Gas Consumption - EJ",
-        ],
-    )
-
-    bp_energy = bp_energy.rename(errors="raise", columns={"Entity": "Country"})
-
-    ej_to_twh = 277.778
-
-    bp_energy["Coal Consumption - TWh"] = bp_energy["Coal Consumption - EJ"] * ej_to_twh
-    bp_energy["Oil Consumption - TWh"] = bp_energy["Oil Consumption - EJ"] * ej_to_twh
-    bp_energy["Gas Consumption - TWh"] = bp_energy["Gas Consumption - EJ"] * ej_to_twh
-
-    bp_energy = bp_energy.drop(
-        errors="raise",
-        columns=[
-            "Coal Consumption - EJ",
-            "Oil Consumption - EJ",
-            "Gas Consumption - EJ",
-        ],
-    )
+    bp_energy = load_bp_data()
 
     # Add Energy Mix
     energy_mix = pd.read_csv(ENERGY_MIX_FROM_BP_FILE)
@@ -289,6 +274,10 @@ def main():
             "Wind (TWh – sub method)": "wind_consumption",
             "Wind electricity per capita (kWh)": "wind_elec_per_capita",
             "Wind per capita (kWh)": "wind_energy_per_capita",
+            # TODO: Consider better names.
+            # TODO: Include in codebook.
+            "Net imports (TWh)": "net_imports",
+            "Electricity demand (TWh)": "electricity_demand",
         },
     )
 
@@ -313,4 +302,6 @@ def main():
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    args = parser.parse_args()
     main()
