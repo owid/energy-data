@@ -1,5 +1,7 @@
 """Functions shared among different modules.
 
+TODO: Consider moving some (or all) of these functions to data-utils.
+
 """
 
 import json
@@ -8,6 +10,108 @@ import numpy as np
 import pandas as pd
 
 from owid import catalog
+
+
+class ExceptionFromDocstring(Exception):
+    """Exception that, if no exception message is explicitly given, returns its own docstring.
+    """
+    def __init__(self, exception_message=None, *args):
+        super().__init__(exception_message or self.__doc__, *args)
+
+
+class DataFramesHaveDifferentLengths(ExceptionFromDocstring):
+    """Dataframes cannot be compared because they have different number of rows.
+    """
+
+
+class ObjectsAreNotDataframes(ExceptionFromDocstring):
+    """Given objects are not dataframes.
+    """
+
+
+def compare_dataframes(df1, df2, columns=None, absolute_tolerance=1e-8, relative_tolerance=1e-8):
+    # Condition to be equal based on absolute tolerance: abs(a - b) <= absolute_tolerance
+    # Condition to be equal based on relative tolerance: abs(a - b) <= relative_tolerance * absolute(b)
+    # TODO: Add documentation.
+    if (type(df1) != pd.DataFrame) or (type(df2) != pd.DataFrame):
+        raise ObjectsAreNotDataframes
+    if len(df1) != len(df2):
+        raise DataFramesHaveDifferentLengths
+    if columns is None:
+        # If columns are not specified, assume common columns.
+        columns = sorted(set(df1.columns) & set(df2.columns))
+    compared = pd.DataFrame()
+    for col in columns:
+        if (df1[col].dtype == object) or (df2[col].dtype == object):
+            compared_row = df1[col] == df2[col]
+        else:
+            compared_row = np.isclose(df1[col], df2[col], atol=absolute_tolerance, rtol=relative_tolerance)
+            # Treat nans as equal.
+            compared_row[np.isnan(df1[col]) & np.isnan(df2[col])] = True
+        compared[col] = compared_row
+
+    return compared
+
+
+def are_dataframes_equal(df1, df2, absolute_tolerance=1e-8, relative_tolerance=1e-8):
+    # TODO: Add documentation.
+    # Initialise flag that is True only if both dataframes are equal.
+    are_equal = True
+    # Initialise flag that is True if dataframes can be compared cell by cell.
+    can_be_compared = True
+
+    # Check if all columns in df2 are in df1.
+    missing_in_df1 = sorted(set(df2.columns) - set(df1.columns))
+    if len(missing_in_df1):
+        print(f"* {len(missing_in_df1)} columns in df2 missing in df1.")
+        print("\n".join([f"  * {col}" for col in missing_in_df1]))
+        are_equal = False
+
+    # Check if all columns in df1 are in df2.
+    missing_in_df2 = sorted(set(df1.columns) - set(df2.columns))
+    if len(missing_in_df2):
+        print(f"* {len(missing_in_df2)} columns in df1 missing in df2.")
+        print("\n".join([f"  * {col}" for col in missing_in_df2]))
+        are_equal = False
+
+    # Check if dataframes have the same number of rows.
+    if len(df1) != len(df2):
+        print(f"* {len(df1)} rows in df1 and {len(df2)} rows in df2.")
+        are_equal = False
+        can_be_compared = False
+
+    # Check for differences in column names or types.
+    common_columns = sorted(set(df1.columns) & set(df2.columns))
+    all_columns = sorted(set(df1.columns) | set(df2.columns))
+    if common_columns == all_columns:
+        if df1.columns.tolist() != df2.columns.tolist():
+            print("* Columns are sorted differently.")
+            are_equal = False
+        for col in common_columns:
+            if df1[col].dtype != df2[col].dtype:
+                print(f"  * Column {col} is of type {df1[col].dtype} for df1, but type {df2[col].dtype} for df2.")
+                are_equal = False
+    else:
+        print(f"* Only {len(common_columns)} common columns out of {len(all_columns)} distinct columns.")
+        are_equal = False
+
+    if not can_be_compared:
+        # Dataframes cannot be compared.
+        compared = pd.DataFrame()
+        are_equal = False
+    else:
+        # Dataframes can be compared cell by cell.
+        compared = compare_dataframes(df1, df2, columns=common_columns, absolute_tolerance=absolute_tolerance,
+                                      relative_tolerance=relative_tolerance)
+        # Dataframes are equal only if all previous checks have passed and cells are identical
+        # Two nans are considered identical.
+        are_equal = are_equal & compared.all().all()
+
+    if are_equal:
+        print(f"Dataframes are identical (within absolute tolerance of {absolute_tolerance} and relative tolerance of "
+              f"{relative_tolerance}).")
+
+    return are_equal, compared
 
 
 def _warn_on_list_of_entities(list_of_entities, warning_message, show_list):
