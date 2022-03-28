@@ -17,8 +17,12 @@ import pandas as pd
 from scripts import GRAPHER_DIR, INPUT_DIR, OUTPUT_DIR
 from scripts.bp_energy import main as generate_energy_mix_dataset
 from scripts.electricity_bp_ember import main as generate_electricity_mix_dataset
-from scripts.fossil_fuel_production import main as generate_fossil_fuel_production_dataset
-from scripts.primary_energy_consumption import main as generate_primary_energy_consumption_dataset
+from scripts.fossil_fuel_production import (
+    main as generate_fossil_fuel_production_dataset,
+)
+from scripts.primary_energy_consumption import (
+    main as generate_primary_energy_consumption_dataset,
+)
 from scripts.primary_energy_consumption import load_maddison_data
 
 # Define paths to output files.
