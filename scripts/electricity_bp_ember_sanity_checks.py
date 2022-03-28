@@ -152,6 +152,7 @@ COLUMNS_ELECTRICITY_TOTAL = [
     "Electricity from wind (TWh)",
     "Electricity from bioenergy (TWh)",
     "Electricity from other renewables excluding bioenergy (TWh)",
+    "Electricity demand (TWh)",
 ]
 # Define columns (default entity names) related to per capita electricity.
 COLUMNS_ELECTRICITY_PER_CAPITA = [
