@@ -25,10 +25,11 @@ A [full codebook](https://github.com/owid/energy-data/blob/master/owid-energy-co
 ## Changelog
 
 - On March 25, 2022:
-  - BP data has been updated (using the Statistical Review of the World Energy 2021).
-  - Maddison data on GDP has been updated (using the Maddison Project Database 2020).
-  - EIA data on primary energy consumption has been included in the dataset.
-  - Some issues in the dataset have been corrected (for example some missing data in production by fossil fuels).
+  - Data on net electricity imports and electricity demand was added.
+  - BP data was updated (using the Statistical Review of the World Energy 2021).
+  - Maddison data on GDP was updated (using the Maddison Project Database 2020).
+  - EIA data on primary energy consumption was included in the dataset.
+  - Some issues in the dataset were corrected (for example some missing data in production by fossil fuels).
 - On February 14, 2022:
   - Some issues were corrected in the electricity data, and the energy dataset was updated accordingly.
   - The json and xlsx dataset files were removed from GitHub in favor of an external storage service, to keep this repository at a reasonable size.
