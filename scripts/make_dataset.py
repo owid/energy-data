@@ -14,8 +14,11 @@ import os
 import numpy as np
 import pandas as pd
 
-
 from scripts import GRAPHER_DIR, INPUT_DIR, OUTPUT_DIR
+from scripts.bp_energy import main as generate_energy_mix_dataset
+from scripts.electricity_bp_ember import main as generate_electricity_mix_dataset
+from scripts.fossil_fuel_production import main as generate_fossil_fuel_production_dataset
+from scripts.primary_energy_consumption import main as generate_primary_energy_consumption_dataset
 from scripts.primary_energy_consumption import load_maddison_data
 
 # Define paths to output files.
@@ -75,7 +78,7 @@ def load_bp_data():
     return bp_data
 
 
-def main():
+def generate_combined_dataset():
     # Add Primary Energy Consumption
     primary_energy = pd.read_csv(PRIMARY_ENERGY_CONSUMPTION_FILE)
 
@@ -277,10 +280,9 @@ def main():
             "Wind (TWh – sub method)": "wind_consumption",
             "Wind electricity per capita (kWh)": "wind_elec_per_capita",
             "Wind per capita (kWh)": "wind_energy_per_capita",
-            # TODO: Consider better names.
-            # TODO: Include in codebook.
-            "Net imports (TWh)": "net_imports",
+            "Net imports (TWh)": "net_elec_imports",
             "Electricity demand (TWh)": "electricity_demand",
+            "Net electricity imports as a share of demand": "net_elec_imports_share_demand",
         },
     )
 
@@ -302,6 +304,23 @@ def main():
     combined.to_csv(OUTPUT_CSV_FILE, index=False)
     combined.to_excel(OUTPUT_EXCEL_FILE, index=False)
     df_to_json(combined, OUTPUT_JSON_FILE, ["iso_code"])
+
+
+def main():
+    print("\nGenerating energy mix dataset.")
+    generate_energy_mix_dataset()
+
+    print("\nGenerating electricity mix dataset.")
+    generate_electricity_mix_dataset()
+
+    print("\nGenerating fossil fuel energy production dataset.")
+    generate_fossil_fuel_production_dataset()
+
+    print("\nGenerating primary energy consumption dataset.")
+    generate_primary_energy_consumption_dataset()
+
+    print("\nGenerating energy dataset.")
+    generate_combined_dataset()
 
 
 if __name__ == "__main__":

@@ -688,6 +688,11 @@ def add_share_variables(df):
         * 100
     )
 
+    # Calculate the percentage of electricity demand that is imported.
+    combined["Net electricity imports as a share of demand"] = (
+        combined["Net imports (TWh)"] / combined["Electricity demand (TWh)"] * 100
+    )
+
     # Calculating electricity shares by source
     for cat in [
         "Coal",
