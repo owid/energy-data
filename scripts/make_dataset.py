@@ -13,6 +13,7 @@ import os
 
 import numpy as np
 import pandas as pd
+from owid import catalog
 
 from scripts import GRAPHER_DIR, INPUT_DIR, OUTPUT_DIR
 from scripts.bp_energy import main as generate_energy_mix_dataset
@@ -43,9 +44,8 @@ ELECTRICITY_MIX_FROM_BP_AND_EMBER_FILE = os.path.join(
 FOSSIL_FUEL_PRODUCTION_FILE = os.path.join(
     GRAPHER_DIR, "Fossil fuel production BP & Shift (2022).csv"
 )
-# TODO: Load population from owid catalog and include missing populations from this file.
+# TODO: Remove this file once full population dataset can be loaded from OWID catalog.
 POPULATION_FILE = os.path.join(INPUT_DIR, "shared", "population.csv")
-ISO_CODES_FILE = os.path.join(INPUT_DIR, "shared", "iso_codes.csv")
 
 
 def df_to_json(complete_dataset, output_path, static_columns):
@@ -65,6 +65,34 @@ def df_to_json(complete_dataset, output_path, static_columns):
 
     with open(output_path, "w") as file:
         file.write(json.dumps(megajson, indent=4))
+
+
+def load_population_with_iso_codes():
+    # Load population data and calculate per capita energy.
+    population = catalog.find("population", namespace="owid", dataset="key_indicators").load().reset_index().rename(
+        columns={
+            "country": "Country",
+            "year": "Year",
+            "population": "Population",
+        })[['Country', "Year", "Population"]]
+
+    ####################################################################################################################
+    # TODO: Remove temporary solution once OWID population dataset is complete.
+    additional_population = pd.read_csv(POPULATION_FILE)
+    population = pd.concat([population, additional_population], ignore_index=True). \
+        drop_duplicates(subset=['Country', 'Year'], keep='first')
+    ####################################################################################################################
+    population = population.sort_values(['Country', 'Year']).reset_index(drop=True)
+
+    # Load OWID countries_regions dataset.
+    countries_regions = catalog.find("countries_regions", dataset="reference", namespace="owid").load()
+    countries_regions = countries_regions.reset_index().rename(columns={'name': 'Country', 'code': 'iso_code'})[[
+        'Country', 'iso_code']]
+
+    # Add iso codes to population dataframe.
+    population = pd.merge(population, countries_regions, on=['Country'], how='left')
+
+    return population
 
 
 def load_bp_data():
@@ -99,9 +127,8 @@ def generate_combined_dataset():
     fossil_fuels = pd.read_csv(FOSSIL_FUEL_PRODUCTION_FILE)
 
     # Add population and GDP data
-    population = pd.read_csv(POPULATION_FILE)
+    population = load_population_with_iso_codes()
     gdp = load_maddison_data()
-    iso_codes = pd.read_csv(ISO_CODES_FILE)
 
     # merges together energy datasets
     combined = (
@@ -141,8 +168,7 @@ def generate_combined_dataset():
 
     # merges non-energy datasets onto energy dataset
     combined = (
-        combined.merge(iso_codes, on=["Country"], how="left", validate="m:1")
-        .merge(population, on=["Year", "Country"], how="left", validate="1:1")
+        combined.merge(population, on=["Year", "Country"], how="left", validate="1:1")
         .merge(gdp, on=["Year", "Country"], how="left", validate="1:1")
     )
 

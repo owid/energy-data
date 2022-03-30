@@ -36,6 +36,16 @@ EJ_TO_TWH = 277.778
 # Petajoules to exajoules.
 PJ_TO_EJ = 1e-3
 
+# After analysing the resulting time series, we detected several issues with the following countries/regions.
+# For the moment, we remove them from the final dataset.
+REGIONS_WITH_INCONSISTENT_DATA = [
+    # Remove North America, Central America and South & Central America, since their definitions in BP are different
+    # from the definition in OWID population dataset.
+    "North America",
+    "Central America",
+    "South & Central America",
+]
+
 
 def main():
     # Define columns to import from BP dataset, and how to rename them.
@@ -268,6 +278,17 @@ def main():
     rounded_cols = [col for col in list(energy_mix) if col not in ("Country", "Year")]
     energy_mix[rounded_cols] = energy_mix[rounded_cols].round(3)
     energy_mix = energy_mix[energy_mix.isna().sum(axis=1) < len(rounded_cols)]
+
+    ####################################################################################################################
+    # TODO: Remove this temporary solution once inconsistencies in data have been tackled.
+    print(f"WARNING: Removing countries and regions with inconsistent data:")
+    for region in REGIONS_WITH_INCONSISTENT_DATA:
+        if region in sorted(set(energy_mix["Country"])):
+            print(f" * {region}")
+    energy_mix = energy_mix[
+        ~energy_mix["Country"].isin(REGIONS_WITH_INCONSISTENT_DATA)
+    ].reset_index(drop=True)
+    ####################################################################################################################
 
     # Sort conveniently.
     energy_mix = energy_mix.sort_values(["Country", "Year"]).reset_index(drop=True)

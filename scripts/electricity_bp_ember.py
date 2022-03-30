@@ -66,6 +66,8 @@ REGIONS_WITH_INCONSISTENT_DATA = [
     "Moldova",
     "North America",
     "South & Central America",
+    "Slovenia",
+    "Slovakia",
 ]
 
 

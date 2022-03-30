@@ -43,6 +43,11 @@ TWH_TO_KWH = 1e9
 # For the moment, we remove them from the final dataset.
 REGIONS_WITH_INCONSISTENT_DATA = [
     "Gibraltar",
+    # Remove North America, Central America and South & Central America, since their definitions in BP are different
+    # from the definition in OWID population dataset.
+    "North America",
+    "Central America",
+    "South & Central America",
 ]
 
 

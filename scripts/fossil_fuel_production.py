@@ -32,6 +32,16 @@ EJ_TO_TWH = 277.778
 # Convert terawatt-hours to kilowatt-hours.
 TWH_TO_KWH = 1e9
 
+# After analysing the resulting time series, we detected several issues with the following countries/regions.
+# For the moment, we remove them from the final dataset.
+REGIONS_WITH_INCONSISTENT_DATA = [
+    # Remove North America, Central America and South & Central America, since their definitions in BP are different
+    # from the definition in OWID population dataset.
+    "North America",
+    "Central America",
+    "South & Central America",
+]
+
 
 def load_bp_data():
     """Load data from BP.
@@ -260,6 +270,17 @@ def main():
     rounded_cols = [col for col in list(combined) if col not in ("Country", "Year")]
     combined[rounded_cols] = combined[rounded_cols].round(3)
     combined = combined[combined.isna().sum(axis=1) < len(rounded_cols)]
+
+    ####################################################################################################################
+    # TODO: Remove this temporary solution once inconsistencies in data have been tackled.
+    print(f"WARNING: Removing countries and regions with inconsistent data:")
+    for region in REGIONS_WITH_INCONSISTENT_DATA:
+        if region in sorted(set(combined["Country"])):
+            print(f" * {region}")
+    combined = combined[
+        ~combined["Country"].isin(REGIONS_WITH_INCONSISTENT_DATA)
+    ].reset_index(drop=True)
+    ####################################################################################################################
 
     print("Save data to output file.")
     combined.to_csv(OUTPUT_FILE, index=False)
