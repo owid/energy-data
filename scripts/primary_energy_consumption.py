@@ -6,6 +6,7 @@ combine data, add variables, and export as a csv file.
 import argparse
 import os
 
+import numpy as np
 import pandas as pd
 from owid import catalog
 
@@ -156,6 +157,35 @@ def load_bp_data():
     return bp_data
 
 
+def remove_infinity_values(df):
+    """Replace any possible spurious infinity values in the data with nans.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Combined data on primary energy consumption.
+
+    Returns
+    -------
+    combined : pd.DataFrame
+        Input dataframe after replacing inf values with nan values.
+
+    """
+    combined = df.copy()
+    for column in combined.columns:
+        issues_mask = combined[column] == np.inf
+        issues = combined[issues_mask]
+        if len(issues) > 0:
+            print(
+                f"WARNING: Removing {len(issues)} infinity values found in '{column}'. Affected countries:"
+            )
+            for country in set(issues["Country"]):
+                print(f"* {country}")
+            combined.loc[issues_mask, column] = np.nan
+
+    return combined
+
+
 def main():
     # Load BP data and EIA data on primary energy consumption.
     bp_data = load_bp_data()
@@ -203,6 +233,9 @@ def main():
         combined["Primary energy consumption (TWh)"] / combined["GDP"] * TWH_TO_KWH
     )
     combined = combined.drop(errors="raise", columns=["GDP"])
+
+    # Remove any possible spurious infinity values (which should be further investigated during sanity checks).
+    combined = remove_infinity_values(df=combined)
 
     # Round all values to 3 decimal places
     rounded_cols = [col for col in list(combined) if col not in ("Country", "Year")]
