@@ -60,7 +60,7 @@ def main():
         "Solar Consumption - EJ": "Solar (EJ)",
         "Wind Consumption - EJ": "Wind (EJ)",
         "Geo Biomass Other - EJ": "Other renewables (EJ)",
-        "Primary Energy Consumption - TWh": "Primary Energy (EJ)",
+        "Primary Energy Consumption - EJ": "Primary Energy (EJ)",
         "Hydro Generation - TWh": "Hydro (TWh)",
         "Nuclear Generation - TWh": "Nuclear (TWh)",
         "Solar Generation - TWh": "Solar (TWh)",
@@ -110,12 +110,13 @@ def main():
             primary_energy[f"{cat} (EJ)"] * EJ_TO_TWH
         )
 
+    # Fill nan in biofuels with zeros (see comment above on the same issue).
     primary_energy["Renewables (TWh)"] = (
         primary_energy["Hydro (TWh)"]
         .add(primary_energy["Solar (TWh)"])
         .add(primary_energy["Wind (TWh)"])
         .add(primary_energy["Other renewables (TWh)"])
-        .add(primary_energy["Biofuels (TWh)"])
+        .add(primary_energy["Biofuels (TWh)"].fillna(0))
     )
     primary_energy["Low-carbon energy (TWh)"] = primary_energy["Renewables (TWh)"].add(
         primary_energy["Nuclear (TWh)"]
