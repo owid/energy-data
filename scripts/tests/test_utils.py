@@ -86,8 +86,12 @@ class TestCompareDataFrames:
         # Even if dataframes are not identical, compare_dataframes should return all Trues (since it does not care about
         # indexes, only values).
         assert utils.compare_dataframes(
-            df1=pd.DataFrame({"col_01": [1, 2], "col_02": ['a', 'b']}).set_index("col_02"),
-            df2=pd.DataFrame({"col_01": [1, 2], "col_02": ['a', 'c']}).set_index("col_02"),
+            df1=pd.DataFrame({"col_01": [1, 2], "col_02": ["a", "b"]}).set_index(
+                "col_02"
+            ),
+            df2=pd.DataFrame({"col_01": [1, 2], "col_02": ["a", "c"]}).set_index(
+                "col_02"
+            ),
         ).equals(pd.DataFrame({"col_01": [True, True]}))
 
 
@@ -211,14 +215,22 @@ class TestAreDataFramesEqual:
 
     def test_on_equal_dataframes_with_non_numeric_indexes(self):
         assert utils.are_dataframes_equal(
-            df1=pd.DataFrame({"col_01": [1, 2], "col_02": ['a', 'b']}).set_index("col_02"),
-            df2=pd.DataFrame({"col_01": [1, 2], "col_02": ['a', 'b']}).set_index("col_02"),
+            df1=pd.DataFrame({"col_01": [1, 2], "col_02": ["a", "b"]}).set_index(
+                "col_02"
+            ),
+            df2=pd.DataFrame({"col_01": [1, 2], "col_02": ["a", "b"]}).set_index(
+                "col_02"
+            ),
         )[0]
 
     def test_on_dataframes_of_equal_values_but_different_indexes(self):
         assert not utils.are_dataframes_equal(
-            df1=pd.DataFrame({"col_01": [1, 2], "col_02": ['a', 'b']}).set_index("col_02"),
-            df2=pd.DataFrame({"col_01": [1, 2], "col_02": ['a', 'c']}).set_index("col_02"),
+            df1=pd.DataFrame({"col_01": [1, 2], "col_02": ["a", "b"]}).set_index(
+                "col_02"
+            ),
+            df2=pd.DataFrame({"col_01": [1, 2], "col_02": ["a", "c"]}).set_index(
+                "col_02"
+            ),
         )[0]
 
 

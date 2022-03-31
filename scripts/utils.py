@@ -78,7 +78,10 @@ def compare_dataframes(
         else:
             # For numeric data, consider them equal within certain absolute and relative tolerances.
             compared_row = np.isclose(
-                df1[col].values, df2[col].values, atol=absolute_tolerance, rtol=relative_tolerance
+                df1[col].values,
+                df2[col].values,
+                atol=absolute_tolerance,
+                rtol=relative_tolerance,
             )
             # Treat nans as equal.
             compared_row[np.isnan(df1[col].values) & np.isnan(df2[col].values)] = True
@@ -166,7 +169,9 @@ def are_dataframes_equal(df1, df2, absolute_tolerance=1e-8, relative_tolerance=1
     else:
         # Check if indexes are equal.
         if (df1.index != df2.index).any():
-            print("* Dataframes have different indexes (consider resetting indexes of input dataframes).")
+            print(
+                "* Dataframes have different indexes (consider resetting indexes of input dataframes)."
+            )
             are_equal = False
 
         # Dataframes can be compared cell by cell.

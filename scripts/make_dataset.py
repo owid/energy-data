@@ -69,28 +69,38 @@ def df_to_json(complete_dataset, output_path, static_columns):
 
 def load_population_with_iso_codes():
     # Load population data and calculate per capita energy.
-    population = catalog.find("population", namespace="owid", dataset="key_indicators").load().reset_index().rename(
-        columns={
-            "country": "Country",
-            "year": "Year",
-            "population": "Population",
-        })[['Country', "Year", "Population"]]
+    population = (
+        catalog.find("population", namespace="owid", dataset="key_indicators")
+        .load()
+        .reset_index()
+        .rename(
+            columns={
+                "country": "Country",
+                "year": "Year",
+                "population": "Population",
+            }
+        )[["Country", "Year", "Population"]]
+    )
 
     ####################################################################################################################
     # TODO: Remove temporary solution once OWID population dataset is complete.
     additional_population = pd.read_csv(POPULATION_FILE)
-    population = pd.concat([population, additional_population], ignore_index=True). \
-        drop_duplicates(subset=['Country', 'Year'], keep='first')
+    population = pd.concat(
+        [population, additional_population], ignore_index=True
+    ).drop_duplicates(subset=["Country", "Year"], keep="first")
     ####################################################################################################################
-    population = population.sort_values(['Country', 'Year']).reset_index(drop=True)
+    population = population.sort_values(["Country", "Year"]).reset_index(drop=True)
 
     # Load OWID countries_regions dataset.
-    countries_regions = catalog.find("countries_regions", dataset="reference", namespace="owid").load()
-    countries_regions = countries_regions.reset_index().rename(columns={'name': 'Country', 'code': 'iso_code'})[[
-        'Country', 'iso_code']]
+    countries_regions = catalog.find(
+        "countries_regions", dataset="reference", namespace="owid"
+    ).load()
+    countries_regions = countries_regions.reset_index().rename(
+        columns={"name": "Country", "code": "iso_code"}
+    )[["Country", "iso_code"]]
 
     # Add iso codes to population dataframe.
-    population = pd.merge(population, countries_regions, on=['Country'], how='left')
+    population = pd.merge(population, countries_regions, on=["Country"], how="left")
 
     return population
 
@@ -167,10 +177,9 @@ def generate_combined_dataset():
     combined = combined[row_has_data & combined["Country"].isin(countries_keep)]
 
     # merges non-energy datasets onto energy dataset
-    combined = (
-        combined.merge(population, on=["Year", "Country"], how="left", validate="1:1")
-        .merge(gdp, on=["Year", "Country"], how="left", validate="1:1")
-    )
+    combined = combined.merge(
+        population, on=["Year", "Country"], how="left", validate="1:1"
+    ).merge(gdp, on=["Year", "Country"], how="left", validate="1:1")
 
     # Reorder columns
     left_columns = ["iso_code", "Country", "Year"]
