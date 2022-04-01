@@ -8,7 +8,7 @@ We will continue to publish updated data on Energy as it becomes available. Most
 
 ## Our data sources
 
-- **Energy consumption (primary energy, energy mix and energy intensity):** this data is sourced from a combination of two sources—the [BP Statistical Review of World Energy](https://www.bp.com/en/global/corporate/energy-economics/statistical-review-of-world-energy.html) and [SHIFT Data Portal](https://www.theshiftdataportal.org/energy).
+- **Energy consumption (primary energy, energy mix and energy intensity):** this data is sourced from a combination of three sources—the [BP Statistical Review of World Energy](https://www.bp.com/en/global/corporate/energy-economics/statistical-review-of-world-energy.html), the [EIA](https://www.eia.gov/international/data/world/total-energy/more-total-energy-data) and the [SHIFT Data Portal](https://www.theshiftdataportal.org/energy).
 - **Electricity generation (electricity generation, and electricity mix):** this data is sourced from a combination of three sources—the [BP Statistical Review of World Energy](https://www.bp.com/en/global/corporate/energy-economics/statistical-review-of-world-energy.html), the [Ember – Data Explorer](https://ember-climate.org/global-electricity-review-2021/data-explorer/) and the [Ember European Electricity Review](https://ember-climate.org/project/european-electricity-review-2022/).
 - **Other variables:** this data is collected from a variety of sources (United Nations, World Bank, Gapminder, Maddison Project Database, etc.). More information is available in [our codebook](https://github.com/owid/energy-data/blob/master/owid-energy-codebook.csv).
 
@@ -24,6 +24,12 @@ A [full codebook](https://github.com/owid/energy-data/blob/master/owid-energy-co
 
 ## Changelog
 
+- On March 25, 2022:
+  - Data on net electricity imports and electricity demand was added.
+  - BP data was updated (using the Statistical Review of the World Energy 2021).
+  - Maddison data on GDP was updated (using the Maddison Project Database 2020).
+  - EIA data on primary energy consumption was included in the dataset.
+  - Some issues in the dataset were corrected (for example some missing data in production by fossil fuels).
 - On February 14, 2022:
   - Some issues were corrected in the electricity data, and the energy dataset was updated accordingly.
   - The json and xlsx dataset files were removed from GitHub in favor of an external storage service, to keep this repository at a reasonable size.

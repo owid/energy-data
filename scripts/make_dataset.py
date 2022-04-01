@@ -7,18 +7,24 @@ Running this script will generate the full energy dataset in three different for
 
 """
 
+import argparse
 import json
 import os
 
 import numpy as np
 import pandas as pd
+from owid import catalog
 
-
-# Define common paths.
-CURRENT_DIR = os.path.dirname(__file__)
-INPUT_DIR = os.path.join(CURRENT_DIR, "input")
-GRAPHER_DIR = os.path.join(CURRENT_DIR, "grapher")
-OUTPUT_DIR = os.path.join(CURRENT_DIR, "..")
+from scripts import GRAPHER_DIR, INPUT_DIR, OUTPUT_DIR
+from scripts.bp_energy import main as generate_energy_mix_dataset
+from scripts.electricity_bp_ember import main as generate_electricity_mix_dataset
+from scripts.fossil_fuel_production import (
+    main as generate_fossil_fuel_production_dataset,
+)
+from scripts.primary_energy_consumption import (
+    main as generate_primary_energy_consumption_dataset,
+)
+from scripts.primary_energy_consumption import load_maddison_data
 
 # Define paths to output files.
 OUTPUT_CSV_FILE = os.path.join(OUTPUT_DIR, "owid-energy-data.csv")
@@ -26,19 +32,20 @@ OUTPUT_EXCEL_FILE = os.path.join(OUTPUT_DIR, "owid-energy-data.xlsx")
 OUTPUT_JSON_FILE = os.path.join(OUTPUT_DIR, "owid-energy-data.json")
 # Define paths to input files.
 PRIMARY_ENERGY_CONSUMPTION_FILE = os.path.join(
-    GRAPHER_DIR, "Primary Energy Consumption (BP & Shift).csv"
+    GRAPHER_DIR, "Primary energy consumption BP & EIA (2022).csv"
 )
-BP_ENERGY_FILE = os.path.join(INPUT_DIR, "shared", "bp_energy.csv")
-ENERGY_MIX_FROM_BP_FILE = os.path.join(GRAPHER_DIR, "Energy mix from BP (2020).csv")
+BP_ENERGY_FILE = os.path.join(
+    INPUT_DIR, "shared", "statistical_review_of_world_energy_bp_2021.csv"
+)
+ENERGY_MIX_FROM_BP_FILE = os.path.join(GRAPHER_DIR, "Energy mix from BP (2021).csv")
 ELECTRICITY_MIX_FROM_BP_AND_EMBER_FILE = os.path.join(
     GRAPHER_DIR, "Electricity mix from BP & EMBER (2022).csv"
 )
 FOSSIL_FUEL_PRODUCTION_FILE = os.path.join(
-    GRAPHER_DIR, "Fossil fuel production (BP & Shift).csv"
+    GRAPHER_DIR, "Fossil fuel production BP & Shift (2022).csv"
 )
+# TODO: Remove this file once full population dataset can be loaded from OWID catalog.
 POPULATION_FILE = os.path.join(INPUT_DIR, "shared", "population.csv")
-TOTAL_GDP_FILE = os.path.join(INPUT_DIR, "shared", "total-gdp-maddison.csv")
-ISO_CODES_FILE = os.path.join(INPUT_DIR, "shared", "iso_codes.csv")
 
 
 def df_to_json(complete_dataset, output_path, static_columns):
@@ -60,39 +67,65 @@ def df_to_json(complete_dataset, output_path, static_columns):
         file.write(json.dumps(megajson, indent=4))
 
 
-def main():
+def load_population_with_iso_codes():
+    # Load population data and calculate per capita energy.
+    population = (
+        catalog.find("population", namespace="owid", dataset="key_indicators")
+        .load()
+        .reset_index()
+        .rename(
+            columns={
+                "country": "Country",
+                "year": "Year",
+                "population": "Population",
+            }
+        )[["Country", "Year", "Population"]]
+    )
 
+    ####################################################################################################################
+    # TODO: Remove temporary solution once OWID population dataset is complete.
+    additional_population = pd.read_csv(POPULATION_FILE)
+    population = pd.concat(
+        [population, additional_population], ignore_index=True
+    ).drop_duplicates(subset=["Country", "Year"], keep="first")
+    ####################################################################################################################
+    population = population.sort_values(["Country", "Year"]).reset_index(drop=True)
+
+    # Load OWID countries_regions dataset.
+    countries_regions = catalog.find(
+        "countries_regions", dataset="reference", namespace="owid"
+    ).load()
+    countries_regions = countries_regions.reset_index().rename(
+        columns={"name": "Country", "code": "iso_code"}
+    )[["Country", "iso_code"]]
+
+    # Add iso codes to population dataframe.
+    population = pd.merge(population, countries_regions, on=["Country"], how="left")
+
+    return population
+
+
+def load_bp_data():
+    columns = {
+        "Entity": "Country",
+        "Year": "Year",
+        "Coal Consumption - TWh": "Coal Consumption - TWh",
+        "Oil Consumption - TWh": "Oil Consumption - TWh",
+        "Gas Consumption - TWh": "Gas Consumption - TWh",
+    }
+    bp_data = pd.read_csv(BP_ENERGY_FILE).rename(errors="raise", columns=columns)[
+        columns.values()
+    ]
+
+    return bp_data
+
+
+def generate_combined_dataset():
     # Add Primary Energy Consumption
     primary_energy = pd.read_csv(PRIMARY_ENERGY_CONSUMPTION_FILE)
 
     # Add BP data for Coal, Oil and Gas consumption
-    bp_energy = pd.read_csv(
-        BP_ENERGY_FILE,
-        usecols=[
-            "Entity",
-            "Year",
-            "Coal Consumption - EJ",
-            "Oil Consumption - EJ",
-            "Gas Consumption - EJ",
-        ],
-    )
-
-    bp_energy = bp_energy.rename(errors="raise", columns={"Entity": "Country"})
-
-    ej_to_twh = 277.778
-
-    bp_energy["Coal Consumption - TWh"] = bp_energy["Coal Consumption - EJ"] * ej_to_twh
-    bp_energy["Oil Consumption - TWh"] = bp_energy["Oil Consumption - EJ"] * ej_to_twh
-    bp_energy["Gas Consumption - TWh"] = bp_energy["Gas Consumption - EJ"] * ej_to_twh
-
-    bp_energy = bp_energy.drop(
-        errors="raise",
-        columns=[
-            "Coal Consumption - EJ",
-            "Oil Consumption - EJ",
-            "Gas Consumption - EJ",
-        ],
-    )
+    bp_energy = load_bp_data()
 
     # Add Energy Mix
     energy_mix = pd.read_csv(ENERGY_MIX_FROM_BP_FILE)
@@ -104,9 +137,8 @@ def main():
     fossil_fuels = pd.read_csv(FOSSIL_FUEL_PRODUCTION_FILE)
 
     # Add population and GDP data
-    population = pd.read_csv(POPULATION_FILE)
-    gdp = pd.read_csv(TOTAL_GDP_FILE)
-    iso_codes = pd.read_csv(ISO_CODES_FILE)
+    population = load_population_with_iso_codes()
+    gdp = load_maddison_data()
 
     # merges together energy datasets
     combined = (
@@ -145,11 +177,9 @@ def main():
     combined = combined[row_has_data & combined["Country"].isin(countries_keep)]
 
     # merges non-energy datasets onto energy dataset
-    combined = (
-        combined.merge(iso_codes, on=["Country"], how="left", validate="m:1")
-        .merge(population, on=["Year", "Country"], how="left", validate="1:1")
-        .merge(gdp, on=["Year", "Country"], how="left", validate="1:1")
-    )
+    combined = combined.merge(
+        population, on=["Year", "Country"], how="left", validate="1:1"
+    ).merge(gdp, on=["Year", "Country"], how="left", validate="1:1")
 
     # Reorder columns
     left_columns = ["iso_code", "Country", "Year"]
@@ -281,7 +311,7 @@ def main():
             "Solar (TWh – sub method)": "solar_consumption",
             "Solar electricity per capita (kWh)": "solar_elec_per_capita",
             "Solar per capita (kWh)": "solar_energy_per_capita",
-            "Total real GDP": "gdp",
+            "GDP": "gdp",
             "Wind (% electricity)": "wind_share_elec",
             "Wind (% growth)": "wind_cons_change_pct",
             "Wind (% sub energy)": "wind_share_energy",
@@ -289,6 +319,9 @@ def main():
             "Wind (TWh – sub method)": "wind_consumption",
             "Wind electricity per capita (kWh)": "wind_elec_per_capita",
             "Wind per capita (kWh)": "wind_energy_per_capita",
+            "Net imports (TWh)": "net_elec_imports",
+            "Electricity demand (TWh)": "electricity_demand",
+            "Net electricity imports as a share of demand": "net_elec_imports_share_demand",
         },
     )
 
@@ -312,5 +345,24 @@ def main():
     df_to_json(combined, OUTPUT_JSON_FILE, ["iso_code"])
 
 
+def main():
+    print("\nGenerating energy mix dataset.")
+    generate_energy_mix_dataset()
+
+    print("\nGenerating electricity mix dataset.")
+    generate_electricity_mix_dataset()
+
+    print("\nGenerating fossil fuel energy production dataset.")
+    generate_fossil_fuel_production_dataset()
+
+    print("\nGenerating primary energy consumption dataset.")
+    generate_primary_energy_consumption_dataset()
+
+    print("\nGenerating energy dataset.")
+    generate_combined_dataset()
+
+
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    args = parser.parse_args()
     main()

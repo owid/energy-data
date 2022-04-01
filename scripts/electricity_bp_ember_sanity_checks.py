@@ -152,6 +152,7 @@ COLUMNS_ELECTRICITY_TOTAL = [
     "Electricity from wind (TWh)",
     "Electricity from bioenergy (TWh)",
     "Electricity from other renewables excluding bioenergy (TWh)",
+    "Electricity demand (TWh)",
 ]
 # Define columns (default entity names) related to per capita electricity.
 COLUMNS_ELECTRICITY_PER_CAPITA = [
@@ -301,19 +302,16 @@ def load_population(name_population=None):
     """
     if name_population is None:
         name_population = NAME_POPULATION
-    population = catalog.find("population", namespace="owid").load().reset_index()
+    population = (
+        catalog.find("population", namespace="owid", dataset="key_indicators")
+        .load()
+        .reset_index()
+    )
     population_renamed = rename_columns(
         data=population,
         entities_to_rename_in_columns=["country", "year"],
         name_dataset=name_population,
     )
-    ####################################################################################################################
-    # TODO: Remove this temporary solution once OWID population dataset is complete.
-    population_file = os.path.join(
-        CURRENT_DIR, "..", "scripts", "input", "shared", "population.csv"
-    )
-    population_renamed = pd.read_csv(population_file)
-    ####################################################################################################################
 
     return population_renamed
 
