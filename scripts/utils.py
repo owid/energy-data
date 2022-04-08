@@ -439,6 +439,8 @@ def list_countries_in_region(region, countries_regions=None, income_groups=None)
         Name of the region (e.g. Europe).
     countries_regions : pd.DataFrame or None
         Countries-regions dataset, or None to load it from the catalog.
+    income_groups : pd.DataFrame or None
+        Income-groups dataset, or None, to load it from the catalog.
 
     Returns
     -------
@@ -452,6 +454,7 @@ def list_countries_in_region(region, countries_regions=None, income_groups=None)
             "countries_regions", dataset="reference", namespace="owid"
         ).load()
 
+    # TODO: Remove lines related to income_groups once they are included in countries-regions dataset.
     if income_groups is None:
         income_groups = catalog.find(
             table="wb_income_group", dataset="wb_income", namespace="wb"
@@ -465,7 +468,6 @@ def list_countries_in_region(region, countries_regions=None, income_groups=None)
 
     # TODO: Once countries-regions has additional columns 'is_historic' and 'is_country', select only countries, and not
     #  historical regions.
-
     if region in countries_regions["name"].tolist():
         # Find codes of member countries in this region.
         member_codes = json.loads(
@@ -485,7 +487,7 @@ def list_countries_in_region(region, countries_regions=None, income_groups=None)
     return members
 
 
-def list_countries_in_region_with_largest_contribution(
+def list_countries_in_region_that_must_have_data(
     region,
     reference_year=REFERENCE_YEAR,
     min_frac_individual_population=MIN_FRAC_INDIVIDUAL_POPULATION,
@@ -571,7 +573,7 @@ def list_countries_in_region_with_largest_contribution(
         )
     else:
         # Select the smallest possible list of countries that fulfil both conditions.
-        selected = selected.loc[0 : candidates_to_ignore.index[0]]
+        selected = selected.loc[0: candidates_to_ignore.index[0]]
 
     print(
         f"{len(selected)} countries must be informed for {region} (covering {selected['fraction'].sum() * 100: .2f}% "
@@ -585,19 +587,16 @@ def list_countries_in_region_with_largest_contribution(
 def add_region_aggregates(
     df,
     region,
-    min_frac_individual_population=MIN_FRAC_INDIVIDUAL_POPULATION,
-    min_frac_cumulative_population=MIN_FRAC_CUMULATIVE_POPULATION,
-    reference_year_to_choose_countries_that_must_be_present=REFERENCE_YEAR,
+    countries_in_region=None,
+    countries_that_must_have_data=None,
     num_allowed_nans_per_year=NUM_ALLOWED_NANS_PER_YEAR,
     frac_allowed_nans_per_year=FRAC_ALLOWED_NANS_PER_YEAR,
     country_col="Country",
     year_col="Year",
     aggregations=None,
-    countries_regions=None,
-    population=None,
 ):
     """Add data for regions (e.g. income groups or continents) to a dataset, or replace it, if the dataset already
-    contains data for that region).
+    contains data for that region.
 
     When adding up the contribution from different countries (e.g. Spain, France, etc.) of a region (e.g. Europe), we
     want to avoid two problems:
@@ -621,12 +620,12 @@ def add_region_aggregates(
         Original dataset, which may contain data for that region (in which case, it will be replaced by the ).
     region : str
         Region to add.
-    min_frac_individual_population : float
-        Minimum fraction of the total population of the region that each of the big countries must exceed.
-    min_frac_cumulative_population : float
-        Minimum fraction of the total population of the region that the sum of the big countries must exceed.
-    reference_year_to_choose_countries_that_must_be_present : int
-        Reference year used to choose big countries.
+    countries_in_region : list or None
+        List of countries that are members of this region. None to load them from countries-regions dataset.
+    countries_that_must_have_data : list or None
+        List of countries that must have data for a particular variable and year, otherwise the region will have nan for
+        that particular variable and year. See function list_countries_in_region_that_must_have_data for more
+        details.
     num_allowed_nans_per_year : int or None
         Maximum number of nans that can be present in a particular variable and year. If exceeded, the aggregation will
         be nan.
@@ -641,10 +640,6 @@ def add_region_aggregates(
         Aggregations to execute for each variable. If None, the contribution to each variable from each country in the
         region will be summed. Otherwise, only the variables indicated in the dictionary will be affected. All remaining
         variables will be nan.
-    countries_regions : pd.DataFrame or None
-        Countries-regions dataset. If None, it will be loaded from owid catalog.
-    population : pd.DataFrame or None
-        Population dataset. If None, it will be loaded from owid catalog.
 
     Returns
     -------
@@ -653,24 +648,13 @@ def add_region_aggregates(
 
     """
     # TODO: Add tests.
-    if countries_regions is None:
-        countries_regions = catalog.find(
-            "countries_regions", dataset="reference", namespace="owid"
-        ).load()
+    if countries_in_region is None:
+        # List countries in the region.
+        countries_in_region = list_countries_in_region(region=region)
 
-    # List countries in the region, and countries that should present in the data (since they are expected to contribute
-    # the most).
-    countries_in_region = list_countries_in_region(
-        region=region, countries_regions=countries_regions
-    )
-    countries_that_must_be_present = list_countries_in_region_with_largest_contribution(
-        region=region,
-        countries_regions=countries_regions,
-        reference_year=reference_year_to_choose_countries_that_must_be_present,
-        min_frac_individual_population=min_frac_individual_population,
-        min_frac_cumulative_population=min_frac_cumulative_population,
-        population=population,
-    )
+    if countries_that_must_have_data is None:
+        # List countries that should present in the data (since they are expected to contribute the most).
+        countries_that_must_have_data = list_countries_in_region_that_must_have_data(region=region)
 
     # If aggregations are not defined for each variable, assume 'sum'.
     fixed_columns = [country_col, year_col]
@@ -690,7 +674,7 @@ def add_region_aggregates(
             df=df_clean,
             groupby_columns=year_col,
             aggregations={
-                country_col: lambda x: set(countries_that_must_be_present).issubset(
+                country_col: lambda x: set(countries_that_must_have_data).issubset(
                     set(list(x))
                 ),
                 variable: aggregations[variable],

@@ -14,6 +14,7 @@ from scripts import GRAPHER_DIR, INPUT_DIR
 from utils import (
     add_population_to_dataframe,
     add_region_aggregates,
+    list_countries_in_region_that_must_have_data,
     multi_merge,
     standardize_countries,
 )
@@ -579,19 +580,21 @@ def add_all_region_aggregates(df):
             print(f"Replacing {region} with its corresponding aggregate.")
         else:
             print(f"Adding {region}.")
+        countries_that_must_have_data = list_countries_in_region_that_must_have_data(
+            region=region,
+            reference_year=2018,
+            min_frac_individual_population=0.,
+            min_frac_cumulative_population=0.7,
+        )
         df_updated = add_region_aggregates(
             df_updated,
             region,
-            min_frac_individual_population=0.0,
-            min_frac_cumulative_population=0.7,
-            reference_year_to_choose_countries_that_must_be_present=2018,
+            countries_that_must_have_data=countries_that_must_have_data,
             num_allowed_nans_per_year=None,
             frac_allowed_nans_per_year=0.2,
             country_col="Country",
             year_col="Year",
             aggregations=None,
-            countries_regions=None,
-            population=None,
         )
 
     return df_updated
