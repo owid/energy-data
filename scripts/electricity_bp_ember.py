@@ -439,6 +439,24 @@ def combine_ember_data(global_ember_data, eu_ember_data):
             f"WARNING: Parameter GLOBAL_VS_EU_EMBER_PRIORITY must be either 'EU' or 'Global'."
         )
 
+    # Add other useful aggregations.
+    combined["Other renewables including bioenergy (TWh)"] = combined[
+        "Other renewables excluding bioenergy (TWh)"
+    ].add(combined["Bioenergy (TWh)"])
+    combined["Fossil fuels (TWh)"] = (
+        combined["Gas (TWh)"].add(combined["Oil (TWh)"]).add(combined["Coal (TWh)"])
+    )
+    combined["Renewables (TWh)"] = (
+        combined["Solar (TWh)"]
+        .add(combined["Wind (TWh)"])
+        .add(combined["Hydro (TWh)"])
+        .add(combined["Bioenergy (TWh)"])
+        .add(combined["Other renewables excluding bioenergy (TWh)"])
+    )
+    combined["Low-carbon electricity (TWh)"] = combined["Renewables (TWh)"].add(
+        combined["Nuclear (TWh)"]
+    )
+
     return combined
 
 
