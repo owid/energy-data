@@ -96,9 +96,9 @@ class TestCompareDataFrames:
 
     def test_with_two_dataframes_with_object_columns_with_nans(self):
         assert utils.compare_dataframes(
-            df1=pd.DataFrame({'col_01': [np.nan, 'b', 'c']}),
-            df2=pd.DataFrame({'col_01': [np.nan, 'b', 'c']}),
-        ).equals(pd.DataFrame({'col_01': [True, True, True]}))
+            df1=pd.DataFrame({"col_01": [np.nan, "b", "c"]}),
+            df2=pd.DataFrame({"col_01": [np.nan, "b", "c"]}),
+        ).equals(pd.DataFrame({"col_01": [True, True, True]}))
 
 
 class TestAreDataFramesEqual:
@@ -241,8 +241,8 @@ class TestAreDataFramesEqual:
 
     def test_on_dataframes_with_object_columns_with_nans(self):
         assert utils.are_dataframes_equal(
-            df1=pd.DataFrame({'col_01': [np.nan, 'b', 'c']}),
-            df2=pd.DataFrame({'col_01': [np.nan, 'b', 'c']}),
+            df1=pd.DataFrame({"col_01": [np.nan, "b", "c"]}),
+            df2=pd.DataFrame({"col_01": [np.nan, "b", "c"]}),
         )[0]
 
 
@@ -435,255 +435,469 @@ class TestStandardizeCountries:
 
 class TestGroupbyAggregate:
     def test_default_aggregate_single_groupby_column_as_string(self):
-        df_in = pd.DataFrame({
-            'year': [2001, 2003, 2003, 2003, 2002, 2002],
-            'value_01': [1, 2, 3, 4, 5, 6]})
-        df_out = pd.DataFrame({
-            'year': [2001, 2002, 2003],
-            'value_01': [1, 11, 9],
-        }).set_index('year')
-        assert utils.groupby_agg(df_in, 'year', aggregations=None, num_allowed_nans=None, frac_allowed_nans=None).\
-            equals(df_out)
+        df_in = pd.DataFrame(
+            {
+                "year": [2001, 2003, 2003, 2003, 2002, 2002],
+                "value_01": [1, 2, 3, 4, 5, 6],
+            }
+        )
+        df_out = pd.DataFrame(
+            {
+                "year": [2001, 2002, 2003],
+                "value_01": [1, 11, 9],
+            }
+        ).set_index("year")
+        assert utils.groupby_agg(
+            df_in,
+            "year",
+            aggregations=None,
+            num_allowed_nans=None,
+            frac_allowed_nans=None,
+        ).equals(df_out)
 
     def test_default_aggregate_single_groupby_column_as_list(self):
-        df_in = pd.DataFrame({
-            'year': [2001, 2003, 2003, 2003, 2002, 2002],
-            'value_01': [1, 2, 3, 4, 5, 6]})
-        df_out = pd.DataFrame({
-            'year': [2001, 2002, 2003],
-            'value_01': [1, 11, 9],
-        }).set_index('year')
-        assert utils.groupby_agg(df_in, ['year'], aggregations=None, num_allowed_nans=None, frac_allowed_nans=None).\
-            equals(df_out)
+        df_in = pd.DataFrame(
+            {
+                "year": [2001, 2003, 2003, 2003, 2002, 2002],
+                "value_01": [1, 2, 3, 4, 5, 6],
+            }
+        )
+        df_out = pd.DataFrame(
+            {
+                "year": [2001, 2002, 2003],
+                "value_01": [1, 11, 9],
+            }
+        ).set_index("year")
+        assert utils.groupby_agg(
+            df_in,
+            ["year"],
+            aggregations=None,
+            num_allowed_nans=None,
+            frac_allowed_nans=None,
+        ).equals(df_out)
 
     def test_default_aggregate_with_some_nans_ignored(self):
-        df_in = pd.DataFrame({
-            'year': [2001, 2002, 2002, 2003, 2003, 2003],
-            'value_01': [np.nan, 2, np.nan, 4, 5, 6]})
-        df_out = pd.DataFrame({
-            'year': [2001, 2002, 2003],
-            'value_01': [0., 2., 15.],
-        }).set_index('year')
-        assert utils.groupby_agg(df_in, ['year'], aggregations=None, num_allowed_nans=None, frac_allowed_nans=None).\
-            equals(df_out)
+        df_in = pd.DataFrame(
+            {
+                "year": [2001, 2002, 2002, 2003, 2003, 2003],
+                "value_01": [np.nan, 2, np.nan, 4, 5, 6],
+            }
+        )
+        df_out = pd.DataFrame(
+            {
+                "year": [2001, 2002, 2003],
+                "value_01": [0.0, 2.0, 15.0],
+            }
+        ).set_index("year")
+        assert utils.groupby_agg(
+            df_in,
+            ["year"],
+            aggregations=None,
+            num_allowed_nans=None,
+            frac_allowed_nans=None,
+        ).equals(df_out)
 
     def test_default_aggregate_with_some_nans_ignored_different_types(self):
-        df_in = pd.DataFrame({
-            'year': [2001, 2002, 2002, 2003, 2003, 2003],
-            'value_01': [np.nan, 2, np.nan, 4, 5, 6],
-            'value_02': ['a', 'b', 'c', 'd', 'e', 'f'],
-            'value_03': [True, False, False, True, True, False],
-        })
-        df_out = pd.DataFrame({
-            'year': [2001, 2002, 2003],
-            'value_01': [0., 2., 15.],
-            'value_02': ['a', 'bc', 'def'],
-            'value_03': [1, 0, 2],
-        }).set_index('year')
-        assert utils.groupby_agg(df_in, ['year'], aggregations=None, num_allowed_nans=None, frac_allowed_nans=None).\
-            equals(df_out)
+        df_in = pd.DataFrame(
+            {
+                "year": [2001, 2002, 2002, 2003, 2003, 2003],
+                "value_01": [np.nan, 2, np.nan, 4, 5, 6],
+                "value_02": ["a", "b", "c", "d", "e", "f"],
+                "value_03": [True, False, False, True, True, False],
+            }
+        )
+        df_out = pd.DataFrame(
+            {
+                "year": [2001, 2002, 2003],
+                "value_01": [0.0, 2.0, 15.0],
+                "value_02": ["a", "bc", "def"],
+                "value_03": [1, 0, 2],
+            }
+        ).set_index("year")
+        assert utils.groupby_agg(
+            df_in,
+            ["year"],
+            aggregations=None,
+            num_allowed_nans=None,
+            frac_allowed_nans=None,
+        ).equals(df_out)
 
-    def test_default_aggregate_with_some_nans_ignored_different_types_and_more_nans(self):
-        df_in = pd.DataFrame({
-            'year': [2001, 2002, 2002, 2003, 2003, 2003],
-            'value_01': [np.nan, 2, np.nan, 4, 5, 6],
-            'value_02': [np.nan, 'b', np.nan, 'd', 'e', 'f'],
-            'value_03': [np.nan, False, False, True, True, np.nan],
-        })
-        df_out = pd.DataFrame({
-            'year': [2001, 2002, 2003],
-            'value_01': [0., 2., 15.],
-            'value_02': [0, 'b', 'def'],
-            'value_03': [0, 0, 2],
-        }).set_index('year')
-        df_out['value_03'] = df_out['value_03'].astype(object)
-        assert utils.groupby_agg(df_in, ['year'], aggregations=None, num_allowed_nans=None, frac_allowed_nans=None).\
-            equals(df_out)
+    def test_default_aggregate_with_some_nans_ignored_different_types_and_more_nans(
+        self,
+    ):
+        df_in = pd.DataFrame(
+            {
+                "year": [2001, 2002, 2002, 2003, 2003, 2003],
+                "value_01": [np.nan, 2, np.nan, 4, 5, 6],
+                "value_02": [np.nan, "b", np.nan, "d", "e", "f"],
+                "value_03": [np.nan, False, False, True, True, np.nan],
+            }
+        )
+        df_out = pd.DataFrame(
+            {
+                "year": [2001, 2002, 2003],
+                "value_01": [0.0, 2.0, 15.0],
+                "value_02": [0, "b", "def"],
+                "value_03": [0, 0, 2],
+            }
+        ).set_index("year")
+        df_out["value_03"] = df_out["value_03"].astype(object)
+        assert utils.groupby_agg(
+            df_in,
+            ["year"],
+            aggregations=None,
+            num_allowed_nans=None,
+            frac_allowed_nans=None,
+        ).equals(df_out)
 
     def test_default_aggregate_with_num_allowed_nans_zero(self):
-        df_in = pd.DataFrame({
-            'year': [2001, 2002, 2002, 2003, 2003, 2003],
-            'value_01': [np.nan, 2, np.nan, 4, 5, 6],
-            'value_02': [np.nan, 'b', np.nan, 'd', 'e', 'f'],
-            'value_03': [np.nan, False, False, True, True, np.nan],
-        })
-        df_out = pd.DataFrame({
-            'year': [2001, 2002, 2003],
-            'value_01': [np.nan, np.nan, 15.],
-            'value_02': [np.nan, np.nan, 'def'],
-        }).set_index('year')
-        df_out['value_03'] = pd.Series([np.nan, 0, np.nan], index=[2001, 2002, 2003], dtype=object)
+        df_in = pd.DataFrame(
+            {
+                "year": [2001, 2002, 2002, 2003, 2003, 2003],
+                "value_01": [np.nan, 2, np.nan, 4, 5, 6],
+                "value_02": [np.nan, "b", np.nan, "d", "e", "f"],
+                "value_03": [np.nan, False, False, True, True, np.nan],
+            }
+        )
+        df_out = pd.DataFrame(
+            {
+                "year": [2001, 2002, 2003],
+                "value_01": [np.nan, np.nan, 15.0],
+                "value_02": [np.nan, np.nan, "def"],
+            }
+        ).set_index("year")
+        df_out["value_03"] = pd.Series(
+            [np.nan, 0, np.nan], index=[2001, 2002, 2003], dtype=object
+        )
         assert utils.are_dataframes_equal(
-            df1=utils.groupby_agg(df_in, ['year'], aggregations=None, num_allowed_nans=0, frac_allowed_nans=None),
-            df2=df_out)[0]
+            df1=utils.groupby_agg(
+                df_in,
+                ["year"],
+                aggregations=None,
+                num_allowed_nans=0,
+                frac_allowed_nans=None,
+            ),
+            df2=df_out,
+        )[0]
 
     def test_default_aggregate_with_num_allowed_nans_one(self):
-        df_in = pd.DataFrame({
-            'year': [2001, 2002, 2002, 2003, 2003, 2003],
-            'value_01': [np.nan, 2, np.nan, 4, 5, 6],
-            'value_02': [np.nan, 'b', np.nan, 'd', 'e', 'f'],
-            'value_03': [np.nan, False, False, True, np.nan, np.nan],
-        })
-        df_out = pd.DataFrame({
-            'year': [2001, 2002, 2003],
-            'value_01': [0., 2., 15.],
-            'value_02': [0, 'b', 'def'],
-        }).set_index('year')
-        df_out['value_03'] = pd.Series([0, 0, np.nan], index=[2001, 2002, 2003], dtype=object)
+        df_in = pd.DataFrame(
+            {
+                "year": [2001, 2002, 2002, 2003, 2003, 2003],
+                "value_01": [np.nan, 2, np.nan, 4, 5, 6],
+                "value_02": [np.nan, "b", np.nan, "d", "e", "f"],
+                "value_03": [np.nan, False, False, True, np.nan, np.nan],
+            }
+        )
+        df_out = pd.DataFrame(
+            {
+                "year": [2001, 2002, 2003],
+                "value_01": [0.0, 2.0, 15.0],
+                "value_02": [0, "b", "def"],
+            }
+        ).set_index("year")
+        df_out["value_03"] = pd.Series(
+            [0, 0, np.nan], index=[2001, 2002, 2003], dtype=object
+        )
         assert utils.are_dataframes_equal(
-            df1=utils.groupby_agg(df_in, ['year'], aggregations=None, num_allowed_nans=1, frac_allowed_nans=None),
-            df2=df_out)[0]
+            df1=utils.groupby_agg(
+                df_in,
+                ["year"],
+                aggregations=None,
+                num_allowed_nans=1,
+                frac_allowed_nans=None,
+            ),
+            df2=df_out,
+        )[0]
 
     def test_default_aggregate_with_num_allowed_nans_two(self):
-        df_in = pd.DataFrame({
-            'year': [2001, 2002, 2002, 2003, 2003, 2003],
-            'value_01': [np.nan, 2, np.nan, 4, 5, 6],
-            'value_02': [np.nan, 'b', np.nan, 'd', 'e', 'f'],
-            'value_03': [np.nan, False, False, True, np.nan, np.nan],
-        })
-        df_out = pd.DataFrame({
-            'year': [2001, 2002, 2003],
-            'value_01': [0., 2., 15.],
-            'value_02': [0, 'b', 'def'],
-        }).set_index('year')
-        df_out['value_03'] = pd.Series([0, 0, 1], index=[2001, 2002, 2003], dtype=object)
+        df_in = pd.DataFrame(
+            {
+                "year": [2001, 2002, 2002, 2003, 2003, 2003],
+                "value_01": [np.nan, 2, np.nan, 4, 5, 6],
+                "value_02": [np.nan, "b", np.nan, "d", "e", "f"],
+                "value_03": [np.nan, False, False, True, np.nan, np.nan],
+            }
+        )
+        df_out = pd.DataFrame(
+            {
+                "year": [2001, 2002, 2003],
+                "value_01": [0.0, 2.0, 15.0],
+                "value_02": [0, "b", "def"],
+            }
+        ).set_index("year")
+        df_out["value_03"] = pd.Series(
+            [0, 0, 1], index=[2001, 2002, 2003], dtype=object
+        )
         assert utils.are_dataframes_equal(
-            df1=utils.groupby_agg(df_in, ['year'], aggregations=None, num_allowed_nans=2, frac_allowed_nans=None),
-            df2=df_out)[0]
+            df1=utils.groupby_agg(
+                df_in,
+                ["year"],
+                aggregations=None,
+                num_allowed_nans=2,
+                frac_allowed_nans=None,
+            ),
+            df2=df_out,
+        )[0]
 
     def test_default_aggregate_with_num_allowed_nans_the_length_of_the_dataframe(self):
-        df_in = pd.DataFrame({
-            'year': [2001, 2002, 2002, 2004, 2004, 2004, 2004],
-            'value_01': [np.nan, 2, np.nan, 4, 5, 6, 7],
-            'value_02': [np.nan, 'b', np.nan, 'd', 'e', 'f', 'g'],
-            'value_03': [np.nan, False, False, True, np.nan, np.nan, np.nan],
-        })
-        df_out = pd.DataFrame({
-            'year': [2001, 2002, 2004],
-            'value_01': [0., 2., 22.],
-            'value_02': [0, 'b', 'defg'],
-        }).set_index('year')
-        df_out['value_03'] = pd.Series([0, 0, 1], index=[2001, 2002, 2004], dtype=object)
+        df_in = pd.DataFrame(
+            {
+                "year": [2001, 2002, 2002, 2004, 2004, 2004, 2004],
+                "value_01": [np.nan, 2, np.nan, 4, 5, 6, 7],
+                "value_02": [np.nan, "b", np.nan, "d", "e", "f", "g"],
+                "value_03": [np.nan, False, False, True, np.nan, np.nan, np.nan],
+            }
+        )
+        df_out = pd.DataFrame(
+            {
+                "year": [2001, 2002, 2004],
+                "value_01": [0.0, 2.0, 22.0],
+                "value_02": [0, "b", "defg"],
+            }
+        ).set_index("year")
+        df_out["value_03"] = pd.Series(
+            [0, 0, 1], index=[2001, 2002, 2004], dtype=object
+        )
         assert utils.are_dataframes_equal(
-            df1=utils.groupby_agg(df_in, ['year'], aggregations=None, num_allowed_nans=None,
-                                  frac_allowed_nans=len(df_in)),
-            df2=df_out)[0]
+            df1=utils.groupby_agg(
+                df_in,
+                ["year"],
+                aggregations=None,
+                num_allowed_nans=None,
+                frac_allowed_nans=len(df_in),
+            ),
+            df2=df_out,
+        )[0]
 
     def test_default_aggregate_with_frac_allowed_nans_zero(self):
-        df_in = pd.DataFrame({
-            'year': [2001, 2002, 2002, 2003, 2003, 2003],
-            'value_01': [np.nan, 2, np.nan, 4, 5, 6],
-            'value_02': [np.nan, 'b', np.nan, 'd', 'e', 'f'],
-            'value_03': [np.nan, False, False, True, True, np.nan],
-        })
-        df_out = pd.DataFrame({
-            'year': [2001, 2002, 2003],
-            'value_01': [np.nan, np.nan, 15.],
-            'value_02': [np.nan, np.nan, 'def'],
-        }).set_index('year')
-        df_out['value_03'] = pd.Series([np.nan, 0, np.nan], index=[2001, 2002, 2003], dtype=object)
+        df_in = pd.DataFrame(
+            {
+                "year": [2001, 2002, 2002, 2003, 2003, 2003],
+                "value_01": [np.nan, 2, np.nan, 4, 5, 6],
+                "value_02": [np.nan, "b", np.nan, "d", "e", "f"],
+                "value_03": [np.nan, False, False, True, True, np.nan],
+            }
+        )
+        df_out = pd.DataFrame(
+            {
+                "year": [2001, 2002, 2003],
+                "value_01": [np.nan, np.nan, 15.0],
+                "value_02": [np.nan, np.nan, "def"],
+            }
+        ).set_index("year")
+        df_out["value_03"] = pd.Series(
+            [np.nan, 0, np.nan], index=[2001, 2002, 2003], dtype=object
+        )
         assert utils.are_dataframes_equal(
-            df1=utils.groupby_agg(df_in, ['year'], aggregations=None, num_allowed_nans=None, frac_allowed_nans=0),
-            df2=df_out)[0]
+            df1=utils.groupby_agg(
+                df_in,
+                ["year"],
+                aggregations=None,
+                num_allowed_nans=None,
+                frac_allowed_nans=0,
+            ),
+            df2=df_out,
+        )[0]
 
     def test_default_aggregate_with_frac_allowed_nans_half(self):
-        df_in = pd.DataFrame({
-            'year': [2001, 2002, 2002, 2003, 2003, 2003],
-            'value_01': [np.nan, 2, np.nan, 4, 5, 6],
-            'value_02': [np.nan, 'b', np.nan, 'd', 'e', 'f'],
-            'value_03': [np.nan, False, False, True, np.nan, np.nan],
-        })
-        df_out = pd.DataFrame({
-            'year': [2001, 2002, 2003],
-            'value_01': [np.nan, 2., 15.],
-            'value_02': [np.nan, 'b', 'def'],
-        }).set_index('year')
-        df_out['value_03'] = pd.Series([np.nan, 0, np.nan], index=[2001, 2002, 2003], dtype=object)
+        df_in = pd.DataFrame(
+            {
+                "year": [2001, 2002, 2002, 2003, 2003, 2003],
+                "value_01": [np.nan, 2, np.nan, 4, 5, 6],
+                "value_02": [np.nan, "b", np.nan, "d", "e", "f"],
+                "value_03": [np.nan, False, False, True, np.nan, np.nan],
+            }
+        )
+        df_out = pd.DataFrame(
+            {
+                "year": [2001, 2002, 2003],
+                "value_01": [np.nan, 2.0, 15.0],
+                "value_02": [np.nan, "b", "def"],
+            }
+        ).set_index("year")
+        df_out["value_03"] = pd.Series(
+            [np.nan, 0, np.nan], index=[2001, 2002, 2003], dtype=object
+        )
         assert utils.are_dataframes_equal(
-            df1=utils.groupby_agg(df_in, ['year'], aggregations=None, num_allowed_nans=None, frac_allowed_nans=0.5),
-            df2=df_out)[0]
+            df1=utils.groupby_agg(
+                df_in,
+                ["year"],
+                aggregations=None,
+                num_allowed_nans=None,
+                frac_allowed_nans=0.5,
+            ),
+            df2=df_out,
+        )[0]
 
     def test_default_aggregate_with_frac_allowed_nans_two_thirds(self):
-        df_in = pd.DataFrame({
-            'year': [2001, 2002, 2002, 2003, 2003, 2003],
-            'value_01': [np.nan, 2, np.nan, 4, 5, 6],
-            'value_02': [np.nan, 'b', np.nan, 'd', 'e', 'f'],
-            'value_03': [np.nan, False, False, True, np.nan, np.nan],
-        })
-        df_out = pd.DataFrame({
-            'year': [2001, 2002, 2003],
-            'value_01': [np.nan, 2., 15.],
-            'value_02': [np.nan, 'b', 'def'],
-        }).set_index('year')
-        df_out['value_03'] = pd.Series([np.nan, 0, 1], index=[2001, 2002, 2003], dtype=object)
+        df_in = pd.DataFrame(
+            {
+                "year": [2001, 2002, 2002, 2003, 2003, 2003],
+                "value_01": [np.nan, 2, np.nan, 4, 5, 6],
+                "value_02": [np.nan, "b", np.nan, "d", "e", "f"],
+                "value_03": [np.nan, False, False, True, np.nan, np.nan],
+            }
+        )
+        df_out = pd.DataFrame(
+            {
+                "year": [2001, 2002, 2003],
+                "value_01": [np.nan, 2.0, 15.0],
+                "value_02": [np.nan, "b", "def"],
+            }
+        ).set_index("year")
+        df_out["value_03"] = pd.Series(
+            [np.nan, 0, 1], index=[2001, 2002, 2003], dtype=object
+        )
         assert utils.are_dataframes_equal(
-            df1=utils.groupby_agg(df_in, ['year'], aggregations=None, num_allowed_nans=None, frac_allowed_nans=0.67),
-            df2=df_out)[0]
+            df1=utils.groupby_agg(
+                df_in,
+                ["year"],
+                aggregations=None,
+                num_allowed_nans=None,
+                frac_allowed_nans=0.67,
+            ),
+            df2=df_out,
+        )[0]
 
     def test_default_aggregate_with_frac_allowed_nans_one(self):
-        df_in = pd.DataFrame({
-            'year': [2001, 2002, 2002, 2003, 2003, 2003, 2004, 2004, 2004, 2004],
-            'value_01': [np.nan, 2, np.nan, 4, 5, 6, 7, np.nan, np.nan, np.nan],
-            'value_02': [np.nan, 'b', np.nan, 'd', 'e', 'f', 'g', 'h', 'i', 'j'],
-            'value_03': [np.nan, False, False, True, np.nan, np.nan, np.nan, np.nan, np.nan, True],
-        })
-        df_out = pd.DataFrame({
-            'year': [2001, 2002, 2003, 2004],
-            'value_01': [0, 2., 15., 7],
-            'value_02': [0, 'b', 'def', 'ghij'],
-        }).set_index('year')
-        df_out['value_03'] = pd.Series([0, 0, 1, 1], index=[2001, 2002, 2003, 2004], dtype=object)
+        df_in = pd.DataFrame(
+            {
+                "year": [2001, 2002, 2002, 2003, 2003, 2003, 2004, 2004, 2004, 2004],
+                "value_01": [np.nan, 2, np.nan, 4, 5, 6, 7, np.nan, np.nan, np.nan],
+                "value_02": [np.nan, "b", np.nan, "d", "e", "f", "g", "h", "i", "j"],
+                "value_03": [
+                    np.nan,
+                    False,
+                    False,
+                    True,
+                    np.nan,
+                    np.nan,
+                    np.nan,
+                    np.nan,
+                    np.nan,
+                    True,
+                ],
+            }
+        )
+        df_out = pd.DataFrame(
+            {
+                "year": [2001, 2002, 2003, 2004],
+                "value_01": [0, 2.0, 15.0, 7],
+                "value_02": [0, "b", "def", "ghij"],
+            }
+        ).set_index("year")
+        df_out["value_03"] = pd.Series(
+            [0, 0, 1, 1], index=[2001, 2002, 2003, 2004], dtype=object
+        )
         assert utils.are_dataframes_equal(
-            df1=utils.groupby_agg(df_in, ['year'], aggregations=None, num_allowed_nans=None, frac_allowed_nans=None),
-            df2=df_out)[0]
+            df1=utils.groupby_agg(
+                df_in,
+                ["year"],
+                aggregations=None,
+                num_allowed_nans=None,
+                frac_allowed_nans=None,
+            ),
+            df2=df_out,
+        )[0]
 
     def test_default_aggregate_with_both_num_allowed_nans_and_frac_allowed_nans(self):
-        df_in = pd.DataFrame({
-            'year': [2001, 2002, 2002, 2003, 2003, 2003, 2004, 2004, 2004, 2004],
-            'value_01': [np.nan, 2, np.nan, 4, 5, 6, 7, np.nan, np.nan, np.nan],
-            'value_02': [np.nan, 'b', np.nan, 'd', 'e', 'f', 'g', 'h', 'i', 'j'],
-            'value_03': [np.nan, False, False, True, np.nan, np.nan, np.nan, np.nan, np.nan, True],
-        })
-        df_out = pd.DataFrame({
-            'year': [2001, 2002, 2003, 2004],
-            'value_01': [np.nan, 2., 15., np.nan],
-            'value_02': [np.nan, 'b', 'def', 'ghij'],
-        }).set_index('year')
-        df_out['value_03'] = pd.Series([np.nan, 0, np.nan, np.nan], index=[2001, 2002, 2003, 2004], dtype=object)
+        df_in = pd.DataFrame(
+            {
+                "year": [2001, 2002, 2002, 2003, 2003, 2003, 2004, 2004, 2004, 2004],
+                "value_01": [np.nan, 2, np.nan, 4, 5, 6, 7, np.nan, np.nan, np.nan],
+                "value_02": [np.nan, "b", np.nan, "d", "e", "f", "g", "h", "i", "j"],
+                "value_03": [
+                    np.nan,
+                    False,
+                    False,
+                    True,
+                    np.nan,
+                    np.nan,
+                    np.nan,
+                    np.nan,
+                    np.nan,
+                    True,
+                ],
+            }
+        )
+        df_out = pd.DataFrame(
+            {
+                "year": [2001, 2002, 2003, 2004],
+                "value_01": [np.nan, 2.0, 15.0, np.nan],
+                "value_02": [np.nan, "b", "def", "ghij"],
+            }
+        ).set_index("year")
+        df_out["value_03"] = pd.Series(
+            [np.nan, 0, np.nan, np.nan], index=[2001, 2002, 2003, 2004], dtype=object
+        )
         assert utils.are_dataframes_equal(
-            df1=utils.groupby_agg(df_in, ['year'], aggregations=None, num_allowed_nans=2, frac_allowed_nans=0.5),
-            df2=df_out)[0]
+            df1=utils.groupby_agg(
+                df_in,
+                ["year"],
+                aggregations=None,
+                num_allowed_nans=2,
+                frac_allowed_nans=0.5,
+            ),
+            df2=df_out,
+        )[0]
 
     def test_default_aggregate_with_two_groupby_columns(self):
-        df_in = pd.DataFrame({
-            'country': ['country_a', 'country_a', 'country_a', 'country_b', 'country_b', 'country_c'],
-            'year': [2001, 2002, 2002, 2003, 2003, 2003],
-            'value_01': [1, 2, 3, 4, 5, 6]
-        })
-        df_out = pd.DataFrame({
-            'country': ['country_a', 'country_a', 'country_b', 'country_c'],
-            'year': [2001, 2002, 2003, 2003],
-            'value_01': [1, 5, 9, 6],
-        }).set_index(['country', 'year'])
+        df_in = pd.DataFrame(
+            {
+                "country": [
+                    "country_a",
+                    "country_a",
+                    "country_a",
+                    "country_b",
+                    "country_b",
+                    "country_c",
+                ],
+                "year": [2001, 2002, 2002, 2003, 2003, 2003],
+                "value_01": [1, 2, 3, 4, 5, 6],
+            }
+        )
+        df_out = pd.DataFrame(
+            {
+                "country": ["country_a", "country_a", "country_b", "country_c"],
+                "year": [2001, 2002, 2003, 2003],
+                "value_01": [1, 5, 9, 6],
+            }
+        ).set_index(["country", "year"])
         assert utils.are_dataframes_equal(
-            df1=utils.groupby_agg(df_in, ['country', 'year'], aggregations=None, num_allowed_nans=None,
-                                  frac_allowed_nans=None),
-            df2=df_out)[0]
+            df1=utils.groupby_agg(
+                df_in,
+                ["country", "year"],
+                aggregations=None,
+                num_allowed_nans=None,
+                frac_allowed_nans=None,
+            ),
+            df2=df_out,
+        )[0]
 
     def test_custom_aggregate(self):
-        aggregations = {'value_01': 'sum', 'value_02': 'mean'}
-        df_in = pd.DataFrame({
-            'year': [2001, 2002, 2002, 2003, 2003, 2003],
-            'value_01': [1, 2, 3, 4, 5, np.nan],
-            'value_02': [1, 2, 3, 4, 5, 6],
-        })
-        df_out = pd.DataFrame({
-            'year': [2001, 2002, 2003],
-            'value_01': [1., 5., np.nan],
-            'value_02': [1, 2.5, 7.5],
-        }).set_index('year')
+        aggregations = {"value_01": "sum", "value_02": "mean"}
+        df_in = pd.DataFrame(
+            {
+                "year": [2001, 2002, 2002, 2003, 2003, 2003],
+                "value_01": [1, 2, 3, 4, 5, np.nan],
+                "value_02": [1, 2, 3, 4, 5, 6],
+            }
+        )
+        df_out = pd.DataFrame(
+            {
+                "year": [2001, 2002, 2003],
+                "value_01": [1.0, 5.0, np.nan],
+                "value_02": [1, 2.5, 7.5],
+            }
+        ).set_index("year")
         assert utils.are_dataframes_equal(
-            df1=utils.groupby_agg(df_in, ['year'], aggregations=aggregations, num_allowed_nans=0,
-                                  frac_allowed_nans=None),
+            df1=utils.groupby_agg(
+                df_in,
+                ["year"],
+                aggregations=aggregations,
+                num_allowed_nans=0,
+                frac_allowed_nans=None,
+            ),
             df2=df_out,
         )

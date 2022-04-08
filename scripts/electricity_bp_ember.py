@@ -11,12 +11,19 @@ import pandas as pd
 import requests
 
 from scripts import GRAPHER_DIR, INPUT_DIR
-from utils import add_population_to_dataframe, add_region_aggregates, multi_merge, standardize_countries
+from utils import (
+    add_population_to_dataframe,
+    add_region_aggregates,
+    multi_merge,
+    standardize_countries,
+)
 
 # Path to output file of combined dataset.
 OUTPUT_FILE = os.path.join(GRAPHER_DIR, "Electricity mix from BP & EMBER (2022).csv")
 # URL to download Ember 2022 global data from.
-EMBER_GLOBAL_DATA_FILE = "https://ember-climate.org/app/uploads/2022/03/Ember-GER-2022-Data.xlsx"
+EMBER_GLOBAL_DATA_FILE = (
+    "https://ember-climate.org/app/uploads/2022/03/Ember-GER-2022-Data.xlsx"
+)
 # Path to file with country names in the Ember dataset.
 EMBER_GLOBAL_COUNTRIES_FILE = os.path.join(
     INPUT_DIR, "electricity-bp-ember", "ember.countries.json"
@@ -73,10 +80,10 @@ REGIONS_TO_ADD = [
     "Africa",
     "Asia",
     "Oceania",
-    'Low-income countries',
-    'Upper-middle-income countries',
-    'Lower-middle-income countries',
-    'High-income countries',
+    "Low-income countries",
+    "Upper-middle-income countries",
+    "Lower-middle-income countries",
+    "High-income countries",
 ]
 
 
@@ -122,9 +129,13 @@ def load_eu_ember_generation_data():
         "year": "Year",
         "fuel_desc": "Variable",
         "generation_twh": "Value (TWh)",
-        }
-    eu_ember_elec = read_csv_files_inside_remote_zip(url=EMBER_EUROPE_DATA_FILE)[EU_EMBER_GENERATION_NAME]
-    eu_ember_elec = eu_ember_elec.rename(errors='raise', columns=columns)[columns.values()]
+    }
+    eu_ember_elec = read_csv_files_inside_remote_zip(url=EMBER_EUROPE_DATA_FILE)[
+        EU_EMBER_GENERATION_NAME
+    ]
+    eu_ember_elec = eu_ember_elec.rename(errors="raise", columns=columns)[
+        columns.values()
+    ]
 
     # Translate the new source groups into the old ones.
     rows = {
@@ -136,7 +147,7 @@ def load_eu_ember_generation_data():
         "Nuclear": "Nuclear (TWh)",
         "Other Fossil": "Oil (TWh)",
         "Other Renewables": "Other renewables excluding bioenergy (TWh)",
-        }
+    }
     eu_ember_elec["Variable"] = eu_ember_elec["Variable"].replace(rows)
 
     # Combine the new groups Hard Coal and Lignite into the old group for Coal.
@@ -248,11 +259,13 @@ def load_eu_ember_emissions_data():
     )[EU_EMBER_EMISSIONS_NAME]
 
     columns = {
-        'country_name': 'Country',
-        'year': 'Year',
-        'emissions_mtc02e': 'Emissions (MtCO2)',
+        "country_name": "Country",
+        "year": "Year",
+        "emissions_mtc02e": "Emissions (MtCO2)",
     }
-    eu_ember_emissions_data = eu_ember_emissions_data.rename(errors='raise', columns=columns)[columns.values()]
+    eu_ember_emissions_data = eu_ember_emissions_data.rename(
+        errors="raise", columns=columns
+    )[columns.values()]
 
     return eu_ember_emissions_data
 
@@ -273,8 +286,14 @@ def load_eu_ember_data():
 
     # Combine all datasets.
     eu_ember_data = multi_merge(
-        dfs=[eu_ember_generation_data, eu_ember_net_imports_and_demand, eu_ember_emissions_data], how='outer',
-        on=['Country', 'Year'])
+        dfs=[
+            eu_ember_generation_data,
+            eu_ember_net_imports_and_demand,
+            eu_ember_emissions_data,
+        ],
+        how="outer",
+        on=["Country", "Year"],
+    )
 
     # Standardize country names.
     eu_ember_data = standardize_countries(
@@ -307,7 +326,7 @@ def load_global_ember_generation_data():
         "Variable": "Variable",
         "Electricity generated (TWh)": "Value (TWh)",
     }
-    generation = generation.rename(errors='raise', columns=columns)[columns.values()]
+    generation = generation.rename(errors="raise", columns=columns)[columns.values()]
 
     # Rename and select rows.
     rows = {
@@ -354,7 +373,7 @@ def load_global_ember_emissions_data():
         "Year": "Year",
         "Emissions (MtCO2)": "Emissions (MtCO2)",
     }
-    emissions = emissions.rename(errors='raise', columns=columns)[columns.values()]
+    emissions = emissions.rename(errors="raise", columns=columns)[columns.values()]
 
     return emissions
 
@@ -373,8 +392,12 @@ def load_global_ember_data():
     global_ember_emissions_data = load_global_ember_emissions_data()
 
     # Combine datasets.
-    global_ember_data = pd.merge(global_ember_generation_data, global_ember_emissions_data, how='outer',
-                                 on=['Country', 'Year'])
+    global_ember_data = pd.merge(
+        global_ember_generation_data,
+        global_ember_emissions_data,
+        how="outer",
+        on=["Country", "Year"],
+    )
 
     # Standardize countries, warn about countries not included in countries file, and remove them.
     global_ember_data = standardize_countries(
@@ -383,7 +406,9 @@ def load_global_ember_data():
         country_col="Country",
         make_missing_countries_nan=True,
     )
-    global_ember_data = global_ember_data.dropna(subset="Country").reset_index(drop=True)
+    global_ember_data = global_ember_data.dropna(subset="Country").reset_index(
+        drop=True
+    )
 
     return global_ember_data
 
@@ -410,7 +435,9 @@ def combine_ember_data(global_ember_data, eu_ember_data):
     elif GLOBAL_VS_EU_EMBER_PRIORITY == "Global":
         combined = combined.drop_duplicates(subset=("Country", "Year"), keep="first")
     else:
-        print(f"WARNING: Parameter GLOBAL_VS_EU_EMBER_PRIORITY must be either 'EU' or 'Global'.")
+        print(
+            f"WARNING: Parameter GLOBAL_VS_EU_EMBER_PRIORITY must be either 'EU' or 'Global'."
+        )
 
     return combined
 
@@ -528,25 +555,25 @@ def add_all_region_aggregates(df):
 
     """
     df_updated = df.copy()
-    informed_regions = df['Country'].unique().tolist()
+    informed_regions = df["Country"].unique().tolist()
     for region in REGIONS_TO_ADD:
         if region in informed_regions:
             print(f"Replacing {region} with its corresponding aggregate.")
         else:
             print(f"Adding {region}.")
         df_updated = add_region_aggregates(
-                df_updated,
-                region,
-                min_frac_individual_population=0.,
-                min_frac_cumulative_population=0.7,
-                reference_year_to_choose_countries_that_must_be_present=2018,
-                num_allowed_nans_per_year=None,
-                frac_allowed_nans_per_year=0.2,
-                country_col='Country',
-                year_col='Year',
-                aggregations=None,
-                countries_regions=None,
-                population=None
+            df_updated,
+            region,
+            min_frac_individual_population=0.0,
+            min_frac_cumulative_population=0.7,
+            reference_year_to_choose_countries_that_must_be_present=2018,
+            num_allowed_nans_per_year=None,
+            frac_allowed_nans_per_year=0.2,
+            country_col="Country",
+            year_col="Year",
+            aggregations=None,
+            countries_regions=None,
+            population=None,
         )
 
     return df_updated
@@ -567,8 +594,11 @@ def add_carbon_intensities(df):
 
     """
     df = df.copy()
-    df['Carbon intensity of electricity (gCO2/kWh)'] = df['Emissions (MtCO2)'] * MT_TO_G /\
-        (df['Electricity generation (TWh)'] * TWH_TO_KWH)
+    df["Carbon intensity of electricity (gCO2/kWh)"] = (
+        df["Emissions (MtCO2)"]
+        * MT_TO_G
+        / (df["Electricity generation (TWh)"] * TWH_TO_KWH)
+    )
 
     return df
 
@@ -738,7 +768,9 @@ def main():
     eu_ember_data = load_eu_ember_data()
 
     print("Combine all data from Ember")
-    ember_data = combine_ember_data(global_ember_data=global_ember_data, eu_ember_data=eu_ember_data)
+    ember_data = combine_ember_data(
+        global_ember_data=global_ember_data, eu_ember_data=eu_ember_data
+    )
 
     print("Combine BP and Ember data.")
     combined = combine_bp_and_ember_data(bp_data=bp_data, ember_data=ember_data)

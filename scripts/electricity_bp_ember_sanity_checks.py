@@ -903,7 +903,7 @@ class SanityChecksComparingTwoDatasets(Check):
             .update_layout(font={"size": 9})
         )
 
-        if '%' in variable:
+        if "%" in variable:
             fig = fig.update_yaxes(range=[0, 100])
         else:
             fig = fig.update_yaxes(

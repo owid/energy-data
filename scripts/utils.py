@@ -12,7 +12,7 @@ import pandas as pd
 from owid import catalog
 
 # Default parameters for aggregation of data to construct regions.
-MIN_FRAC_INDIVIDUAL_POPULATION = 0.
+MIN_FRAC_INDIVIDUAL_POPULATION = 0.0
 MIN_FRAC_CUMULATIVE_POPULATION = 0.7
 REFERENCE_YEAR = 2018
 FRAC_ALLOWED_NANS_PER_YEAR = 0.2
@@ -346,7 +346,9 @@ def add_population_to_dataframe(
     return df_with_population
 
 
-def groupby_agg(df, groupby_columns, aggregations=None, num_allowed_nans=0, frac_allowed_nans=None):
+def groupby_agg(
+    df, groupby_columns, aggregations=None, num_allowed_nans=0, frac_allowed_nans=None
+):
     """Group dataframe by certain columns, and aggregate using a certain method, and decide how to handle nans.
 
     This function is similar to the usual
@@ -393,25 +395,33 @@ def groupby_agg(df, groupby_columns, aggregations=None, num_allowed_nans=0, frac
         groupby_columns = [groupby_columns]
 
     if aggregations is None:
-        columns_to_aggregate = [column for column in df.columns if column not in groupby_columns]
-        aggregations = {column: 'sum' for column in columns_to_aggregate}
+        columns_to_aggregate = [
+            column for column in df.columns if column not in groupby_columns
+        ]
+        aggregations = {column: "sum" for column in columns_to_aggregate}
 
     # Group by and aggregate.
     grouped = df.groupby(groupby_columns, dropna=False).agg(aggregations)
 
     if num_allowed_nans is not None:
         # Count the number of missing values in each group.
-        num_nans_detected = df.groupby(groupby_columns, dropna=False).agg(lambda x: pd.isnull(x).sum())
+        num_nans_detected = df.groupby(groupby_columns, dropna=False).agg(
+            lambda x: pd.isnull(x).sum()
+        )
         # Make nan any aggregation where there were too many missing values.
         grouped = grouped[num_nans_detected <= num_allowed_nans]
 
     if frac_allowed_nans is not None:
         # Count the number of missing values in each group.
-        num_nans_detected = df.groupby(groupby_columns, dropna=False).agg(lambda x: pd.isnull(x).sum())
+        num_nans_detected = df.groupby(groupby_columns, dropna=False).agg(
+            lambda x: pd.isnull(x).sum()
+        )
         # Count number of elements in each group (avoid using 'count' method, which ignores nans).
         num_elements = df.groupby(groupby_columns, dropna=False).size()
         # Make nan any aggregation where there were too many missing values.
-        grouped = grouped[num_nans_detected.divide(num_elements, axis='index') <= frac_allowed_nans]
+        grouped = grouped[
+            num_nans_detected.divide(num_elements, axis="index") <= frac_allowed_nans
+        ]
 
     return grouped
 
@@ -438,23 +448,37 @@ def list_countries_in_region(region, countries_regions=None, income_groups=None)
     """
     # TODO: Add tests.
     if countries_regions is None:
-        countries_regions = catalog.find('countries_regions', dataset='reference', namespace='owid').load()
+        countries_regions = catalog.find(
+            "countries_regions", dataset="reference", namespace="owid"
+        ).load()
 
     if income_groups is None:
-        income_groups = catalog.find(table='wb_income_group', dataset='wb_income', namespace='wb')
-        income_groups = income_groups[income_groups.path.str.startswith("garden")].load().reset_index()
-    income_groups_names = income_groups['income_group'].dropna().unique().tolist()
+        income_groups = catalog.find(
+            table="wb_income_group", dataset="wb_income", namespace="wb"
+        )
+        income_groups = (
+            income_groups[income_groups.path.str.startswith("garden")]
+            .load()
+            .reset_index()
+        )
+    income_groups_names = income_groups["income_group"].dropna().unique().tolist()
 
     # TODO: Once countries-regions has additional columns 'is_historic' and 'is_country', select only countries, and not
     #  historical regions.
 
-    if region in countries_regions['name'].tolist():
+    if region in countries_regions["name"].tolist():
         # Find codes of member countries in this region.
-        member_codes = json.loads(countries_regions[countries_regions['name'] == region]['members'].item())
+        member_codes = json.loads(
+            countries_regions[countries_regions["name"] == region]["members"].item()
+        )
         # Get standardized names of these countries.
-        members = countries_regions.loc[member_codes]['name'].tolist()
+        members = countries_regions.loc[member_codes]["name"].tolist()
     elif region in income_groups_names:
-        members = income_groups[income_groups['income_group'] == region]['country'].unique().tolist()
+        members = (
+            income_groups[income_groups["income_group"] == region]["country"]
+            .unique()
+            .tolist()
+        )
     else:
         raise RegionNotFound
 
@@ -462,8 +486,13 @@ def list_countries_in_region(region, countries_regions=None, income_groups=None)
 
 
 def list_countries_in_region_with_largest_contribution(
-        region, reference_year=REFERENCE_YEAR, min_frac_individual_population=MIN_FRAC_INDIVIDUAL_POPULATION,
-        min_frac_cumulative_population=MIN_FRAC_CUMULATIVE_POPULATION, countries_regions=None, population=None):
+    region,
+    reference_year=REFERENCE_YEAR,
+    min_frac_individual_population=MIN_FRAC_INDIVIDUAL_POPULATION,
+    min_frac_cumulative_population=MIN_FRAC_CUMULATIVE_POPULATION,
+    countries_regions=None,
+    population=None,
+):
     """List countries of a region that are expected to have the largest contribution to any variable (based on their
     population).
 
@@ -497,54 +526,75 @@ def list_countries_in_region_with_largest_contribution(
     """
     # TODO: Add tests.
     if countries_regions is None:
-        countries_regions = catalog.find('countries_regions', dataset='reference', namespace='owid').load()
+        countries_regions = catalog.find(
+            "countries_regions", dataset="reference", namespace="owid"
+        ).load()
 
     if population is None:
-        population = catalog.find("population", namespace="owid", dataset="key_indicators").load().reset_index()
+        population = (
+            catalog.find("population", namespace="owid", dataset="key_indicators")
+            .load()
+            .reset_index()
+        )
 
     # List all countries in the selected region.
     members = list_countries_in_region(region, countries_regions=countries_regions)
 
     # Select population data for reference year for all countries in the region.
-    reference = population[(population['country'].isin(members)) & (population['year'] == reference_year)].\
-        dropna(subset='population').sort_values('population', ascending=False).reset_index(drop=True)
+    reference = (
+        population[
+            (population["country"].isin(members))
+            & (population["year"] == reference_year)
+        ]
+        .dropna(subset="population")
+        .sort_values("population", ascending=False)
+        .reset_index(drop=True)
+    )
 
     # Calculate total population in the region, and the fractional contribution of each country.
-    total_population = reference['population'].sum()
-    reference['fraction'] = reference['population'] / total_population
+    total_population = reference["population"].sum()
+    reference["fraction"] = reference["population"] / total_population
 
     # Select countries that exceed a minimum individual fraction of the total population of the region.
-    selected = reference[(reference['fraction'] > min_frac_individual_population)].reset_index(drop=True)
+    selected = reference[
+        (reference["fraction"] > min_frac_individual_population)
+    ].reset_index(drop=True)
 
     # Among remaining countries, select countries that, combined, exceed a minimum fraction of the total population.
-    selected['cumulative_fraction'] = selected['population'].cumsum() / total_population
-    candidates_to_ignore = selected[selected['cumulative_fraction'] > min_frac_cumulative_population]
+    selected["cumulative_fraction"] = selected["population"].cumsum() / total_population
+    candidates_to_ignore = selected[
+        selected["cumulative_fraction"] > min_frac_cumulative_population
+    ]
     if len(candidates_to_ignore) == 0:
-        print('WARNING: Conditions are too strict to select countries that must be included in the data.')
+        print(
+            "WARNING: Conditions are too strict to select countries that must be included in the data."
+        )
     else:
         # Select the smallest possible list of countries that fulfil both conditions.
-        selected = selected.loc[0:candidates_to_ignore.index[0]]
+        selected = selected.loc[0 : candidates_to_ignore.index[0]]
 
-    print(f"{len(selected)} countries must be informed for {region} (covering {selected['fraction'].sum() * 100: .2f}% "
-          f"of the population; otherwise aggregate data will be nan.")
-    countries = selected['country'].tolist()
+    print(
+        f"{len(selected)} countries must be informed for {region} (covering {selected['fraction'].sum() * 100: .2f}% "
+        f"of the population; otherwise aggregate data will be nan."
+    )
+    countries = selected["country"].tolist()
 
     return countries
 
 
 def add_region_aggregates(
-        df,
-        region,
-        min_frac_individual_population=MIN_FRAC_INDIVIDUAL_POPULATION,
-        min_frac_cumulative_population=MIN_FRAC_CUMULATIVE_POPULATION,
-        reference_year_to_choose_countries_that_must_be_present=REFERENCE_YEAR,
-        num_allowed_nans_per_year=NUM_ALLOWED_NANS_PER_YEAR,
-        frac_allowed_nans_per_year=FRAC_ALLOWED_NANS_PER_YEAR,
-        country_col='Country',
-        year_col='Year',
-        aggregations=None,
-        countries_regions=None,
-        population=None
+    df,
+    region,
+    min_frac_individual_population=MIN_FRAC_INDIVIDUAL_POPULATION,
+    min_frac_cumulative_population=MIN_FRAC_CUMULATIVE_POPULATION,
+    reference_year_to_choose_countries_that_must_be_present=REFERENCE_YEAR,
+    num_allowed_nans_per_year=NUM_ALLOWED_NANS_PER_YEAR,
+    frac_allowed_nans_per_year=FRAC_ALLOWED_NANS_PER_YEAR,
+    country_col="Country",
+    year_col="Year",
+    aggregations=None,
+    countries_regions=None,
+    population=None,
 ):
     """Add data for regions (e.g. income groups or continents) to a dataset, or replace it, if the dataset already
     contains data for that region).
@@ -604,24 +654,30 @@ def add_region_aggregates(
     """
     # TODO: Add tests.
     if countries_regions is None:
-        countries_regions = catalog.find('countries_regions', dataset='reference', namespace='owid').load()
+        countries_regions = catalog.find(
+            "countries_regions", dataset="reference", namespace="owid"
+        ).load()
 
     # List countries in the region, and countries that should present in the data (since they are expected to contribute
     # the most).
     countries_in_region = list_countries_in_region(
-        region=region, countries_regions=countries_regions)
+        region=region, countries_regions=countries_regions
+    )
     countries_that_must_be_present = list_countries_in_region_with_largest_contribution(
         region=region,
         countries_regions=countries_regions,
         reference_year=reference_year_to_choose_countries_that_must_be_present,
         min_frac_individual_population=min_frac_individual_population,
         min_frac_cumulative_population=min_frac_cumulative_population,
-        population=population)
+        population=population,
+    )
 
     # If aggregations are not defined for each variable, assume 'sum'.
     fixed_columns = [country_col, year_col]
     if aggregations is None:
-        aggregations = {variable: 'sum' for variable in df.columns if variable not in fixed_columns}
+        aggregations = {
+            variable: "sum" for variable in df.columns if variable not in fixed_columns
+        }
     variables = list(aggregations)
 
     # Initialise dataframe of added regions, and add variables one by one to it.
@@ -633,8 +689,12 @@ def add_region_aggregates(
         df_added = groupby_agg(
             df=df_clean,
             groupby_columns=year_col,
-            aggregations={country_col: lambda x: set(countries_that_must_be_present).issubset(set(list(x))),
-                          variable: aggregations[variable]},
+            aggregations={
+                country_col: lambda x: set(countries_that_must_be_present).issubset(
+                    set(list(x))
+                ),
+                variable: aggregations[variable],
+            },
             num_allowed_nans=num_allowed_nans_per_year,
             frac_allowed_nans=frac_allowed_nans_per_year,
         ).reset_index()
@@ -643,10 +703,14 @@ def add_region_aggregates(
         # Replace the column that was used to check if most contributing countries were present by the region's name.
         df_added[country_col] = region
         # Include this variable to the dataframe of added regions.
-        df_region = pd.merge(df_region, df_added, on=[country_col, year_col], how='outer')
+        df_region = pd.merge(
+            df_region, df_added, on=[country_col, year_col], how="outer"
+        )
 
     # Remove rows in the original dataframe containing rows for region, and append new rows for region.
-    df_updated = pd.concat([df[~(df[country_col] == region)], df_region], ignore_index=True)
+    df_updated = pd.concat(
+        [df[~(df[country_col] == region)], df_region], ignore_index=True
+    )
 
     # Sort conveniently.
     df_updated = df_updated.sort_values([country_col, year_col]).reset_index(drop=True)
@@ -654,7 +718,7 @@ def add_region_aggregates(
     return df_updated
 
 
-def multi_merge(dfs, on, how='inner'):
+def multi_merge(dfs, on, how="inner"):
     """Merge multiple dataframes.
 
     This is a helper function when merging more than two dataframes on common columns.
