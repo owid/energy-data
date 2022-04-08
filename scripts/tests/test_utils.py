@@ -901,3 +901,49 @@ class TestGroupbyAggregate:
             ),
             df2=df_out,
         )
+
+
+class TestMultiMerge:
+    df1 = pd.DataFrame({'col_01': ['aa', 'ab', 'ac'], 'col_02': ['ba', 'bb', 'bc']})
+
+    def test_merge_identical_dataframes(self):
+        df1 = self.df1.copy()
+        df2 = self.df1.copy()
+        df3 = self.df1.copy()
+        assert utils.multi_merge([df1, df2, df3], how='inner', on=['col_01', 'col_02']).equals(df1)
+
+    def test_inner_join_with_non_overlapping_dataframes(self):
+        df1 = self.df1.copy()
+        df2 = pd.DataFrame({'col_01': ['ad', 'ae']})
+        df3 = pd.DataFrame({'col_01': ['af'], 'col_03': ['ca']})
+        # For some reason the order of columns changes on the second merge.
+        df_out = pd.DataFrame({'col_02': [], 'col_01': [], 'col_03': []}, dtype=str)
+        assert utils.are_dataframes_equal(df1=utils.multi_merge([df1, df2, df3], how='inner', on='col_01'), df2=df_out)
+
+    def test_outer_join_with_non_overlapping_dataframes(self):
+        df1 = self.df1.copy()
+        df2 = pd.DataFrame({'col_01': ['ad']})
+        df3 = pd.DataFrame({'col_01': ['ae']})
+        df_out = pd.DataFrame({'col_01': ['aa', 'ab', 'ac', 'ad', 'ae'], 'col_02': ['ba', 'bb', 'bc', np.nan, np.nan]})
+        assert utils.are_dataframes_equal(
+            df1=utils.multi_merge([df1, df2, df3], how='outer', on='col_01'), df2=df_out
+        )[0]
+
+    def test_left_join(self):
+        df1 = self.df1.copy()
+        df2 = pd.DataFrame({'col_01': ['aa', 'ab', 'ad'], 'col_02': ['ba', 'bB', 'bc'], 'col_03': [1, 2, 3]})
+        # df_12 = pd.DataFrame({'col_01': ['aa', 'ab', 'ac'], 'col_02': ['ba', 'bb', 'bc'],
+        #                       'col_03': [1, np.nan, np.nan]})
+        df3 = pd.DataFrame({'col_01': [], 'col_02': [], 'col_04': []})
+        df_out = pd.DataFrame({'col_01': ['aa', 'ab', 'ac'], 'col_02': ['ba', 'bb', 'bc'],
+                               'col_03': [1, np.nan, np.nan], 'col_04': [np.nan, np.nan, np.nan]})
+        assert utils.multi_merge([df1, df2, df3], how='left', on=['col_01', 'col_02']).equals(df_out)
+
+    def test_right_join(self):
+        df1 = self.df1.copy()
+        df2 = pd.DataFrame({'col_01': ['aa', 'ab', 'ad'], 'col_02': ['ba', 'bB', 'bc'], 'col_03': [1, 2, 3]})
+        # df12 = pd.DataFrame({'col_01': ['aa', 'ab', 'ad'], 'col_02': ['ba', 'bB', 'bc'], 'col_03': [1, 2, 3]})
+        df3 = pd.DataFrame({'col_01': ['aa', 'ae'], 'col_02': ['ba', 'be'], 'col_04': [4, 5]})
+        df_out = pd.DataFrame({'col_01': ['aa', 'ae'], 'col_02': ['ba', 'be'],
+                               'col_03': [1, np.nan], 'col_04': [4, 5]})
+        assert utils.multi_merge([df1, df2, df3], how='right', on=['col_01', 'col_02']).equals(df_out)

@@ -722,7 +722,6 @@ def multi_merge(dfs, on, how="inner"):
         Input dataframes merged.
 
     """
-    # TODO: Add tests.
     merged = dfs[0].copy()
     for df in dfs[1:]:
         merged = pd.merge(merged, df, how=how, on=on)
