@@ -24,6 +24,10 @@ A [full codebook](https://github.com/owid/energy-data/blob/master/owid-energy-co
 
 ## Changelog
 
+- On April 8, 2022:
+  - Electricity data from Ember was updated (using the Global Electricity Review 2022).
+  - Data on greenhouse-gas emissions in electricity generation was added (`greenhouse_gas_emissions`).
+  - Data on emissions intensity is now provided for most countries in the world.
 - On March 25, 2022:
   - Data on net electricity imports and electricity demand was added.
   - BP data was updated (using the Statistical Review of the World Energy 2021).
