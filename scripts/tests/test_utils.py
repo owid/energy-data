@@ -13,15 +13,15 @@ from scripts import utils
 
 
 mock_countries = {
-    "country_02": "Country_02",
-    "country_03": "Country_03",
+    "country_02": "Country 2",
+    "country_03": "Country 3",
 }
 
 mock_population = pd.DataFrame(
     {
-        "country": ["Country_01", "Country_01", "Country_02", "Country_02"],
-        "year": [2020, 2021, 2019, 2020],
-        "population": [10, 20, 30, 40],
+        "country": ["Country 1", "Country 1", "Country 2", "Country 2", "Country 3"],
+        "year": [2020, 2021, 2019, 2020, 2020],
+        "population": [10, 20, 30, 40, 50],
     }
 )
 
@@ -29,7 +29,7 @@ mock_countries_regions = pd.DataFrame(
     {
         "code": ["C01", "C02", "C03", "R01", "R02"],
         "name": ["Country 1", "Country 2", "Country 3", "Region 1", "Region 2"],
-        "members": [np.nan, np.nan, np.nan, '["C01", "C03"]', '["C02"]'],
+        "members": [np.nan, np.nan, np.nan, '["C01", "C02"]', '["C03"]'],
     }
 ).set_index("code")
 
@@ -266,11 +266,11 @@ class TestAreDataFramesEqual:
 class TestAddPopulationToDataframe:
     def test_all_countries_and_years_in_population(self):
         df_in = pd.DataFrame(
-            {"country": ["Country_02", "Country_01"], "year": [2019, 2021]}
+            {"country": ["Country 2", "Country 1"], "year": [2019, 2021]}
         )
         df_out = pd.DataFrame(
             {
-                "country": ["Country_02", "Country_01"],
+                "country": ["Country 2", "Country 1"],
                 "year": [2019, 2021],
                 "population": [30, 20],
             }
@@ -279,11 +279,11 @@ class TestAddPopulationToDataframe:
 
     def test_countries_and_years_in_population_just_one(self):
         df_in = pd.DataFrame(
-            {"country": ["Country_02", "Country_02"], "year": [2020, 2019]}
+            {"country": ["Country 2", "Country 2"], "year": [2020, 2019]}
         )
         df_out = pd.DataFrame(
             {
-                "country": ["Country_02", "Country_02"],
+                "country": ["Country 2", "Country 2"],
                 "year": [2020, 2019],
                 "population": [40, 30],
             }
@@ -292,11 +292,11 @@ class TestAddPopulationToDataframe:
 
     def test_one_country_in_and_another_not_in_population(self):
         df_in = pd.DataFrame(
-            {"country": ["Country_01", "Country_03"], "year": [2020, 2021]}
+            {"country": ["Country 1", "Country 3"], "year": [2020, 2021]}
         )
         df_out = pd.DataFrame(
             {
-                "country": ["Country_01", "Country_03"],
+                "country": ["Country 1", "Country 3"],
                 "year": [2020, 2021],
                 "population": [10, np.nan],
             }
@@ -318,11 +318,11 @@ class TestAddPopulationToDataframe:
 
     def test_countries_in_population_but_not_for_given_years(self):
         df_in = pd.DataFrame(
-            {"country": ["Country_02", "Country_01"], "year": [2000, 2000]}
+            {"country": ["Country 2", "Country 1"], "year": [2000, 2000]}
         )
         df_out = pd.DataFrame(
             {
-                "country": ["Country_02", "Country_01"],
+                "country": ["Country 2", "Country 1"],
                 "year": [2000, 2000],
                 "population": [np.nan, np.nan],
             }
@@ -331,11 +331,11 @@ class TestAddPopulationToDataframe:
 
     def test_countries_in_population_but_a_year_in_and_another_not_in_population(self):
         df_in = pd.DataFrame(
-            {"country": ["Country_02", "Country_01"], "year": [2019, 2000]}
+            {"country": ["Country 2", "Country 1"], "year": [2019, 2000]}
         )
         df_out = pd.DataFrame(
             {
-                "country": ["Country_02", "Country_01"],
+                "country": ["Country 2", "Country 1"],
                 "year": [2019, 2000],
                 "population": [30, np.nan],
             }
@@ -344,11 +344,11 @@ class TestAddPopulationToDataframe:
 
     def test_change_country_and_year_column_names(self):
         df_in = pd.DataFrame(
-            {"Country": ["Country_02", "Country_01"], "Year": [2019, 2021]}
+            {"Country": ["Country 2", "Country 1"], "Year": [2019, 2021]}
         )
         df_out = pd.DataFrame(
             {
-                "Country": ["Country_02", "Country_01"],
+                "Country": ["Country 2", "Country 1"],
                 "Year": [2019, 2021],
                 "population": [30, 20],
             }
@@ -362,10 +362,10 @@ class TestAddPopulationToDataframe:
 class TestStandardizeCountries:
     def test_one_country_unchanged_and_another_changed(self, _):
         df_in = pd.DataFrame(
-            {"country": ["Country_01", "country_02"], "some_variable": [1, 2]}
+            {"country": ["Country 1", "country_02"], "some_variable": [1, 2]}
         )
         df_out = pd.DataFrame(
-            {"country": ["Country_01", "Country_02"], "some_variable": [1, 2]}
+            {"country": ["Country 1", "Country 2"], "some_variable": [1, 2]}
         )
         assert utils.standardize_countries(df=df_in, countries_file="IGNORED").equals(
             df_out
@@ -373,10 +373,10 @@ class TestStandardizeCountries:
 
     def test_one_country_unchanged_and_another_unknown(self, _):
         df_in = pd.DataFrame(
-            {"country": ["Country_01", "country_04"], "some_variable": [1, 2]}
+            {"country": ["Country 1", "country_04"], "some_variable": [1, 2]}
         )
         df_out = pd.DataFrame(
-            {"country": ["Country_01", "country_04"], "some_variable": [1, 2]}
+            {"country": ["Country 1", "country_04"], "some_variable": [1, 2]}
         )
         assert utils.standardize_countries(df=df_in, countries_file="IGNORED").equals(
             df_out
@@ -384,7 +384,7 @@ class TestStandardizeCountries:
 
     def test_two_unknown_countries_made_nan(self, _):
         df_in = pd.DataFrame(
-            {"country": ["Country_01", "country_04"], "some_variable": [1, 2]}
+            {"country": ["Country 1", "country_04"], "some_variable": [1, 2]}
         )
         df_out = pd.DataFrame({"country": [np.nan, np.nan], "some_variable": [1, 2]})
         assert utils.are_dataframes_equal(
@@ -396,10 +396,10 @@ class TestStandardizeCountries:
 
     def test_one_unknown_country_made_nan_and_a_known_country_changed(self, _):
         df_in = pd.DataFrame(
-            {"country": ["Country_01", "country_02"], "some_variable": [1, 2]}
+            {"country": ["Country 1", "country_02"], "some_variable": [1, 2]}
         )
         df_out = pd.DataFrame(
-            {"country": [np.nan, "Country_02"], "some_variable": [1, 2]}
+            {"country": [np.nan, "Country 2"], "some_variable": [1, 2]}
         )
         assert utils.are_dataframes_equal(
             df1=df_out,
@@ -413,13 +413,13 @@ class TestStandardizeCountries:
     ):
         df_in = pd.DataFrame(
             {
-                "country": ["Country_01", "country_02", "Country_03"],
+                "country": ["Country 1", "country_02", "Country 3"],
                 "some_variable": [1, 2, 3],
             }
         )
         df_out = pd.DataFrame(
             {
-                "country": [np.nan, "Country_02", "Country_03"],
+                "country": [np.nan, "Country 2", "Country 3"],
                 "some_variable": [1, 2, 3],
             }
         )
@@ -440,7 +440,7 @@ class TestStandardizeCountries:
 
     def test_change_country_column_name(self, _):
         df_in = pd.DataFrame({"Country": ["country_02"]})
-        df_out = pd.DataFrame({"Country": ["Country_02"]})
+        df_out = pd.DataFrame({"Country": ["Country 2"]})
         assert utils.are_dataframes_equal(
             df1=df_out,
             df2=utils.standardize_countries(
@@ -1010,14 +1010,14 @@ class TestListCountriesInRegions(unittest.TestCase):
             region="Region 1",
             countries_regions=mock_countries_regions,
             income_groups=mock_income_groups,
-        ) == ["Country 1", "Country 3"]
+        ) == ["Country 1", "Country 2"]
 
     def test_get_countries_from_another_region(self):
         assert utils.list_countries_in_region(
             region="Region 2",
             countries_regions=mock_countries_regions,
             income_groups=mock_income_groups,
-        ) == ["Country 2"]
+        ) == ["Country 3"]
 
     def test_get_countries_from_income_group(self):
         assert utils.list_countries_in_region(
@@ -1050,3 +1050,119 @@ class TestListCountriesInRegions(unittest.TestCase):
             )
             == []
         )
+
+
+class TestListCountriesInRegionsThatMustHaveData(unittest.TestCase):
+    def test_having_too_loose_conditions(self):
+        with self.assertWarns(UserWarning):
+            assert utils.list_countries_in_region_that_must_have_data(
+                region='Region 1',
+                reference_year=2020,
+                min_frac_individual_population=0.0,
+                min_frac_cumulative_population=0.0,
+                countries_regions=mock_countries_regions,
+                income_groups=mock_income_groups,
+                population=mock_population,
+            ) == []
+
+    def test_having_too_strict_condition_on_minimum_individual_contribution(self):
+        with self.assertWarns(UserWarning):
+            assert utils.list_countries_in_region_that_must_have_data(
+                region='Region 1',
+                reference_year=2020,
+                min_frac_individual_population=0.81,
+                min_frac_cumulative_population=0.0,
+                countries_regions=mock_countries_regions,
+                income_groups=mock_income_groups,
+                population=mock_population,
+            ) == ['Country 2', 'Country 1']
+
+    def test_having_too_strict_condition_on_minimum_cumulative_contribution(self):
+        with self.assertWarns(UserWarning):
+            assert utils.list_countries_in_region_that_must_have_data(
+                region='Region 1',
+                reference_year=2020,
+                min_frac_individual_population=0.0,
+                min_frac_cumulative_population=0.81,
+                countries_regions=mock_countries_regions,
+                income_groups=mock_income_groups,
+                population=mock_population,
+            ) == ['Country 2', 'Country 1']
+
+    def test_having_too_strict_condition_on_both_minimum_individual_and_cumulative_contributions(self):
+        with self.assertWarns(UserWarning):
+            assert utils.list_countries_in_region_that_must_have_data(
+                region='Region 1',
+                reference_year=2020,
+                min_frac_individual_population=0.81,
+                min_frac_cumulative_population=0.81,
+                countries_regions=mock_countries_regions,
+                income_groups=mock_income_groups,
+                population=mock_population,
+            ) == ['Country 2', 'Country 1']
+
+    def test_region_year_with_only_one_country(self):
+        assert utils.list_countries_in_region_that_must_have_data(
+            region='Region 1',
+            reference_year=2021,
+            min_frac_individual_population=0.1,
+            min_frac_cumulative_population=0,
+            countries_regions=mock_countries_regions,
+            income_groups=mock_income_groups,
+            population=mock_population,
+        ) == ['Country 1']
+
+    def test_region_year_right_below_minimum_individual_contribution(self):
+        assert utils.list_countries_in_region_that_must_have_data(
+            region='Region 1',
+            reference_year=2020,
+            min_frac_individual_population=0.79,
+            min_frac_cumulative_population=0.0,
+            countries_regions=mock_countries_regions,
+            income_groups=mock_income_groups,
+            population=mock_population,
+        ) == ['Country 2']
+
+    def test_region_year_right_above_minimum_individual_contribution(self):
+        assert utils.list_countries_in_region_that_must_have_data(
+            region='Region 1',
+            reference_year=2020,
+            min_frac_individual_population=0.1,
+            min_frac_cumulative_population=0.0,
+            countries_regions=mock_countries_regions,
+            income_groups=mock_income_groups,
+            population=mock_population,
+        ) == ['Country 2']
+
+    def test_region_year_right_below_minimum_cumulative_contribution(self):
+        assert utils.list_countries_in_region_that_must_have_data(
+            region='Region 1',
+            reference_year=2020,
+            min_frac_individual_population=0.0,
+            min_frac_cumulative_population=0.79,
+            countries_regions=mock_countries_regions,
+            income_groups=mock_income_groups,
+            population=mock_population,
+        ) == ['Country 2']
+
+    def test_region_year_right_above_minimum_cumulative_contribution(self):
+        assert utils.list_countries_in_region_that_must_have_data(
+            region='Region 1',
+            reference_year=2020,
+            min_frac_individual_population=0.0,
+            min_frac_cumulative_population=0.1,
+            countries_regions=mock_countries_regions,
+            income_groups=mock_income_groups,
+            population=mock_population,
+        ) == ['Country 2']
+
+    def test_countries_in_income_group(self):
+        assert utils.list_countries_in_region_that_must_have_data(
+            region='Income group 1',
+            reference_year=2020,
+            min_frac_individual_population=0.0,
+            min_frac_cumulative_population=0.5,
+            countries_regions=mock_countries_regions,
+            income_groups=mock_income_groups,
+            population=mock_population,
+        ) == ['Country 3']
