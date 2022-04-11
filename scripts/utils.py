@@ -697,7 +697,9 @@ def add_region_aggregates(
     variables = list(aggregations)
 
     # Initialise dataframe of added regions, and add variables one by one to it.
-    df_region = pd.DataFrame({country_col: [], year_col: []}).astype(dtype={country_col: "object", year_col: "int"})
+    df_region = pd.DataFrame({country_col: [], year_col: []}).astype(
+        dtype={country_col: "object", year_col: "int"}
+    )
     # Select data for countries in the region.
     df_countries = df[df[country_col].isin(countries_in_region)]
     for variable in variables:
