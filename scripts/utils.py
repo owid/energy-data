@@ -5,6 +5,7 @@ TODO: Consider moving some (or all) of these functions to data-utils.
 """
 
 import json
+import warnings
 
 import numpy as np
 import pandas as pd
@@ -32,6 +33,33 @@ class DataFramesHaveDifferentLengths(ExceptionFromDocstring):
 
 class ObjectsAreNotDataframes(ExceptionFromDocstring):
     """Given objects are not dataframes."""
+
+
+def _load_population():
+    population = (
+        catalog.find("population", namespace="owid", dataset="key_indicators").load().reset_index()
+    )
+
+    return population
+
+
+def _load_countries_regions():
+    countries_regions = catalog.find(
+        "countries_regions", dataset="reference", namespace="owid"
+    ).load()
+
+    return countries_regions
+
+
+def _load_income_groups():
+    income_groups = catalog.find(
+        table="wb_income_group", dataset="wb_income", namespace="wb"
+    )
+    income_groups = (
+        income_groups[income_groups.path.str.startswith("garden")].load().reset_index()
+    )
+
+    return income_groups
 
 
 def compare_dataframes(
@@ -314,18 +342,13 @@ def add_population_to_dataframe(
 
     """
     # Load population data and calculate per capita energy.
-    population = (
-        catalog.find("population", namespace="owid", dataset="key_indicators")
-        .load()
-        .reset_index()
-        .rename(
+    population = _load_population().rename(
             columns={
                 "country": country_col,
                 "year": year_col,
                 "population": population_col,
             }
         )[[country_col, year_col, population_col]]
-    )
 
     # Check if there is any missing country.
     missing_countries = set(df[country_col]) - set(population[country_col])
@@ -449,20 +472,11 @@ def list_countries_in_region(region, countries_regions=None, income_groups=None)
 
     """
     if countries_regions is None:
-        countries_regions = catalog.find(
-            "countries_regions", dataset="reference", namespace="owid"
-        ).load()
+        countries_regions = _load_countries_regions()
 
     # TODO: Remove lines related to income_groups once they are included in countries-regions dataset.
     if income_groups is None:
-        income_groups = catalog.find(
-            table="wb_income_group", dataset="wb_income", namespace="wb"
-        )
-        income_groups = (
-            income_groups[income_groups.path.str.startswith("garden")]
-            .load()
-            .reset_index()
-        )
+        income_groups = _load_income_groups()
     income_groups_names = income_groups["income_group"].dropna().unique().tolist()
 
     # TODO: Once countries-regions has additional columns 'is_historic' and 'is_country', select only countries, and not
@@ -496,6 +510,7 @@ def list_countries_in_region_that_must_have_data(
     min_frac_individual_population=MIN_FRAC_INDIVIDUAL_POPULATION,
     min_frac_cumulative_population=MIN_FRAC_CUMULATIVE_POPULATION,
     countries_regions=None,
+    income_groups=None,
     population=None,
 ):
     """List countries of a region that are expected to have the largest contribution to any variable (based on their
@@ -520,6 +535,8 @@ def list_countries_in_region_that_must_have_data(
         Minimum fraction of the total population of the region that the sum of the listed countries must exceed.
     countries_regions : pd.DataFrame or None
         Countries-regions dataset, or None, to load it from owid catalog.
+    income_groups : pd.DataFrame or None
+        Income-groups dataset, or None, to load it from the catalog.
     population : pd.DataFrame or None
         Population dataset, or None, to load it from owid catalog.
 
@@ -529,21 +546,17 @@ def list_countries_in_region_that_must_have_data(
         List of countries that are expected to have the largest contribution.
 
     """
-    # TODO: Add tests.
     if countries_regions is None:
-        countries_regions = catalog.find(
-            "countries_regions", dataset="reference", namespace="owid"
-        ).load()
+        countries_regions = _load_countries_regions()
 
     if population is None:
-        population = (
-            catalog.find("population", namespace="owid", dataset="key_indicators")
-            .load()
-            .reset_index()
-        )
+        population = _load_population()
+
+    if income_groups is None:
+        income_groups = _load_income_groups()
 
     # List all countries in the selected region.
-    members = list_countries_in_region(region, countries_regions=countries_regions)
+    members = list_countries_in_region(region, countries_regions=countries_regions, income_groups=income_groups)
 
     # Select population data for reference year for all countries in the region.
     reference = (
@@ -570,13 +583,20 @@ def list_countries_in_region_that_must_have_data(
     candidates_to_ignore = selected[
         selected["cumulative_fraction"] > min_frac_cumulative_population
     ]
-    if len(candidates_to_ignore) == 0:
-        print(
+    if len(candidates_to_ignore) > 0:
+        selected = selected.loc[0: candidates_to_ignore.index[0]]
+
+    if (min_frac_individual_population == 0) and (min_frac_cumulative_population == 0):
+        warnings.warn(
+            "WARNING: Conditions are too loose to select countries that must be included in the data."
+        )
+        selected = pd.DataFrame({'country': [], 'fraction': []})
+    elif (len(selected) == 0) or ((len(selected) == len(reference)) and (len(reference) > 1)):
+        # This happens when the only way to fulfil the conditions is to include all countries.
+        warnings.warn(
             "WARNING: Conditions are too strict to select countries that must be included in the data."
         )
-    else:
-        # Select the smallest possible list of countries that fulfil both conditions.
-        selected = selected.loc[0 : candidates_to_ignore.index[0]]
+        selected = reference.copy()
 
     print(
         f"{len(selected)} countries must be informed for {region} (covering {selected['fraction'].sum() * 100: .2f}% "
@@ -597,6 +617,8 @@ def add_region_aggregates(
     country_col="Country",
     year_col="Year",
     aggregations=None,
+    countries_regions=None,
+    income_groups=None,
 ):
     """Add data for regions (e.g. income groups or continents) to a dataset, or replace it, if the dataset already
     contains data for that region.
@@ -643,6 +665,10 @@ def add_region_aggregates(
         Aggregations to execute for each variable. If None, the contribution to each variable from each country in the
         region will be summed. Otherwise, only the variables indicated in the dictionary will be affected. All remaining
         variables will be nan.
+    countries_regions : pd.DataFrame or None
+        Countries-regions dataset, or None to load it from the catalog.
+    income_groups : pd.DataFrame or None
+        Income-groups dataset, or None, to load it from the catalog.
 
     Returns
     -------
@@ -653,12 +679,13 @@ def add_region_aggregates(
     # TODO: Add tests.
     if countries_in_region is None:
         # List countries in the region.
-        countries_in_region = list_countries_in_region(region=region)
+        countries_in_region = list_countries_in_region(
+            region=region, countries_regions=countries_regions, income_groups=income_groups)
 
     if countries_that_must_have_data is None:
         # List countries that should present in the data (since they are expected to contribute the most).
         countries_that_must_have_data = list_countries_in_region_that_must_have_data(
-            region=region
+            region=region, countries_regions=countries_regions, income_groups=income_groups,
         )
 
     # If aggregations are not defined for each variable, assume 'sum'.
