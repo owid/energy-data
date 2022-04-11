@@ -448,7 +448,6 @@ def list_countries_in_region(region, countries_regions=None, income_groups=None)
         Names of countries that are members of the region.
 
     """
-    # TODO: Add tests.
     if countries_regions is None:
         countries_regions = catalog.find(
             "countries_regions", dataset="reference", namespace="owid"
@@ -470,9 +469,13 @@ def list_countries_in_region(region, countries_regions=None, income_groups=None)
     #  historical regions.
     if region in countries_regions["name"].tolist():
         # Find codes of member countries in this region.
-        member_codes = json.loads(
-            countries_regions[countries_regions["name"] == region]["members"].item()
-        )
+        member_codes_str = countries_regions[countries_regions["name"] == region][
+            "members"
+        ].item()
+        if pd.isnull(member_codes_str):
+            member_codes = []
+        else:
+            member_codes = json.loads(member_codes_str)
         # Get standardized names of these countries.
         members = countries_regions.loc[member_codes]["name"].tolist()
     elif region in income_groups_names:
@@ -573,7 +576,7 @@ def list_countries_in_region_that_must_have_data(
         )
     else:
         # Select the smallest possible list of countries that fulfil both conditions.
-        selected = selected.loc[0: candidates_to_ignore.index[0]]
+        selected = selected.loc[0 : candidates_to_ignore.index[0]]
 
     print(
         f"{len(selected)} countries must be informed for {region} (covering {selected['fraction'].sum() * 100: .2f}% "
@@ -654,7 +657,9 @@ def add_region_aggregates(
 
     if countries_that_must_have_data is None:
         # List countries that should present in the data (since they are expected to contribute the most).
-        countries_that_must_have_data = list_countries_in_region_that_must_have_data(region=region)
+        countries_that_must_have_data = list_countries_in_region_that_must_have_data(
+            region=region
+        )
 
     # If aggregations are not defined for each variable, assume 'sum'.
     fixed_columns = [country_col, year_col]
