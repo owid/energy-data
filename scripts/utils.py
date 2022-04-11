@@ -37,7 +37,9 @@ class ObjectsAreNotDataframes(ExceptionFromDocstring):
 
 def _load_population():
     population = (
-        catalog.find("population", namespace="owid", dataset="key_indicators").load().reset_index()
+        catalog.find("population", namespace="owid", dataset="key_indicators")
+        .load()
+        .reset_index()
     )
 
     return population
@@ -343,12 +345,12 @@ def add_population_to_dataframe(
     """
     # Load population data and calculate per capita energy.
     population = _load_population().rename(
-            columns={
-                "country": country_col,
-                "year": year_col,
-                "population": population_col,
-            }
-        )[[country_col, year_col, population_col]]
+        columns={
+            "country": country_col,
+            "year": year_col,
+            "population": population_col,
+        }
+    )[[country_col, year_col, population_col]]
 
     # Check if there is any missing country.
     missing_countries = set(df[country_col]) - set(population[country_col])
@@ -556,7 +558,9 @@ def list_countries_in_region_that_must_have_data(
         income_groups = _load_income_groups()
 
     # List all countries in the selected region.
-    members = list_countries_in_region(region, countries_regions=countries_regions, income_groups=income_groups)
+    members = list_countries_in_region(
+        region, countries_regions=countries_regions, income_groups=income_groups
+    )
 
     # Select population data for reference year for all countries in the region.
     reference = (
@@ -584,14 +588,16 @@ def list_countries_in_region_that_must_have_data(
         selected["cumulative_fraction"] > min_frac_cumulative_population
     ]
     if len(candidates_to_ignore) > 0:
-        selected = selected.loc[0: candidates_to_ignore.index[0]]
+        selected = selected.loc[0 : candidates_to_ignore.index[0]]
 
     if (min_frac_individual_population == 0) and (min_frac_cumulative_population == 0):
         warnings.warn(
             "WARNING: Conditions are too loose to select countries that must be included in the data."
         )
-        selected = pd.DataFrame({'country': [], 'fraction': []})
-    elif (len(selected) == 0) or ((len(selected) == len(reference)) and (len(reference) > 1)):
+        selected = pd.DataFrame({"country": [], "fraction": []})
+    elif (len(selected) == 0) or (
+        (len(selected) == len(reference)) and (len(reference) > 1)
+    ):
         # This happens when the only way to fulfil the conditions is to include all countries.
         warnings.warn(
             "WARNING: Conditions are too strict to select countries that must be included in the data."
@@ -680,12 +686,17 @@ def add_region_aggregates(
     if countries_in_region is None:
         # List countries in the region.
         countries_in_region = list_countries_in_region(
-            region=region, countries_regions=countries_regions, income_groups=income_groups)
+            region=region,
+            countries_regions=countries_regions,
+            income_groups=income_groups,
+        )
 
     if countries_that_must_have_data is None:
         # List countries that should present in the data (since they are expected to contribute the most).
         countries_that_must_have_data = list_countries_in_region_that_must_have_data(
-            region=region, countries_regions=countries_regions, income_groups=income_groups,
+            region=region,
+            countries_regions=countries_regions,
+            income_groups=income_groups,
         )
 
     # If aggregations are not defined for each variable, assume 'sum'.

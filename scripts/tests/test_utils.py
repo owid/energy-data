@@ -1055,114 +1055,119 @@ class TestListCountriesInRegions(unittest.TestCase):
 class TestListCountriesInRegionsThatMustHaveData(unittest.TestCase):
     def test_having_too_loose_conditions(self):
         with self.assertWarns(UserWarning):
-            assert utils.list_countries_in_region_that_must_have_data(
-                region='Region 1',
-                reference_year=2020,
-                min_frac_individual_population=0.0,
-                min_frac_cumulative_population=0.0,
-                countries_regions=mock_countries_regions,
-                income_groups=mock_income_groups,
-                population=mock_population,
-            ) == []
+            assert (
+                utils.list_countries_in_region_that_must_have_data(
+                    region="Region 1",
+                    reference_year=2020,
+                    min_frac_individual_population=0.0,
+                    min_frac_cumulative_population=0.0,
+                    countries_regions=mock_countries_regions,
+                    income_groups=mock_income_groups,
+                    population=mock_population,
+                )
+                == []
+            )
 
     def test_having_too_strict_condition_on_minimum_individual_contribution(self):
         with self.assertWarns(UserWarning):
             assert utils.list_countries_in_region_that_must_have_data(
-                region='Region 1',
+                region="Region 1",
                 reference_year=2020,
                 min_frac_individual_population=0.81,
                 min_frac_cumulative_population=0.0,
                 countries_regions=mock_countries_regions,
                 income_groups=mock_income_groups,
                 population=mock_population,
-            ) == ['Country 2', 'Country 1']
+            ) == ["Country 2", "Country 1"]
 
     def test_having_too_strict_condition_on_minimum_cumulative_contribution(self):
         with self.assertWarns(UserWarning):
             assert utils.list_countries_in_region_that_must_have_data(
-                region='Region 1',
+                region="Region 1",
                 reference_year=2020,
                 min_frac_individual_population=0.0,
                 min_frac_cumulative_population=0.81,
                 countries_regions=mock_countries_regions,
                 income_groups=mock_income_groups,
                 population=mock_population,
-            ) == ['Country 2', 'Country 1']
+            ) == ["Country 2", "Country 1"]
 
-    def test_having_too_strict_condition_on_both_minimum_individual_and_cumulative_contributions(self):
+    def test_having_too_strict_condition_on_both_minimum_individual_and_cumulative_contributions(
+        self,
+    ):
         with self.assertWarns(UserWarning):
             assert utils.list_countries_in_region_that_must_have_data(
-                region='Region 1',
+                region="Region 1",
                 reference_year=2020,
                 min_frac_individual_population=0.81,
                 min_frac_cumulative_population=0.81,
                 countries_regions=mock_countries_regions,
                 income_groups=mock_income_groups,
                 population=mock_population,
-            ) == ['Country 2', 'Country 1']
+            ) == ["Country 2", "Country 1"]
 
     def test_region_year_with_only_one_country(self):
         assert utils.list_countries_in_region_that_must_have_data(
-            region='Region 1',
+            region="Region 1",
             reference_year=2021,
             min_frac_individual_population=0.1,
             min_frac_cumulative_population=0,
             countries_regions=mock_countries_regions,
             income_groups=mock_income_groups,
             population=mock_population,
-        ) == ['Country 1']
+        ) == ["Country 1"]
 
     def test_region_year_right_below_minimum_individual_contribution(self):
         assert utils.list_countries_in_region_that_must_have_data(
-            region='Region 1',
+            region="Region 1",
             reference_year=2020,
             min_frac_individual_population=0.79,
             min_frac_cumulative_population=0.0,
             countries_regions=mock_countries_regions,
             income_groups=mock_income_groups,
             population=mock_population,
-        ) == ['Country 2']
+        ) == ["Country 2"]
 
     def test_region_year_right_above_minimum_individual_contribution(self):
         assert utils.list_countries_in_region_that_must_have_data(
-            region='Region 1',
+            region="Region 1",
             reference_year=2020,
             min_frac_individual_population=0.1,
             min_frac_cumulative_population=0.0,
             countries_regions=mock_countries_regions,
             income_groups=mock_income_groups,
             population=mock_population,
-        ) == ['Country 2']
+        ) == ["Country 2"]
 
     def test_region_year_right_below_minimum_cumulative_contribution(self):
         assert utils.list_countries_in_region_that_must_have_data(
-            region='Region 1',
+            region="Region 1",
             reference_year=2020,
             min_frac_individual_population=0.0,
             min_frac_cumulative_population=0.79,
             countries_regions=mock_countries_regions,
             income_groups=mock_income_groups,
             population=mock_population,
-        ) == ['Country 2']
+        ) == ["Country 2"]
 
     def test_region_year_right_above_minimum_cumulative_contribution(self):
         assert utils.list_countries_in_region_that_must_have_data(
-            region='Region 1',
+            region="Region 1",
             reference_year=2020,
             min_frac_individual_population=0.0,
             min_frac_cumulative_population=0.1,
             countries_regions=mock_countries_regions,
             income_groups=mock_income_groups,
             population=mock_population,
-        ) == ['Country 2']
+        ) == ["Country 2"]
 
     def test_countries_in_income_group(self):
         assert utils.list_countries_in_region_that_must_have_data(
-            region='Income group 1',
+            region="Income group 1",
             reference_year=2020,
             min_frac_individual_population=0.0,
             min_frac_cumulative_population=0.5,
             countries_regions=mock_countries_regions,
             income_groups=mock_income_groups,
             population=mock_population,
-        ) == ['Country 3']
+        ) == ["Country 3"]

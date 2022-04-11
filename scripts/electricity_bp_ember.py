@@ -583,7 +583,7 @@ def add_all_region_aggregates(df):
         countries_that_must_have_data = list_countries_in_region_that_must_have_data(
             region=region,
             reference_year=2018,
-            min_frac_individual_population=0.,
+            min_frac_individual_population=0.0,
             min_frac_cumulative_population=0.7,
         )
         df_updated = add_region_aggregates(
