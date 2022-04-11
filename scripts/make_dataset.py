@@ -224,6 +224,7 @@ def generate_combined_dataset():
             "Coal production (TWh)": "coal_production",
             "Coal production per capita (kWh)": "coal_prod_per_capita",
             "Electricity generation (TWh)": "electricity_generation",
+            "Emissions (MtCO2)": "greenhouse_gas_emissions",
             "Electricity from bioenergy (TWh)": "biofuel_electricity",
             "Electricity from coal (TWh)": "coal_electricity",
             "Electricity from fossil fuels (TWh)": "fossil_electricity",

@@ -29,6 +29,7 @@ coal_production,"Coal production, measured in terawatt-hours",Calculated by Our 
 coal_prod_per_capita,"Per capita coal production, measured in kilowatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy; Gapminder and UN Population Estimates
 electricity_demand,"Electricity demand, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember
 electricity_generation,"Electricity generation, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember
+greenhouse_gas_emissions,"Greenhouse-gas emissions produced in the generation of electricity, measured in million tonnes of CO2 equivalent",Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember
 biofuel_electricity,"Electricity generation from biofuels, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember
 coal_electricity,"Electricity generation from coal, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember
 fossil_electricity,"Electricity generation from fossil fuels, measured in terawatt-hours. This is the sum of electricity generation from coal, oil and gas.",Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember

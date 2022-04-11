@@ -79,11 +79,11 @@ MAX_ACCEPTED_VALUE_ELECTRICITY_PER_CAPITA = 60000
 # MIN_RELEVANT_VALUE_* is the minimum value of a data point (from old or from new datasets) to be considered in the
 # calculation of the error. This is used to avoid inspecting large errors on small quantities.
 # E.g. 5 (in some units) means that errors will be calculated only when old or new variables are above 5.
-MIN_RELEVANT_VALUE_ELECTRICITY_SHARE = 5
+MIN_RELEVANT_VALUE_ELECTRICITY_SHARE = 20
 MIN_RELEVANT_VALUE_ELECTRICITY_TOTAL = 1
 MIN_RELEVANT_VALUE_ELECTRICITY_PER_CAPITA = 100
 # MIN_RELEVANT_ERROR is the minimum error (defined below) to consider as potentially problematic.
-MIN_RELEVANT_ERROR = 20
+MIN_RELEVANT_ERROR = 30
 
 # Define naming of entities in the different datasets used.
 
@@ -896,16 +896,22 @@ class SanityChecksComparingTwoDatasets(Check):
                 showgrid=True,
                 title=variable,
                 autorange=False,
-                range=[
-                    comparison[variable].min() * 0.9,
-                    comparison[variable].max() * 1.1,
-                ],
             )
             .update_layout(
                 clickmode="event+select", autosize=True, title=f"{country} - {variable}"
             )
             .update_layout(font={"size": 9})
         )
+
+        if "%" in variable:
+            fig = fig.update_yaxes(range=[0, 100])
+        else:
+            fig = fig.update_yaxes(
+                range=[
+                    comparison[variable].min() * 0.9,
+                    comparison[variable].max() * 1.1,
+                ],
+            )
 
         return fig
 
