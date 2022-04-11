@@ -1171,3 +1171,147 @@ class TestListCountriesInRegionsThatMustHaveData(unittest.TestCase):
             income_groups=mock_income_groups,
             population=mock_population,
         ) == ["Country 3"]
+
+
+@patch.object(utils, "_load_countries_regions", lambda: mock_countries_regions)
+@patch.object(utils, "_load_income_groups", lambda: mock_income_groups)
+class TestAddRegionAggregates:
+    df_in = pd.DataFrame({
+        'country': ['Country 1', 'Country 1', 'Country 2', 'Country 3', 'Region 1', 'Income group 1'],
+        'year': [2020, 2021, 2020, 2022, 2022, 2022],
+        'var_01': [1, 2, 3, np.nan, 5, 6],
+        'var_02': [10, 20, 30, 40, 50, 60],
+    })
+
+    def test_add_region_with_one_nan_permitted(self):
+        df = utils.add_region_aggregates(
+            df=self.df_in,
+            region='Region 2',
+            countries_in_region=['Country 3'],
+            countries_that_must_have_data=['Country 3'],
+            num_allowed_nans_per_year=None,
+            country_col='country',
+            year_col='year',
+        )
+        df_out = pd.DataFrame({
+            'country': ['Country 1', 'Country 1', 'Country 2', 'Country 3', 'Region 1', 'Income group 1', 'Region 2'],
+            'year': [2020, 2021, 2020, 2022, 2022, 2022, 2022],
+            'var_01': [1, 2, 3, np.nan, 5, 6, 0.],
+            'var_02': [10., 20., 30., 40., 50., 60., 40.],
+        })
+        assert utils.are_dataframes_equal(df1=df, df2=df_out)
+
+    def test_add_region_with_one_nan_not_permitted(self):
+        df = utils.add_region_aggregates(
+            df=self.df_in,
+            region='Region 2',
+            countries_in_region=['Country 3'],
+            countries_that_must_have_data=['Country 3'],
+            num_allowed_nans_per_year=0,
+            country_col='country',
+            year_col='year',
+        )
+        df_out = pd.DataFrame({
+            'country': ['Country 1', 'Country 1', 'Country 2', 'Country 3', 'Region 1', 'Income group 1', 'Region 2'],
+            'year': [2020, 2021, 2020, 2022, 2022, 2022, 2022],
+            'var_01': [1, 2, 3, np.nan, 5, 6, np.nan],
+            'var_02': [10., 20., 30., 40., 50., 60., 40.],
+        })
+        assert utils.are_dataframes_equal(df1=df, df2=df_out)
+
+    def test_add_income_group(self):
+        df = utils.add_region_aggregates(
+            df=self.df_in,
+            region='Income group 2',
+            countries_in_region=['Country 1'],
+            countries_that_must_have_data=['Country 1'],
+            num_allowed_nans_per_year=0,
+            country_col='country',
+            year_col='year',
+        )
+        df_out = pd.DataFrame({
+            'country': ['Country 1', 'Country 1', 'Country 2', 'Country 3', 'Region 1', 'Income group 1',
+                        'Income group 2', 'Income group 2'],
+            'year': [2020, 2021, 2020, 2022, 2022, 2022, 2020, 2021],
+            'var_01': [1, 2, 3, np.nan, 5, 6, 1, 2],
+            'var_02': [10., 20., 30., 40., 50., 60., 10., 20.],
+        })
+        assert utils.are_dataframes_equal(df1=df, df2=df_out)
+
+    def test_replace_region_with_one_non_mandatory_country_missing(self):
+        # Country 2 does not have data for 2021, however, since it is not a mandatory country, its data will be treated
+        # as zero.
+        df = utils.add_region_aggregates(
+            df=self.df_in,
+            region='Region 1',
+            countries_in_region=['Country 1', 'Country 2'],
+            countries_that_must_have_data=['Country 1'],
+            num_allowed_nans_per_year=0,
+            country_col='country',
+            year_col='year',
+        )
+        df_out = pd.DataFrame({
+            'country': ['Country 1', 'Country 1', 'Country 2', 'Country 3', 'Income group 1', 'Region 1', 'Region 1'],
+            'year': [2020, 2021, 2020, 2022, 2022, 2020, 2021],
+            'var_01': [1, 2, 3, np.nan, 6, 1 + 3, 2],
+            'var_02': [10., 20., 30., 40., 60., 10. + 30., 20.],
+        })
+        assert utils.are_dataframes_equal(df1=df, df2=df_out)[0]
+
+    def test_replace_region_with_one_mandatory_country_missing(self):
+        # Country 2 does not have data for 2021, and, given that it is a mandatory country, the aggregation will be nan.
+        df = utils.add_region_aggregates(
+            df=self.df_in,
+            region='Region 1',
+            countries_in_region=['Country 1', 'Country 2'],
+            countries_that_must_have_data=['Country 1', 'Country 2'],
+            num_allowed_nans_per_year=0,
+            country_col='country',
+            year_col='year',
+        )
+        df_out = pd.DataFrame({
+            'country': ['Country 1', 'Country 1', 'Country 2', 'Country 3', 'Income group 1', 'Region 1', 'Region 1'],
+            'year': [2020, 2021, 2020, 2022, 2022, 2020, 2021],
+            'var_01': [1, 2, 3, np.nan, 6, 1 + 3, np.nan],
+            'var_02': [10., 20., 30., 40., 60., 10. + 30., np.nan],
+        })
+        assert utils.are_dataframes_equal(df1=df, df2=df_out)[0]
+
+    def test_replace_region_with_custom_aggregations(self):
+        # Country 2 does not have data for 2021, and, given that it is a mandatory country, the aggregation will be nan.
+        df = utils.add_region_aggregates(
+            df=self.df_in,
+            region='Region 1',
+            countries_in_region=['Country 1', 'Country 2'],
+            countries_that_must_have_data=['Country 1', 'Country 2'],
+            num_allowed_nans_per_year=0,
+            country_col='country',
+            year_col='year',
+            aggregations={'var_01': 'sum', 'var_02': 'mean'},
+        )
+        df_out = pd.DataFrame({
+            'country': ['Country 1', 'Country 1', 'Country 2', 'Country 3', 'Income group 1', 'Region 1', 'Region 1'],
+            'year': [2020, 2021, 2020, 2022, 2022, 2020, 2021],
+            'var_01': [1, 2, 3, np.nan, 6, 1 + 3, np.nan],
+            'var_02': [10., 20., 30., 40., 60., (10. + 30.) / 2, np.nan],
+        })
+        assert utils.are_dataframes_equal(df1=df, df2=df_out)[0]
+
+    def test_add_income_group_without_specifying_countries_in_region(self):
+        df = utils.add_region_aggregates(
+            df=self.df_in,
+            region='Income group 2',
+            countries_in_region=None,
+            countries_that_must_have_data=[],
+            num_allowed_nans_per_year=0,
+            country_col='country',
+            year_col='year',
+        )
+        df_out = pd.DataFrame({
+            'country': ['Country 1', 'Country 1', 'Country 2', 'Country 3', 'Region 1', 'Income group 1',
+                        'Income group 2', 'Income group 2'],
+            'year': [2020, 2021, 2020, 2022, 2022, 2022, 2020, 2021],
+            'var_01': [1, 2, 3, np.nan, 5, 6, 1, 2],
+            'var_02': [10., 20., 30., 40., 50., 60., 10., 20.],
+        })
+        assert utils.are_dataframes_equal(df1=df, df2=df_out)
