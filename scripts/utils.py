@@ -623,8 +623,6 @@ def add_region_aggregates(
     country_col="Country",
     year_col="Year",
     aggregations=None,
-    countries_regions=None,
-    income_groups=None,
 ):
     """Add data for regions (e.g. income groups or continents) to a dataset, or replace it, if the dataset already
     contains data for that region.
@@ -671,10 +669,6 @@ def add_region_aggregates(
         Aggregations to execute for each variable. If None, the contribution to each variable from each country in the
         region will be summed. Otherwise, only the variables indicated in the dictionary will be affected. All remaining
         variables will be nan.
-    countries_regions : pd.DataFrame or None
-        Countries-regions dataset, or None to load it from the catalog.
-    income_groups : pd.DataFrame or None
-        Income-groups dataset, or None, to load it from the catalog.
 
     Returns
     -------
@@ -682,21 +676,16 @@ def add_region_aggregates(
         Original dataset after adding (or replacing) data for selected region.
 
     """
-    # TODO: Add tests.
     if countries_in_region is None:
         # List countries in the region.
         countries_in_region = list_countries_in_region(
             region=region,
-            countries_regions=countries_regions,
-            income_groups=income_groups,
         )
 
     if countries_that_must_have_data is None:
         # List countries that should present in the data (since they are expected to contribute the most).
         countries_that_must_have_data = list_countries_in_region_that_must_have_data(
             region=region,
-            countries_regions=countries_regions,
-            income_groups=income_groups,
         )
 
     # If aggregations are not defined for each variable, assume 'sum'.
@@ -708,7 +697,7 @@ def add_region_aggregates(
     variables = list(aggregations)
 
     # Initialise dataframe of added regions, and add variables one by one to it.
-    df_region = pd.DataFrame({country_col: [], year_col: []})
+    df_region = pd.DataFrame({country_col: [], year_col: []}).astype(dtype={country_col: "object", year_col: "int"})
     # Select data for countries in the region.
     df_countries = df[df[country_col].isin(countries_in_region)]
     for variable in variables:
