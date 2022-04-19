@@ -14,7 +14,7 @@ import os
 
 from tqdm.auto import tqdm
 
-from owid.datautils.s3 import S3
+from owid.datautils.io.s3 import S3
 
 # Define path to current directory.
 CURRENT_DIR = os.path.dirname(__file__)
