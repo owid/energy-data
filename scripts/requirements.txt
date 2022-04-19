@@ -7,4 +7,4 @@ plotly==5.5.0
 pytest==6.2.5
 tqdm==4.62.3
 xlrd==2.0.1
-git+https://github.com/owid/data-utils-py.git
+git+https://github.com/owid/data-utils-py.git@v0.2.0-alpha#egg=owid.datautils
