@@ -12,24 +12,23 @@ Files should be accessible at the following urls:
 import argparse
 import os
 
+from owid.datautils.io.s3 import S3
 from tqdm.auto import tqdm
 
-from owid.datautils.io.s3 import S3
+from scripts.shared import OUTPUT_DIR
 
-# Define path to current directory.
-CURRENT_DIR = os.path.dirname(__file__)
 # S3 bucket name and folder where energy dataset files will be stored.
 S3_BUCKET_NAME = "owid-public"
 S3_ENERGY_DIR = os.path.join("data", "energy")
 # Local files to upload.
 FILES_TO_UPLOAD = {
-    os.path.join(CURRENT_DIR, "..", "owid-energy-data.csv"): os.path.join(
+    os.path.join(OUTPUT_DIR, "owid-energy-data.csv"): os.path.join(
         S3_ENERGY_DIR, "owid-energy-data.csv"
     ),
-    os.path.join(CURRENT_DIR, "..", "owid-energy-data.json"): os.path.join(
+    os.path.join(OUTPUT_DIR, "owid-energy-data.json"): os.path.join(
         S3_ENERGY_DIR, "owid-energy-data.json"
     ),
-    os.path.join(CURRENT_DIR, "..", "owid-energy-data.xlsx"): os.path.join(
+    os.path.join(OUTPUT_DIR, "owid-energy-data.xlsx"): os.path.join(
         S3_ENERGY_DIR, "owid-energy-data.xlsx"
     ),
 }
@@ -54,9 +53,7 @@ def main(files_to_upload, s3_bucket_name=S3_BUCKET_NAME):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Upload OWID energy dataset files to S3, and make them publicly readable."
-    )
+    parser = argparse.ArgumentParser(description=__doc__)
     args = parser.parse_args()
 
     main(files_to_upload=FILES_TO_UPLOAD)
