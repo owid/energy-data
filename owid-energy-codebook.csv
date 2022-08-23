@@ -1,4 +1,9 @@
 column,description,source
+country,Geographic location,Our World in Data
+year,Year of observation,Our World in Data
+iso_code,ISO 3166-1 alpha-3 three-letter country codes,International Organization for Standardization
+population,Population,Calculated by Our World in Data based on different sources (https://ourworldindata.org/population-sources)
+gdp,"Total real gross domestic product, inflation-adjusted",Maddison Project Database
 biofuel_cons_change_pct,Annual percentage change in biofuel consumption,Calculated by Our World in Data based on BP Statistical Review of World Energy
 biofuel_cons_change_twh,"Annual change in biofuel consumption, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy
 biofuel_cons_per_capita,"Per capita primary energy consumption from biofuels, measured in kilowatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy
@@ -20,7 +25,6 @@ coal_prod_per_capita,"Per capita coal production, measured in kilowatt-hours",Ca
 coal_production,"Coal production, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy and The Shift Dataportal
 coal_share_elec,Share of electricity generation that comes from coal,Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember Global and European Electricity Review
 coal_share_energy,Share of primary energy consumption that comes from coal,Calculated by Our World in Data based on BP Statistical Review of World Energy
-country,Geographic location,Our World in Data
 electricity_demand,"Electricity demand, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember Global and European Electricity Review
 electricity_generation,"Electricity generation, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember Global and European Electricity Review
 energy_cons_change_pct,Annual percentage change in primary energy consumption,Calculated by Our World in Data based on BP Statistical Review of World Energy and EIA International Energy Data
@@ -47,7 +51,6 @@ gas_prod_per_capita,"Per capita gas production, measured in kilowatt-hours",Calc
 gas_production,"Gas production, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy and The Shift Dataportal
 gas_share_elec,Share of electricity generation that comes from gas,Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember Global and European Electricity Review
 gas_share_energy,Share of primary energy consumption that comes from gas,Calculated by Our World in Data based on BP Statistical Review of World Energy
-gdp,"Total real gross domestic product, inflation-adjusted",Maddison Project Database
 greenhouse_gas_emissions,"Greenhouse-gas emissions produced in the generation of electricity, measured in million tonnes of CO2 equivalent",Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember Global and European Electricity Review
 hydro_cons_change_pct,Annual percentage change in hydropower consumption,Calculated by Our World in Data based on BP Statistical Review of World Energy
 hydro_cons_change_twh,"Annual change in hydropower consumption, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy
@@ -57,7 +60,6 @@ hydro_electricity,"Electricity generation from hydropower, measured in terawatt-
 hydro_energy_per_capita,"Per capita primary energy consumption from hydropower, measured in kilowatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy
 hydro_share_elec,Share of electricity generation that comes from hydropower,Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember Global and European Electricity Review
 hydro_share_energy,Share of primary energy consumption that comes from hydropower,Calculated by Our World in Data based on BP Statistical Review of World Energy
-iso_code,ISO 3166-1 alpha-3 three-letter country codes,International Organization for Standardization
 low_carbon_cons_change_pct,Annual percentage change in low-carbon energy consumption,Calculated by Our World in Data based on BP Statistical Review of World Energy
 low_carbon_cons_change_twh,"Annual change in low-carbon energy consumption, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy
 low_carbon_consumption,"Primary energy consumption from low-carbon sources, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy
@@ -100,7 +102,6 @@ other_renewables_share_elec,Share of electricity generation that comes from othe
 other_renewables_share_elec_exc_biofuel,Share of electricity generation that comes from other renewables excluding biofuels,Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember Global and European Electricity Review
 other_renewables_share_energy,Share of primary energy consumption that comes from other renewables,Calculated by Our World in Data based on BP Statistical Review of World Energy
 per_capita_electricity,"Electricity generation per capita, measured in kilowatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember Global and European Electricity Review
-population,Population,Calculated by Our World in Data based on different sources (https://ourworldindata.org/population-sources)
 primary_energy_consumption,"Primary energy consumption, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy and EIA International Energy Data
 renewables_cons_change_pct,Annual percentage change in renewable energy consumption,Calculated by Our World in Data based on BP Statistical Review of World Energy
 renewables_cons_change_twh,"Annual change in renewable energy consumption, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy
@@ -126,4 +127,3 @@ wind_electricity,"Electricity generation from wind, measured in terawatt-hours",
 wind_energy_per_capita,"Per capita primary energy consumption from wind, measured in kilowatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy
 wind_share_elec,Share of electricity generation that comes from wind,Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember Global and European Electricity Review
 wind_share_energy,Share of primary energy consumption that comes from wind,Calculated by Our World in Data based on BP Statistical Review of World Energy
-year,Year of observation,Our World in Data

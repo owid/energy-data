@@ -71,7 +71,10 @@ def prepare_codebook(table: catalog.Table) -> pd.DataFrame:
         metadata["source"].append(table[column].metadata.sources[0].name)
 
     # Create a dataframe with the gathered metadata and sort conveniently by column name.
-    codebook = pd.DataFrame(metadata).sort_values("column").reset_index(drop=True)
+    codebook = pd.DataFrame(metadata).set_index("column").sort_index()
+    # For clarity, ensure column descriptions are in the same order as the columns in the data.
+    first_columns = ["country", "year", "iso_code", "population", "gdp"]
+    codebook = pd.concat([codebook.loc[first_columns], codebook.drop(first_columns)]).reset_index()
 
     return codebook
 
@@ -92,6 +95,10 @@ def main() -> None:
 
     # Prepare codebook.
     codebook = prepare_codebook(table=table)
+
+    # Sanity check.
+    error = "Codebook column descriptions are not in the same order as data columns."
+    assert codebook["column"].tolist() == df.columns.tolist(), error
 
     #
     # Save outputs.
