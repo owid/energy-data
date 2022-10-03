@@ -102,7 +102,7 @@ other_renewables_share_elec,Share of electricity generation that comes from othe
 other_renewables_share_elec_exc_biofuel,Share of electricity generation that comes from other renewables excluding biofuels,Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember Global and European Electricity Review
 other_renewables_share_energy,Share of primary energy consumption that comes from other renewables,Calculated by Our World in Data based on BP Statistical Review of World Energy
 per_capita_electricity,"Electricity generation per capita, measured in kilowatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember Global and European Electricity Review
-primary_energy_consumption,"Primary energy consumption, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy and EIA International Energy Data
+primary_energy_production,"Primary energy production, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy and EIA International Energy Data
 renewables_cons_change_pct,Annual percentage change in renewable energy consumption,Calculated by Our World in Data based on BP Statistical Review of World Energy
 renewables_cons_change_twh,"Annual change in renewable energy consumption, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy
 renewables_consumption,"Primary energy consumption from renewables, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy
