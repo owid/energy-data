@@ -25,11 +25,17 @@ CODEBOOK_FILE = OUTPUT_DIR / "owid-energy-codebook.csv"
 ENERGY_DATASET_TABLE = "owid_energy"
 
 
-def df_to_json(complete_dataset: pd.DataFrame, output_path: str, static_columns: List[str]) -> None:
+def df_to_json(
+    complete_dataset: pd.DataFrame, output_path: str, static_columns: List[str]
+) -> None:
     megajson = {}
 
     # Round all values to 3 decimals.
-    rounded_cols = [col for col in list(complete_dataset) if col not in ("country", "year", "iso_code")]
+    rounded_cols = [
+        col
+        for col in list(complete_dataset)
+        if col not in ("country", "year", "iso_code")
+    ]
     complete_dataset[rounded_cols] = complete_dataset[rounded_cols].round(3)
 
     for _, row in complete_dataset.iterrows():
@@ -55,7 +61,9 @@ def prepare_data(table: catalog.Table) -> pd.DataFrame:
     # Sort rows and columns conveniently.
     df = df.sort_values(["country", "year"]).reset_index(drop=True)
     first_columns = ["country", "year", "iso_code"]
-    df = df[first_columns + [column for column in df.columns if column not in first_columns]]
+    df = df[
+        first_columns + [column for column in df.columns if column not in first_columns]
+    ]
 
     return df
 
@@ -74,7 +82,9 @@ def prepare_codebook(table: catalog.Table) -> pd.DataFrame:
     codebook = pd.DataFrame(metadata).set_index("column").sort_index()
     # For clarity, ensure column descriptions are in the same order as the columns in the data.
     first_columns = ["country", "year", "iso_code", "population", "gdp"]
-    codebook = pd.concat([codebook.loc[first_columns], codebook.drop(first_columns)]).reset_index()
+    codebook = pd.concat(
+        [codebook.loc[first_columns], codebook.drop(first_columns)]
+    ).reset_index()
 
     return codebook
 
@@ -84,8 +94,11 @@ def main() -> None:
     # Load data.
     #
     # Load OWID-energy dataset from the catalog.
-    table = catalog.find(ENERGY_DATASET_TABLE, namespace="energy", channels=["garden"]).\
-        sort_values("version", ascending=False).load()
+    table = (
+        catalog.find(ENERGY_DATASET_TABLE, namespace="energy", channels=["garden"])
+        .sort_values("version", ascending=False)
+        .load()
+    )
 
     #
     # Process data.
@@ -104,8 +117,8 @@ def main() -> None:
     # Save outputs.
     #
     # Save dataset to files in different formats.
-    df.to_csv(OUTPUT_CSV_FILE, index=False, float_format='%.3f')
-    df.to_excel(OUTPUT_EXCEL_FILE, index=False, float_format='%.3f')
+    df.to_csv(OUTPUT_CSV_FILE, index=False, float_format="%.3f")
+    df.to_excel(OUTPUT_EXCEL_FILE, index=False, float_format="%.3f")
     df_to_json(df, OUTPUT_JSON_FILE, ["iso_code"])
 
     # Save codebook file.
