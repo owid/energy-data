@@ -12,7 +12,7 @@ Files should be accessible at the following urls:
 import argparse
 import os
 
-from owid.datautils.io.s3 import S3
+from owid.datautils.s3 import S3
 from tqdm.auto import tqdm
 
 from scripts.shared import OUTPUT_DIR
