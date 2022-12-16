@@ -67,8 +67,8 @@ Additionally, to construct variables per capita and per GDP, we use the followin
 ## Changelog
 
 - On December 16, 2022:
-  - Column `electricity_share_energy` (electricity as a share of primary energy) was added to the dataset.
-  - Fix some minor inconsistencies in electricity data between Ember and BP by prioritizing data from the former.
+  - The column `electricity_share_energy` (electricity as a share of primary energy) was added to the dataset.
+  - Fixed some minor inconsistencies in electricity data between Ember and BP, by prioritizing data from Ember.
   - Updated Ember's yearly electricity data.
 - On August 9, 2022:
   - All inconsistencies due to different definitions of regions among different datasets (especially Europe) have been fixed.
