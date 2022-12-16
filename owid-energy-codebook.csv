@@ -27,6 +27,7 @@ coal_share_elec,Share of electricity generation that comes from coal,Calculated 
 coal_share_energy,Share of primary energy consumption that comes from coal,Calculated by Our World in Data based on BP Statistical Review of World Energy
 electricity_demand,"Electricity demand, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember Global and European Electricity Review
 electricity_generation,"Electricity generation, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember Global and European Electricity Review
+electricity_share_energy,Electricity generation as a share of primary energy,Calculated by Our World in Data based on BP Statistical Review of World Energy and Ember Global and European Electricity Review
 energy_cons_change_pct,Annual percentage change in primary energy consumption,Calculated by Our World in Data based on BP Statistical Review of World Energy and EIA International Energy Data
 energy_cons_change_twh,"Annual change in primary energy consumption, measured in terawatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy and EIA International Energy Data
 energy_per_capita,"Primary energy consumption per capita, measured in kilowatt-hours",Calculated by Our World in Data based on BP Statistical Review of World Energy and EIA International Energy Data
