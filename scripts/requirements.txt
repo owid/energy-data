@@ -1,6 +1,6 @@
 openpyxl==3.0.9
-pandas==1.4.0
+pandas==1.5.2
 pytest==6.2.5
 tqdm==4.62.3
-git+https://github.com/owid/data-utils-py.git@v0.5.0-alpha#egg=owid.datautils
+git+https://github.com/owid/data-utils-py.git@v0.5.2-alpha#egg=owid.datautils
 git+https://github.com/owid/owid-catalog-py.git@master#egg=owid.catalog
