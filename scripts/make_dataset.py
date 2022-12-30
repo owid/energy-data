@@ -71,6 +71,18 @@ def prepare_data(table: catalog.Table) -> pd.DataFrame:
 def prepare_codebook(table: catalog.Table) -> pd.DataFrame:
     table = table.reset_index()
 
+    ######################################
+    # TODO: Remove this temporary solution.
+    # There is possibly a bug in the latest version of owid-catalog-py:
+    # https://github.com/owid/owid-catalog-py/issues/81
+    # The metadata of variables that are in the index are lost.
+    # For now, bring that lost metadata back to index variables.
+    table["country"].metadata.description = "Geographic location"
+    table["country"].metadata.sources = [catalog.Source(name="Our World in Data")]
+    table["year"].metadata.description = "Year of observation"
+    table["year"].metadata.sources = [catalog.Source(name="Our World in Data")]
+    ######################################
+
     # Gather column names, descriptions and sources from the variables' metadata.
     metadata = {"column": [], "description": [], "source": []}
     for column in table.columns:
