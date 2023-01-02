@@ -106,11 +106,7 @@ def main() -> None:
     # Load data.
     #
     # Load OWID-energy dataset from the catalog.
-    table = (
-        catalog.find(ENERGY_DATASET_TABLE, namespace="energy", channels=["garden"])
-        .sort_values("version", ascending=False)
-        .load()
-    )
+    table = catalog.find_latest(ENERGY_DATASET_TABLE, namespace="energy", channels=["garden"])
 
     #
     # Process data.
