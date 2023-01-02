@@ -20,7 +20,7 @@ The dataset is built upon a number of datasets and processing steps:
 - Statistical review of world energy (BP):
   - [Source data](https://www.bp.com/en/global/corporate/energy-economics/statistical-review-of-world-energy.html)
   - [Ingestion and processing code](https://github.com/owid/importers/tree/master/bp_statreview)
-  - [Further processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/bp/2022-07-14/statistical_review.py)
+  - [Further processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/bp/2022-12-28/statistical_review.py)
 - International energy data (EIA):
   - [Source data](https://www.eia.gov/opendata/bulkfiles.php)
   - [Ingestion code](https://github.com/owid/walden/blob/master/ingests/eia_international_energy_data.py)
@@ -44,15 +44,15 @@ The dataset is built upon a number of datasets and processing steps:
 - Combined Electricity (Our World in Data based on Ember's Yearly Electricity Data and European Electricity Review):
   - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/ember/2022-12-13/combined_electricity.py)
 - Energy mix (Our World in Data based on BP's Statistical review of world energy):
-  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/bp/2022-07-14/energy_mix.py)
+  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/bp/2022-12-28/energy_mix.py)
 - Fossil fuel production (Our World in Data based on BP's Statistical review of world energy & Shift's Energy from fossil fuels):
-  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2022-07-20/fossil_fuel_production.py)
+  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2022-12-28/fossil_fuel_production.py)
 - Primary energy consumption (Our World in Data based on BP's Statistical review of world energy & EIA's International energy data):
-  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2022-07-29/primary_energy_consumption.py)
+  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2022-12-28/primary_energy_consumption.py)
 - Electricity mix (Our World in Data based on BP's Statistical Review & Ember's Combined Electricity):
-  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2022-12-13/electricity_mix.py)
+  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2022-12-28/electricity_mix.py)
 - Energy dataset (Our World in Data based on all sources above):
-  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2022-12-13/owid_energy.py)
+  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2022-12-28/owid_energy.py)
   - [Exporting code](https://github.com/owid/energy-data/blob/master/scripts/make_dataset.py)
   - [Uploading code](https://github.com/owid/energy-data/blob/master/scripts/upload_datasets_to_s3.py)
 
@@ -66,6 +66,8 @@ Additionally, to construct variables per capita and per GDP, we use the followin
 
 ## Changelog
 
+- On December 30, 2022:
+  - Fixed some minor issues with BP's dataset. Regions like "Other North America (BP)" have been removed from the data, since, in the original Statistical Review of World Energy, these regions represented different sets of countries for different variables.
 - On December 16, 2022:
   - The column `electricity_share_energy` (electricity as a share of primary energy) was added to the dataset.
   - Fixed some minor inconsistencies in electricity data between Ember and BP, by prioritizing data from Ember.
