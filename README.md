@@ -127,6 +127,6 @@ This data has been collected, aggregated, and documented by Hannah Ritchie, Pabl
 
 ## How to cite this data?
 
-If you are using this dataset, please cite both Our World in Data and the underlying data source(s).
+If you are using this dataset, please cite both [Our World in Data](https://ourworldindata.org/energy#citation) and the underlying data source(s).
 
 Please follow [the guidelines in our FAQ](https://ourworldindata.org/faqs#citing-work-produced-by-third-parties-and-made-available-by-our-world-in-data) on how to cite our work.
