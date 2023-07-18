@@ -17,42 +17,43 @@ A [full codebook](https://github.com/owid/energy-data/blob/master/owid-energy-co
 ## Our source data and code
 
 The dataset is built upon a number of datasets and processing steps:
-- Statistical review of world energy (BP):
-  - [Source data](https://www.bp.com/en/global/corporate/energy-economics/statistical-review-of-world-energy.html)
-  - [Ingestion and processing code](https://github.com/owid/importers/tree/master/bp_statreview)
-  - [Further processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/bp/2022-12-28/statistical_review.py)
-- International energy data (EIA):
+- Statistical review of world energy (Energy Institute, EI):
+  - [Source data](https://www.energyinst.org/statistical-review)
+  - [Ingestion code](https://github.com/owid/etl/blob/master/snapshots/energy_institute/2023-06-26/statistical_review_of_world_energy.py)
+  - [Basic processing code](https://github.com/owid/etl/blob/master/etl/steps/data/meadow/energy_institute/2023-06-26/statistical_review_of_world_energy.py)
+  - [Further processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy_institute/2023-06-26/statistical_review_of_world_energy.py)
+- International energy data (U.S. Energy Information Administration, EIA):
   - [Source data](https://www.eia.gov/opendata/bulkfiles.php)
-  - [Ingestion code](https://github.com/owid/walden/blob/master/ingests/eia_international_energy_data.py)
-  - [Basic processing code](https://github.com/owid/etl/blob/master/etl/steps/data/meadow/eia/2022-07-27/energy_consumption.py)
-  - [Further processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/eia/2022-07-27/energy_consumption.py)
+  - [Ingestion code](https://github.com/owid/etl/blob/master/snapshots/eia/2023-07-10/international_energy_data.py)
+  - [Basic processing code](https://github.com/owid/etl/blob/master/etl/steps/data/meadow/eia/2023-07-10/energy_consumption.py)
+  - [Further processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/eia/2023-07-10/energy_consumption.py)
 - Energy from fossil fuels (The Shift Dataportal):
   - [Source data](https://www.theshiftdataportal.org/energy)
-  - [Ingestion code](https://github.com/owid/walden/blob/master/ingests/shift.py)
-  - [Basic processing code](https://github.com/owid/etl/blob/master/etl/steps/data/meadow/shift/2022-07-18/fossil_fuel_production.py)
-  - [Further processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/shift/2022-07-18/fossil_fuel_production.py)
+  - [Ingestion code](https://github.com/owid/etl/blob/master/snapshots/shift/2023-07-10/energy_production_from_fossil_fuels.py)
+  - [Basic processing code](https://github.com/owid/etl/blob/master/etl/steps/data/meadow/shift/2023-07-10/energy_production_from_fossil_fuels.py)
+  - [Further processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/shift/2023-07-10/energy_production_from_fossil_fuels.py)
 - Yearly Electricity Data (Ember):
   - [Source data](https://ember-climate.org/data-catalogue/yearly-electricity-data/)
-  - [Ingestion code](https://github.com/owid/etl/blob/master/snapshots/ember/2023-06-01/yearly_electricity.py)
-  - [Basic processing code](https://github.com/owid/etl/blob/master/etl/steps/data/meadow/ember/2023-06-01/yearly_electricity.py)
-  - [Further processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/ember/2023-06-01/yearly_electricity.py)
+  - [Ingestion code](https://github.com/owid/etl/blob/master/snapshots/ember/2023-07-10/yearly_electricity.py)
+  - [Basic processing code](https://github.com/owid/etl/blob/master/etl/steps/data/meadow/ember/2023-07-10/yearly_electricity.py)
+  - [Further processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/ember/2023-07-10/yearly_electricity.py)
 - European Electricity Review (Ember):
   - [Source data](https://ember-climate.org/insights/research/european-electricity-review-2022/)
   - [Ingestion code](https://github.com/owid/walden/blob/master/owid/walden/index/ember/2022-02-01/european_electricity_review.json)
   - [Basic processing code](https://github.com/owid/etl/blob/master/etl/steps/data/meadow/ember/2022-08-01/european_electricity_review.py)
   - [Further processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/ember/2022-08-01/european_electricity_review.py)
 - Combined Electricity (Our World in Data based on Ember's Yearly Electricity Data and European Electricity Review):
-  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/ember/2023-06-01/combined_electricity.py)
-- Energy mix (Our World in Data based on BP's Statistical review of world energy):
-  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/bp/2023-06-01/energy_mix.py)
-- Fossil fuel production (Our World in Data based on BP's Statistical review of world energy & Shift's Energy from fossil fuels):
-  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2023-06-01/fossil_fuel_production.py)
-- Primary energy consumption (Our World in Data based on BP's Statistical review of world energy & EIA's International energy data):
-  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2023-06-01/primary_energy_consumption.py)
-- Electricity mix (Our World in Data based on BP's Statistical Review & Ember's Combined Electricity):
-  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2023-06-01/electricity_mix.py)
+  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/ember/2023-07-10/combined_electricity.py)
+- Energy mix (Our World in Data based on EI's Statistical review of world energy):
+  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2023-07-10/energy_mix.py)
+- Fossil fuel production (Our World in Data based on EI's Statistical review of world energy & The Shift Dataportal's Energy from fossil fuels):
+  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2023-07-10/fossil_fuel_production.py)
+- Primary energy consumption (Our World in Data based on EI's Statistical review of world energy & EIA's International energy data):
+  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2023-07-10/primary_energy_consumption.py)
+- Electricity mix (Our World in Data based on EI's Statistical Review & Ember's Combined Electricity):
+  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2023-07-10/electricity_mix.py)
 - Energy dataset (Our World in Data based on all sources above):
-  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2023-06-01/owid_energy.py)
+  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2023-07-10/owid_energy.py)
   - [Exporting code](https://github.com/owid/energy-data/blob/master/scripts/make_dataset.py)
   - [Uploading code](https://github.com/owid/energy-data/blob/master/scripts/upload_datasets_to_s3.py)
 
@@ -61,6 +62,8 @@ Additionally, to construct region aggregates and variables per capita and per GD
   - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/regions/2023-01-01/regions.py)
 - Population (Our World in Data based on [a number of different sources](https://ourworldindata.org/population-sources)).
   - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/demography/2023-03-31/population/__init__.py)
+- Income groups (World Bank).
+  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/wb/2023-04-30/income_groups.py)
 - GDP (University of Groningen GGDC's Maddison Project Database, Bolt and van Zanden, 2020).
   - [Source data](https://www.rug.nl/ggdc/historicaldevelopment/maddison/releases/maddison-project-database-2020)
   - [Ingestion code](https://github.com/owid/walden/blob/master/ingests/ggdc_maddison.py)
@@ -68,6 +71,10 @@ Additionally, to construct region aggregates and variables per capita and per GD
 
 ## Changelog
 
+- On July 7, 2023:
+  - Replaced BP's data by the new Energy Institute Statistical Review of World Energy 2023.
+  - Updated Ember's yearly electricity data.
+  - Updated all datasets accordingly.
 - On June 1, 2023:
   - Updated Ember's yearly electricity data.
   - Renamed countries 'East Timor' and 'Faroe Islands', and added 'Middle East (Ember)'.
@@ -112,9 +119,9 @@ Additionally, to construct region aggregates and variables per capita and per GD
 
 - **We standardize names of countries and regions.** Since the names of countries and regions are different in different data sources, we harmonize all names to the [*Our World in Data* standard entity names](https://ourworldindata.org/world-region-map-definitions).
 - **We create aggregate data for regions (e.g. Africa, Europe, etc.).** Since regions are defined differently by our sources, we create our own aggregates following [*Our World in Data* region definitions](https://ourworldindata.org/world-region-map-definitions).
-  - We also include data for regions as defined in the original datasets; for example, `Europe (BP)` corresponds to Europe as defined by BP.
-- **We recalculate primary energy in terawatt-hours.** The primary data sources on energy—the BP Statistical review of world energy, for example—typically report consumption in terms of exajoules. We have recalculated these figures as terawatt-hours using a conversion factor of 277.8.
-  - Primary energy for renewable sources is calculated using [the 'substitution method'](https://ourworldindata.org/energy-substitution-method).
+  - We also include data for regions as defined in the original datasets; for example, `Europe (EI)` corresponds to Europe as defined by the Energy Institute.
+- **We recalculate primary energy in terawatt-hours.** The primary data sources on energy—the Energy Institute Statistical review of world energy, for example—typically report consumption in terms of exajoules. We have recalculated these figures as terawatt-hours using a conversion factor of 277.8.
+  - Primary energy for renewable sources is reported using [the 'substitution method'](https://ourworldindata.org/energy-substitution-method).
 - **We calculate per capita figures.** All of our per capita figures are calculated from our `population` metric, which is included in the complete dataset.
   - We also calculate energy consumption per gdp, and include the corresponding `gdp` metric used in the calculation as part of the dataset.
 - **We remove inconsistent data.** Certain data points have been removed because their original data presented anomalies. They may be included again in further data releases if the anomalies are amended.
