@@ -71,6 +71,9 @@ Additionally, to construct region aggregates and variables per capita and per GD
 
 ## Changelog
 
+- On January 24, 2024:
+  - Improved codebook, to clarify whether indicators refer to electricity generation or primary energy consumption.
+  - Improved the calculation of the share of electricity in primary energy. Previously, electricity generation was calculated as a share of input-equivalent primary energy consumption. Now it is calculated as a share of direct primary energy consumption.
 - On December 12, 2023:
   - Updated Ember's Yearly electricity data and EIA's International energy data.
   - Enhanced codebook (improved descriptions, added units, updated sources).
