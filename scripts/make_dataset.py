@@ -178,14 +178,17 @@ def load_latest_dataset(dataset_name: str = "owid_energy", namespace: str="energ
             .find(dataset_name, namespace=namespace)
             .sort_values("version", ascending=False)
         )
-    except ValueError:
+        table_selected = tables.iloc[0]
+        tb = table_selected.load()
+        print(f"Loaded local dataset: {table_selected.path}")
+    except (ValueError, IndexError, FileNotFoundError):
         # Load the latest OWID energy dataset from the remote catalog.
         tables = find(
             dataset_name, namespace=namespace, channels=[channel]
         ).sort_values("version", ascending=False)
-    table_selected = tables.iloc[0]
-    tb = table_selected.load()
-    print(f"Loaded: {table_selected.path}")
+        table_selected = tables.iloc[0]
+        tb = table_selected.load()
+        print(f"Loaded remote dataset: {table_selected.path}")
 
     return tb
 
