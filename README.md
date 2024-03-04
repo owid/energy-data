@@ -8,11 +8,11 @@ Our complete Energy dataset is a collection of key metrics maintained by [*Our W
 
 The CSV and XLSX files follow a format of 1 row per location and year. The JSON version is split by country, with an array of yearly records.
 
-The variables represent all of our main data related to energy consumption, energy mix, electricity mix as well as other variables of potential interest.
+The indicators represent all of our main data related to energy consumption, energy mix, electricity mix as well as other indicators of potential interest.
 
 We will continue to publish updated data on energy as it becomes available. Most metrics are published on an annual basis.
 
-A [full codebook](https://github.com/owid/energy-data/blob/master/owid-energy-codebook.csv) is made available, with a description and source for each variable in the dataset. This codebook is also included as an additional sheet in the XLSX file.
+A [full codebook](https://github.com/owid/energy-data/blob/master/owid-energy-codebook.csv) is made available, with a description and source for each indicator in the dataset. This codebook is also included as an additional sheet in the XLSX file.
 
 ## Our source data and code
 
@@ -57,7 +57,7 @@ The dataset is built upon a number of datasets and processing steps:
   - [Exporting code](https://github.com/owid/energy-data/blob/master/scripts/make_dataset.py)
   - [Uploading code](https://github.com/owid/energy-data/blob/master/scripts/upload_datasets_to_s3.py)
 
-Additionally, to construct region aggregates and variables per capita and per GDP, we use the following datasets and processing steps:
+Additionally, to construct region aggregates and indicators per capita and per GDP, we use the following datasets and processing steps:
 - Regions (Our World in Data).
   - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/regions/2023-01-01/regions.py)
 - Population (Our World in Data based on [a number of different sources](https://ourworldindata.org/population-sources)).
@@ -85,11 +85,11 @@ Additionally, to construct region aggregates and variables per capita and per GD
 - On June 1, 2023:
   - Updated Ember's yearly electricity data.
   - Renamed countries 'East Timor' and 'Faroe Islands', and added 'Middle East (Ember)'.
-  - Population and per capita variables are now calculated using an updated version of our population dataset.
+  - Population and per capita indicators are now calculated using an updated version of our population dataset.
 - On March 1, 2023:
   - Updated Ember's yearly electricity data and fixed some minor issues.
 - On December 30, 2022:
-  - Fixed some minor issues with BP's dataset. Regions like "Other North America (BP)" have been removed from the data, since, in the original Statistical Review of World Energy, these regions represented different sets of countries for different variables.
+  - Fixed some minor issues with BP's dataset. Regions like "Other North America (BP)" have been removed from the data, since, in the original Statistical Review of World Energy, these regions represented different sets of countries for different indicators.
 - On December 16, 2022:
   - The column `electricity_share_energy` (electricity as a share of primary energy) was added to the dataset.
   - Fixed some minor inconsistencies in electricity data between Ember and BP, by prioritizing data from Ember.
@@ -99,7 +99,7 @@ Additionally, to construct region aggregates and variables per capita and per GD
     - Now all regions follow [Our World in Data's definitions](https://ourworldindata.org/world-region-map-definitions).
     - We also include data for regions as defined in the original datasets; for example, `Europe (BP)` corresponds to Europe as defined by BP.
   - All data processing now occurs outside this repository; the code has been migrated to be part of the [etl repository](https://github.com/owid/etl).
-  - Variable `fossil_cons_per_capita` has been renamed `fossil_elec_per_capita` for consistency, since it corresponds to electricity generation.
+  - Indicator `fossil_cons_per_capita` has been renamed `fossil_elec_per_capita` for consistency, since it corresponds to electricity generation.
   - The codebook has been updated following these changes.
 - On April 8, 2022:
   - Electricity data from Ember was updated (using the Global Electricity Review 2022).
