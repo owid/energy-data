@@ -34,26 +34,19 @@ The dataset is built upon a number of datasets and processing steps:
   - [Further processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/shift/2023-12-12/energy_production_from_fossil_fuels.py)
 - Yearly Electricity Data (Ember):
   - [Source data](https://ember-climate.org/data-catalogue/yearly-electricity-data/)
-  - [Ingestion code](https://github.com/owid/etl/blob/master/snapshots/ember/2023-12-12/yearly_electricity.py)
-  - [Basic processing code](https://github.com/owid/etl/blob/master/etl/steps/data/meadow/ember/2023-12-12/yearly_electricity.py)
-  - [Further processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/ember/2023-12-12/yearly_electricity.py)
-- European Electricity Review (Ember):
-  - [Source data](https://ember-climate.org/insights/research/european-electricity-review-2022/)
-  - [Ingestion code](https://github.com/owid/etl/blob/master/snapshots/ember/2023-12-12/european_electricity_review.py)
-  - [Basic processing code](https://github.com/owid/etl/blob/master/etl/steps/data/meadow/ember/2023-12-12/european_electricity_review.py)
-  - [Further processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/ember/2023-12-12/european_electricity_review.py)
-- Combined Electricity (Our World in Data based on Ember's Yearly Electricity Data and European Electricity Review):
-  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/ember/2023-12-12/combined_electricity.py)
+  - [Ingestion code](https://github.com/owid/etl/blob/master/snapshots/ember/2024-05-08/yearly_electricity.py)
+  - [Basic processing code](https://github.com/owid/etl/blob/master/etl/steps/data/meadow/ember/2024-05-08/yearly_electricity.py)
+  - [Further processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/ember/2024-05-08/yearly_electricity.py)
 - Energy mix (Our World in Data based on EI's Statistical review of world energy):
-  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2023-12-12/energy_mix.py)
+  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2024-05-08/energy_mix.py)
 - Fossil fuel production (Our World in Data based on EI's Statistical review of world energy & The Shift Dataportal's Energy from fossil fuels):
-  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2023-12-12/fossil_fuel_production.py)
+  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2024-05-08/fossil_fuel_production.py)
 - Primary energy consumption (Our World in Data based on EI's Statistical review of world energy & EIA's International energy data):
-  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2023-12-12/primary_energy_consumption.py)
-- Electricity mix (Our World in Data based on EI's Statistical Review & Ember's Combined Electricity):
-  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2023-12-12/electricity_mix.py)
+  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2024-05-08/primary_energy_consumption.py)
+- Electricity mix (Our World in Data based on EI's Statistical Review & Ember's Yearly Electricity Data):
+  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2024-05-08/electricity_mix.py)
 - Energy dataset (Our World in Data based on all sources above):
-  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2023-12-12/owid_energy.py)
+  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2024-05-08/owid_energy.py)
   - [Exporting code](https://github.com/owid/energy-data/blob/master/scripts/make_dataset.py)
   - [Uploading code](https://github.com/owid/energy-data/blob/master/scripts/upload_datasets_to_s3.py)
 
@@ -63,7 +56,7 @@ Additionally, to construct region aggregates and indicators per capita and per G
 - Population (Our World in Data based on [a number of different sources](https://ourworldindata.org/population-sources)).
   - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/demography/2023-03-31/population/__init__.py)
 - Income groups (World Bank).
-  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/wb/2023-04-30/income_groups.py)
+  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/wb/2024-03-11/income_groups.py)
 - GDP (University of Groningen GGDC's Maddison Project Database, Bolt and van Zanden, 2020).
   - [Source data](https://www.rug.nl/ggdc/historicaldevelopment/maddison/releases/maddison-project-database-2020)
   - [Ingestion code](https://github.com/owid/etl/blob/master/snapshots/ggdc/2020-10-01/ggdc_maddison.py)
@@ -71,11 +64,13 @@ Additionally, to construct region aggregates and indicators per capita and per G
 
 ## Changelog
 
+- On May 8, 2024:
+  - Updated Ember's yearly electricity data.
 - On January 24, 2024:
   - Improved codebook, to clarify whether indicators refer to electricity generation or primary energy consumption.
   - Improved the calculation of the share of electricity in primary energy. Previously, electricity generation was calculated as a share of input-equivalent primary energy consumption. Now it is calculated as a share of direct primary energy consumption.
 - On December 12, 2023:
-  - Updated Ember's Yearly electricity data and EIA's International energy data.
+  - Updated Ember's yearly electricity data and EIA's International energy data.
   - Enhanced codebook (improved descriptions, added units, updated sources).
   - Fixed various minor issues.
 - On July 7, 2023:
