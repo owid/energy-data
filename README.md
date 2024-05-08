@@ -46,7 +46,7 @@ The dataset is built upon a number of datasets and processing steps:
 - Electricity mix (Our World in Data based on EI's Statistical Review & Ember's Yearly Electricity Data):
   - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2024-05-08/electricity_mix.py)
 - Energy dataset (Our World in Data based on all sources above):
-  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2024-05-08/owid_energy.py)
+  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/latest/owid_energy.py)
   - [Exporting code](https://github.com/owid/energy-data/blob/master/scripts/make_dataset.py)
   - [Uploading code](https://github.com/owid/energy-data/blob/master/scripts/upload_datasets_to_s3.py)
 
