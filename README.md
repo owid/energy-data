@@ -57,15 +57,17 @@ Additionally, to construct region aggregates and indicators per capita and per G
   - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/demography/2023-03-31/population/__init__.py)
 - Income groups (World Bank).
   - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/wb/2024-03-11/income_groups.py)
-- GDP (University of Groningen GGDC's Maddison Project Database, Bolt and van Zanden, 2020).
-  - [Source data](https://www.rug.nl/ggdc/historicaldevelopment/maddison/releases/maddison-project-database-2020)
-  - [Ingestion code](https://github.com/owid/etl/blob/master/snapshots/ggdc/2020-10-01/ggdc_maddison.py)
-  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/ggdc/2020-10-01/ggdc_maddison.py)
+- GDP (University of Groningen GGDC's Maddison Project Database, Bolt and van Zanden, 2024).
+  - [Source data](https://www.rug.nl/ggdc/historicaldevelopment/maddison/releases/maddison-project-database-2023)
+  - [Ingestion code](https://github.com/owid/etl/blob/master/snapshots/ggdc/2024-04-26/maddison_project_database.py)
+  - [Basic processing code](https://github.com/owid/etl/blob/master/etl/steps/data/meadow/ggdc/2024-04-26/maddison_project_database.py)
+  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/ggdc/2024-04-26/maddison_project_database.py)
 
 ## Changelog
 
 - On May 8, 2024:
-  - Updated Ember's yearly electricity data.
+  - Updated Ember's yearly electricity data, which includes data for 2023.
+  - Updated GDP data, now coming from Maddison Project Database 2023.
 - On January 24, 2024:
   - Improved codebook, to clarify whether indicators refer to electricity generation or primary energy consumption.
   - Improved the calculation of the share of electricity in primary energy. Previously, electricity generation was calculated as a share of input-equivalent primary energy consumption. Now it is calculated as a share of direct primary energy consumption.
