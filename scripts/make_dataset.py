@@ -97,12 +97,6 @@ def prepare_codebook(tb: Table) -> pd.DataFrame:
     table["year"].metadata.origins = regions_origin
 
     ####################################################################################################################
-    if table["gdp"].metadata.description is None:
-        print("WARNING: Column gdp finally has a description_short. Remove this part of the code")
-    else:
-        table["gdp"].metadata.description_short = table["gdp"].metadata.description
-        table["gdp"].metadata.description = None
-
     if table["population"].metadata.description is None:
         print("WARNING: Column population has no longer a description field. Remove this part of the code")
     else:
@@ -198,7 +192,7 @@ def main() -> None:
     # Load data.
     #
     # Load latest dataset from etl (from a local or otherwise a remote catalog).
-    # NOTE: If the latest dataset exists but is not found, run "reindex" from the etl poetry shell.
+    # NOTE: If the latest dataset exists but is not found, run "etl d reindex" from the etl poetry shell.
     tb = load_latest_dataset()
 
     #
