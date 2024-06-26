@@ -19,9 +19,9 @@ A [full codebook](https://github.com/owid/energy-data/blob/master/owid-energy-co
 The dataset is built upon a number of datasets and processing steps:
 - Statistical review of world energy (Energy Institute, EI):
   - [Source data](https://www.energyinst.org/statistical-review)
-  - [Ingestion code](https://github.com/owid/etl/blob/master/snapshots/energy_institute/2023-12-12/statistical_review_of_world_energy.py)
-  - [Basic processing code](https://github.com/owid/etl/blob/master/etl/steps/data/meadow/energy_institute/2023-12-12/statistical_review_of_world_energy.py)
-  - [Further processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy_institute/2023-12-12/statistical_review_of_world_energy.py)
+  - [Ingestion code](https://github.com/owid/etl/blob/master/snapshots/energy_institute/2024-06-20/statistical_review_of_world_energy.py)
+  - [Basic processing code](https://github.com/owid/etl/blob/master/etl/steps/data/meadow/energy_institute/2024-06-20/statistical_review_of_world_energy.py)
+  - [Further processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy_institute/2024-06-20/statistical_review_of_world_energy.py)
 - International energy data (U.S. Energy Information Administration, EIA):
   - [Source data](https://www.eia.gov/opendata/bulkfiles.php)
   - [Ingestion code](https://github.com/owid/etl/blob/master/snapshots/eia/2023-12-12/international_energy_data.py)
@@ -38,15 +38,15 @@ The dataset is built upon a number of datasets and processing steps:
   - [Basic processing code](https://github.com/owid/etl/blob/master/etl/steps/data/meadow/ember/2024-05-08/yearly_electricity.py)
   - [Further processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/ember/2024-05-08/yearly_electricity.py)
 - Energy mix (Our World in Data based on EI's Statistical review of world energy):
-  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2024-05-08/energy_mix.py)
+  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2024-06-20/energy_mix.py)
 - Fossil fuel production (Our World in Data based on EI's Statistical review of world energy & The Shift Dataportal's Energy from fossil fuels):
-  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2024-05-08/fossil_fuel_production.py)
+  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2024-06-20/fossil_fuel_production.py)
 - Primary energy consumption (Our World in Data based on EI's Statistical review of world energy & EIA's International energy data):
-  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2024-05-08/primary_energy_consumption.py)
+  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2024-06-20/primary_energy_consumption.py)
 - Electricity mix (Our World in Data based on EI's Statistical Review & Ember's Yearly Electricity Data):
-  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2024-05-08/electricity_mix.py)
+  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2024-06-20/electricity_mix.py)
 - Energy dataset (Our World in Data based on all sources above):
-  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/latest/owid_energy.py)
+  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/external/energy_data/latest/owid_energy.py)
   - [Exporting code](https://github.com/owid/energy-data/blob/master/scripts/make_dataset.py)
   - [Uploading code](https://github.com/owid/energy-data/blob/master/scripts/upload_datasets_to_s3.py)
 
@@ -65,6 +65,9 @@ Additionally, to construct region aggregates and indicators per capita and per G
 
 ## Changelog
 
+- On June 20, 2024:
+  - Updated the Energy Institute Statistical Review of World Energy.
+  - Fixed issues on electricity data for aggregate regions.
 - On May 8, 2024:
   - Updated Ember's yearly electricity data, which includes data for 2023.
   - Updated GDP data, now coming from Maddison Project Database 2023.
