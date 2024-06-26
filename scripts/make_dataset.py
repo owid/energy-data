@@ -163,8 +163,8 @@ def prepare_codebook(tb: Table) -> pd.DataFrame:
     return codebook
 
 
-def load_latest_dataset(dataset_name: str = "owid_energy", namespace: str="energy",
-                        path_to_local_catalog: str = "../etl/data/", channel:str = "garden") -> Table:
+def load_latest_dataset(dataset_name: str = "owid_energy", namespace: str="energy_data",
+                        path_to_local_catalog: str = "../etl/data/", channel:str = "external") -> Table:
     try:
         # First try to load the latest OWID energy dataset from the local catalog, if it exists.
         tables = (
