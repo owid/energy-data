@@ -65,6 +65,8 @@ Additionally, to construct region aggregates and indicators per capita and per G
 
 ## Changelog
 
+- On August 30, 2024:
+  - Fixed coal electricity generation for Switzerland, which was missing in the original data, and should be zero instead.
 - On June 20, 2024:
   - Updated the Energy Institute Statistical Review of World Energy.
   - Fixed issues on electricity data for aggregate regions.
