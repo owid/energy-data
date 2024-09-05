@@ -65,6 +65,8 @@ Additionally, to construct region aggregates and indicators per capita and per G
 
 ## Changelog
 
+- On September 5, 2024:
+  - Added per capita electricity demand, from Ember's yearly electricity data.
 - On August 30, 2024:
   - Fixed coal electricity generation for Switzerland, which was missing in the original data, and should be zero instead.
 - On June 20, 2024:
