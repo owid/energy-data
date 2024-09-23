@@ -1,0 +1,30 @@
+name: Sync CSV from Public Repo
+
+# Define when the workflow will run (e.g., daily at midnight)
+on:
+  schedule:
+    - cron: "0 0 * * *"  # Runs daily at midnight
+  workflow_dispatch: # Allows manual trigger via GitHub
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Checkout your repository
+      - name: Checkout your repo
+        uses: actions/checkout@v2
+      
+      # Fetch the CSV file from the public repository
+      - name: Download CSV file from Public GitHub Repo
+        run: |
+          curl -o https://github.com/udewmini/energy-data/blob/master/owid-energy-data.csv https://raw.githubusercontent.com/<PublicUser>/<PublicRepo>/https://github.com/owid/energy-data/blob/master/owid-energy-data.csv
+      
+      # Commit and push changes if the CSV file is updated
+      - name: Commit and push changes if updated
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          git add path/to/your/csv/filename.csv
+          git commit -m "Update CSV file" || echo "No changes to commit"
+          git push
