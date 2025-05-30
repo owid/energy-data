@@ -34,9 +34,9 @@ The dataset is built upon a number of datasets and processing steps:
   - [Further processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/shift/2023-12-12/energy_production_from_fossil_fuels.py)
 - Yearly Electricity Data (Ember):
   - [Source data](https://ember-climate.org/data-catalogue/yearly-electricity-data/)
-  - [Ingestion code](https://github.com/owid/etl/blob/master/snapshots/ember/2024-05-08/yearly_electricity.py)
-  - [Basic processing code](https://github.com/owid/etl/blob/master/etl/steps/data/meadow/ember/2024-05-08/yearly_electricity.py)
-  - [Further processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/ember/2024-05-08/yearly_electricity.py)
+  - [Ingestion code](https://github.com/owid/etl/blob/master/snapshots/ember/2025-05-12/yearly_electricity.py)
+  - [Basic processing code](https://github.com/owid/etl/blob/master/etl/steps/data/meadow/ember/2025-05-12/yearly_electricity.py)
+  - [Further processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/ember/2025-05-12/yearly_electricity.py)
 - Energy mix (Our World in Data based on EI's Statistical review of world energy):
   - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2024-06-20/energy_mix.py)
 - Fossil fuel production (Our World in Data based on EI's Statistical review of world energy & The Shift Dataportal's Energy from fossil fuels):
@@ -44,7 +44,7 @@ The dataset is built upon a number of datasets and processing steps:
 - Primary energy consumption (Our World in Data based on EI's Statistical review of world energy & EIA's International energy data):
   - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2024-06-20/primary_energy_consumption.py)
 - Electricity mix (Our World in Data based on EI's Statistical Review & Ember's Yearly Electricity Data):
-  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2024-06-20/electricity_mix.py)
+  - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2025-05-12/electricity_mix.py)
 - Energy dataset (Our World in Data based on all sources above):
   - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/external/energy_data/latest/owid_energy.py)
   - [Exporting code](https://github.com/owid/energy-data/blob/master/scripts/make_dataset.py)
@@ -65,6 +65,8 @@ Additionally, to construct region aggregates and indicators per capita and per G
 
 ## Changelog
 
+- On May 30, 2025:
+  - Updated Ember's yearly electricity data, which includes data for 2024.
 - On September 5, 2024:
   - Added per capita electricity demand, from Ember's yearly electricity data.
 - On August 30, 2024:

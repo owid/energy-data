@@ -15,7 +15,7 @@ import os
 from owid.datautils.s3 import S3
 from tqdm.auto import tqdm
 
-from scripts.shared import OUTPUT_DIR
+from shared import OUTPUT_DIR
 
 # S3 bucket name and folder where energy dataset files will be stored.
 S3_BUCKET_NAME = "owid-public"
