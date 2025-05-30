@@ -65,6 +65,8 @@ Additionally, to construct region aggregates and indicators per capita and per G
 
 ## Changelog
 
+- On May 30, 2025:
+  - Updated Ember's yearly electricity data, which includes data for 2024.
 - On September 5, 2024:
   - Added per capita electricity demand, from Ember's yearly electricity data.
 - On August 30, 2024:
