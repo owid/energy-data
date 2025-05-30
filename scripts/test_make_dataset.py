@@ -3,7 +3,7 @@ import os
 
 import pandas as pd
 
-from scripts.shared import OUTPUT_DIR
+from shared import OUTPUT_DIR
 
 
 class TestMakeDataset(unittest.TestCase):
