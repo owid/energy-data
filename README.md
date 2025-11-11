@@ -47,8 +47,8 @@ The dataset is built upon a number of datasets and processing steps:
   - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/garden/energy/2025-06-27/electricity_mix.py)
 - Energy dataset (Our World in Data based on all sources above):
   - [Processing code](https://github.com/owid/etl/blob/master/etl/steps/data/external/energy_data/latest/owid_energy.py)
-  - [Exporting code](https://github.com/owid/energy-data/blob/master/scripts/make_dataset.py)
-  - [Uploading code](https://github.com/owid/energy-data/blob/master/scripts/upload_datasets_to_s3.py)
+  - [Exporting code](https://github.com/owid/etl/blob/master/etl/steps/export/github/energy_data/latest/owid_energy.py)
+  - [Uploading code](https://github.com/owid/etl/blob/master/etl/steps/export/s3/energy_data/latest/owid_energy.py)
 
 Additionally, to construct region aggregates and indicators per capita and per GDP, we use the following datasets and processing steps:
 - Regions (Our World in Data).
