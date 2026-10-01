@@ -2,7 +2,7 @@
 
 <!-- ============================== TEMPORARY TRANSITION BANNER ============================== -->
 > [!WARNING]
-> **This dataset is moving to a new home, and the legacy version is no longer updated.**
+> **This dataset is moving to a new home.**
 >
 > The way we measure primary energy has changed to reflect the approach now used by our main data providers, so figures are not directly comparable with the legacy release. Read more about this methodology change in [our explainer article](https://ourworldindata.org/primary-energy-measurement-change).
 > The updated dataset is already available for download:
