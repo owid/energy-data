@@ -4,7 +4,7 @@
 > [!WARNING]
 > **This dataset is moving to a new home, and the legacy version is no longer updated.**
 >
-> The way we measure primary energy has changed to reflect the approach now used by our main data providers. Read more about this methodology change in [our explainer article](https://ourworldindata.org/primary-energy-measurement-change).
+> The way we measure primary energy has changed to reflect the approach now used by our main data providers, so figures are not directly comparable with the legacy release. Read more about this methodology change in [our explainer article](https://ourworldindata.org/primary-energy-measurement-change).
 > The updated dataset is already available for download:
 >
 > 🗂️ **Download the new energy dataset: [CSV](https://catalog.ourworldindata.org/energy/owid_energy/owid_energy.csv) | [XLSX](https://catalog.ourworldindata.org/energy/owid_energy/owid_energy.xlsx)**
@@ -15,9 +15,7 @@
 > - [Full documentation](https://catalog.ourworldindata.org/energy/owid_energy/readme.md) for the updated dataset.
 > - A [column mapping file](https://catalog.ourworldindata.org/energy/owid_energy/column_mapping.csv) matching the column names in the legacy dataset to those in the updated dataset.
 >
-> Primary energy figures use a different methodology and are not directly comparable with the legacy release.
->
-> You can still access the old files below, but we recommend switching to the new files.
+> You can still access the legacy files below, but we recommend switching to the new files.
 >
 > We are working on a better home for this dataset — stay tuned!
 <!-- ============================ END TEMPORARY TRANSITION BANNER ============================ -->
