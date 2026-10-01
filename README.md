@@ -10,7 +10,7 @@
 > 🗂️ **Download the new energy dataset: [CSV](https://catalog.ourworldindata.org/energy/owid_energy/owid_energy.csv) | [XLSX](https://catalog.ourworldindata.org/energy/owid_energy/owid_energy.xlsx)**
 >
 > Also available:
-> - A new [codebook](https://catalog.ourworldindata.org/energy/owid_energy/owid_energy.codebook.csv), with a description and source for each indicator.
+> - A new [codebook](https://catalog.ourworldindata.org/energy/owid_energy/owid_energy.codebook.csv), with descriptions and sources for each indicator.
 > - A new [sources file](https://catalog.ourworldindata.org/energy/owid_energy/owid_energy.sources.csv), with detailed information on each source.
 > - [Full documentation](https://catalog.ourworldindata.org/energy/owid_energy/readme.md) for the updated dataset.
 >
