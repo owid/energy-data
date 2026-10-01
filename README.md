@@ -1,18 +1,41 @@
 # Data on Energy by *Our World in Data*
 
-Our complete Energy dataset is a collection of key metrics maintained by [*Our World in Data*](https://ourworldindata.org/energy). It is updated regularly and includes data on energy consumption (primary energy, per capita, and growth rates), energy mix, electricity mix and other relevant metrics.
+<!-- ============================== TEMPORARY TRANSITION BANNER ============================== -->
+> [!WARNING]
+> **This dataset is moving to a new home. The legacy data files linked below are no longer updated.**
+>
+> The way we measure primary energy has changed to reflect the approach now used by our main data providers. Read more about this methodology change in [our explainer article](https://ourworldindata.org/primary-energy-measurement-change).
+> The updated dataset is already available for download:
+>
+> 🗂️ **Download the new energy dataset: [CSV](https://catalog.ourworldindata.org/energy/owid_energy/owid_energy.csv) | [XLSX](https://catalog.ourworldindata.org/energy/owid_energy/owid_energy.xlsx)**
+>
+> Also available:
+> - The new [codebook](https://catalog.ourworldindata.org/energy/owid_energy/owid_energy.codebook.csv), with a description and source for each indicator.
+> - The new [sources file](https://catalog.ourworldindata.org/energy/owid_energy/owid_energy.sources.csv), with detailed information on each source.
+> - [Full documentation](https://catalog.ourworldindata.org/energy/owid_energy/readme.md) for the updated dataset.
+> - A [column mapping file](https://catalog.ourworldindata.org/energy/owid_energy/column_mapping.csv) matching the column names in the legacy dataset to those in the updated dataset.
+>
+> Primary energy figures use a different methodology and are not directly comparable with the legacy release.
+>
+> You can still access the old files below, but we recommend switching to the new files.
+>
+> We are working on a better home for this dataset — stay tuned!
+<!-- ============================ END TEMPORARY TRANSITION BANNER ============================ -->
 
-## The complete *Our World in Data* Energy dataset
+---
 
-### 🗂️ Download our complete Energy dataset : [CSV](https://owid-public.owid.io/data/energy/owid-energy-data.csv) | [XLSX](https://owid-public.owid.io/data/energy/owid-energy-data.xlsx) | [JSON](https://owid-public.owid.io/data/energy/owid-energy-data.json)
+Our complete energy dataset is a collection of key metrics compiled by [*Our World in Data*](https://ourworldindata.org/energy). The legacy release documented below includes data on energy consumption (primary energy, per capita, and growth rates), energy mix, electricity mix and other relevant metrics. It remains available for download but is no longer updated.
+
+## Legacy dataset — no longer updated
+
+### 🗂️ Download the legacy energy dataset: [CSV](https://owid-public.owid.io/data/energy/owid-energy-data.csv) | [XLSX](https://owid-public.owid.io/data/energy/owid-energy-data.xlsx) | [JSON](https://owid-public.owid.io/data/energy/owid-energy-data.json)
 
 The CSV and XLSX files follow a format of 1 row per location and year. The JSON version is split by country, with an array of yearly records.
-
-We will continue to publish updated data on energy as it becomes available. Most metrics are published on an annual basis.
+Most metrics in this release have annual observations.
 
 A [full codebook](https://github.com/owid/energy-data/blob/master/owid-energy-codebook.csv) is made available, with a description and source for each indicator in the dataset. This codebook is also included as an additional sheet in the XLSX file.
 
-## Our source data and code
+## Source data and code for the legacy release
 
 The dataset is built upon a number of datasets and processing steps:
 - Statistical review of world energy (Energy Institute, EI):
